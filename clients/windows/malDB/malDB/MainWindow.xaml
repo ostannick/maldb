@@ -1,0 +1,135 @@
+﻿<Window x:Class="malDB.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:local="clr-namespace:malDB"
+        xmlns:uc="clr-namespace:malDB.UserControls"
+        mc:Ignorable="d"
+        Title="malDB" Height="720" Width="1280"
+        Style="{StaticResource DefaultStyle}"
+        >
+    <Window.Resources>
+        
+    </Window.Resources>
+    <Grid>
+        <DockPanel>
+            <WrapPanel DockPanel.Dock="Top" Background="#2C2C34">
+                <Menu Background="#2C2C34" Foreground="White" FontFamily="Roboto">
+                    <MenuItem Header="File" Padding="10,10,10,10" Background="#2C2C34">
+                        <MenuItem Header="Account" Background="#2C2C34" BorderThickness="0"></MenuItem>
+                        <MenuItem Header="Account"></MenuItem>
+                        <MenuItem Header="Account"></MenuItem>
+                        <MenuItem Header="Account"></MenuItem>
+                        <MenuItem Header="Account"></MenuItem>
+                    </MenuItem>
+
+                    <MenuItem Header="Search Settings" Padding="10,10,10,10" Click="OpenSearchSettings"></MenuItem>
+                    <MenuItem Header="About" Padding="10,10,10,10"></MenuItem>
+                </Menu>
+
+            </WrapPanel>
+
+            <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch" LastChildFill="True">
+                <DockPanel Width="200" LastChildFill="True" VerticalAlignment="Stretch" >
+                    
+                    <TextBlock DockPanel.Dock="Top" Background="#2C2C34" Foreground="White" Padding="10,10,10,10">
+                        <TextBlock Text="&#xf1c0;" FontFamily="{StaticResource FontAwesome}"></TextBlock>
+                        Databases to Search:
+                    </TextBlock>
+
+                    <TreeView BorderThickness="0" DockPanel.Dock="Top" Width="200" Height="350" Background="#2C2C34" Foreground="White" Padding="0,10,0,0">
+                        <TreeViewItem Header="malDB Databases" Foreground="White">
+                            <TreeViewItem Header="Escherchia coli"></TreeViewItem>
+                            <TreeViewItem Header="Neisseria meningitidis"></TreeViewItem>
+                        </TreeViewItem>
+                        <TreeViewItem Header="My Databases">
+                            <TreeViewItem Header="Pasturella multocida"></TreeViewItem>
+                        </TreeViewItem>
+                        <TreeViewItem Header="My Proteins">
+                            <Button Content="New Protein"></Button>
+
+                        </TreeViewItem>
+                    </TreeView>
+                    
+                    <TextBlock DockPanel.Dock="Top" Background="#2C2C34" Foreground="White" Padding="10,10,10,10" Margin="0,0,0,0">
+                        <TextBlock Text="&#xf03a;" FontFamily="{StaticResource FontAwesome}"></TextBlock>
+                        Mass List
+                    </TextBlock>
+                    
+                    <TextBox 
+                        BorderThickness="0"
+                        Background="#2C2C34" 
+                        Foreground="#B18FCF"
+                        Padding="10,10,10,10"
+                        DockPanel.Dock="Top"
+                        Name="MassListInput"
+                        Width="200"
+                        TextWrapping="Wrap"
+                        AcceptsReturn="True"
+                        VerticalAlignment="Stretch">
+                        Paste masses here...
+                    </TextBox>
+                </DockPanel>
+
+                <DockPanel Background="#494850" LastChildFill="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+                    <DockPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Height="80" Background="#2C2C34">
+                        <StackPanel DockPanel.Dock="Left" Width="100" Margin="10,10,10,10">
+                            <Label Foreground="White">Enzyme</Label>
+                            <ComboBox>
+                                <ComboBoxItem IsSelected="True">Trypsin</ComboBoxItem>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel DockPanel.Dock="Left" Width="100" Margin="10,10,10,10">
+                            <Label Foreground="White">Missed Cuts</Label>
+                            <ComboBox>
+                                <ComboBoxItem IsSelected="True">0</ComboBoxItem>
+                                <ComboBoxItem>1</ComboBoxItem>
+                                <ComboBoxItem>2</ComboBoxItem>
+                                <ComboBoxItem>3</ComboBoxItem>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel DockPanel.Dock="Left" Width="100" Margin="10,10,10,10">
+                            <Label Foreground="White">Cys Blocker</Label>
+                            <ComboBox>
+                                <ComboBoxItem IsSelected="True">Iodoacetamide</ComboBoxItem>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel DockPanel.Dock="Left" Width="100" Margin="10,10,10,10">
+                            <Label Foreground="White">Meth. Ox.</Label>
+                            <ComboBox>
+                                <ComboBoxItem IsSelected="True">Yes</ComboBoxItem>
+                                <ComboBoxItem>No</ComboBoxItem>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <DockPanel>
+                            <Grid HorizontalAlignment="Right" Width="100">
+                                <Button ToolTip="Run Search" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,15,0" Width="50" Height="50" Background="#B18FCF" BorderThickness="0">
+                                    <TextBlock Foreground="White" FontSize="22" Text="&#xe024;" FontFamily="{StaticResource FontAwesome}"></TextBlock>
+                                </Button>
+
+                            </Grid>
+                        </DockPanel>
+                        
+                    </DockPanel>
+                    <DockPanel DockPanel.Dock="Bottom" VerticalAlignment="Stretch" >
+
+
+                        <uc:StackedBarChart />
+                    </DockPanel>
+
+                </DockPanel>
+            </DockPanel>
+
+
+        </DockPanel>
+
+
+    </Grid>
+</Window>
