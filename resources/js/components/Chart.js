@@ -2,23 +2,39 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom'
 import Chart from "react-apexcharts";
 
-class App extends Component {
+class SummaryChart extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       options: {
         chart: {
-          id: "basic-bar"
+          id: "Matches",
+          width: "100%",
+          events: {
+          markerClick:  function(event, chartContext, {seriesIndex, dataPointIndex, config}) {
+            alert(dataPointIndex);
+          },
+        }
+        },
+        stroke: {
+          curve: 'stepline',
+        },
+        markers: {
+            size: 6,
         },
         xaxis: {
-          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
+          categories: ["TbpB", "LbpB", "MBP", "HpuA", "AjjA", "SlpX", "YhhA", "TntA", "TnaA", "greP", "bbNa" ]
         }
       },
       series: [
         {
-          name: "series-1",
-          data: [30, 40, 45, 50, 49, 60, 70, 91]
+          name: "Positive Matches",
+          data: [15, 6, 4, 3, 7, 1, 3, 4, 1, 6, 1,7, 1, 3, 4, 1, 6, 1,7, 1, 3, 4, 1, 6, 1,7, 1, 3, 4, 1, 6, 1]
+        },
+        {
+          name: "Negative Matches",
+          data: [2, 10, 12, 13, 6, 1, 4, 4, 3, 9, 11, 17, 15, 22, 8, 3, 6, 11, 11, 5, 5, 5, 8, 10, 2, 5, 7, 3, 3, 2, 11, 11]
         }
       ]
     };
@@ -26,24 +42,26 @@ class App extends Component {
 
   render() {
     return (
-      <div className="app">
+      <div className="summarychart">
         <div className="row">
-          <div className="mixed-chart">
-            <Chart
-              options={this.state.options}
-              series={this.state.series}
-              type="bar"
-              width="500"
-            />
-          </div>
+        <div className="col-12">
+        <div className="mixed-chart">
+          <Chart
+            options={this.state.options}
+            series={this.state.series}
+            type="line"
+            width="100%"
+          />
+        </div>
+        </div>
         </div>
       </div>
     );
   }
 }
 
-export default App;
+export default SummaryChart;
 
-if (document.getElementById('chart')) {
-    ReactDOM.render(<App />, document.getElementById('chart'));
+if (document.getElementById('summarychart')) {
+    ReactDOM.render(<SummaryChart />, document.getElementById('summarychart'));
 }

@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\maldb\client_windows\malDB\malDB\obj\Debug\
+C:\maldb\clients\windows\malDB\malDB\obj\Debug\
 malDB
 none
 false
 DEBUG;TRACE
-C:\maldb\client_windows\malDB\malDB\App.xaml
+C:\maldb\clients\windows\malDB\malDB\App.xaml
 389855747
 
 8-380734741
-1401293815066
+140-1472256318
 MainWindow.xaml;SearchSettings.xaml;UserControls\StackedBarChart.xaml;
 images\maldb.png
 False

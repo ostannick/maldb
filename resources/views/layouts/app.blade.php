@@ -44,7 +44,10 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                       <li class="nav-item">
-                          <a class="btn btn-primary" href="/search" role="button">Perform Search</a>
+                          <a class="btn btn-primary" href="/search" role="button">
+                            <i class="fal fa-search"></i>
+                            Perform Search
+                          </a>
                       </li>
                         <!-- Authentication Links -->
                         @guest
