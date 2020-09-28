@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Proteome;
 use Illuminate\Http\Request;
+use Auth;
 
 class ProteomeController extends Controller
 {
@@ -14,7 +15,15 @@ class ProteomeController extends Controller
      */
     public function index()
     {
-        //
+      return view('proteomes', [
+        'proteomes' => $this->FetchProteomes(),
+
+      ]);
+    }
+
+    public function FetchProteomes()
+    {
+      return Proteome::all();
     }
 
     /**
@@ -35,7 +44,33 @@ class ProteomeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      /*
+      $request->validate([
+      'file' => 'required|mimes:txt,fa,fasta|max:2048'
+      ]);
+      */
+
+      $proteome = new Proteome;
+
+      if($request->file())
+      {
+        $fileName = time().'_'.$request->file->getClientOriginalName();
+        $filePath = $request->file('file')->storeAs('proteomes/'.Auth::user()->id.'/', $fileName);
+
+        $proteome->name = $request->input('name');
+        $proteome->path = '/storage/' . $filePath;
+        $proteome->description = $request->input('description');
+        $proteome->organism = $request->input('organism');
+        $proteome->user_id = Auth::user()->id;
+
+        $proteome->save();
+
+        return back()
+        ->with('success', 'Proteome uploaded.')
+        ->with('file', $fileName);
+      }
+
+      return back()->with('failure', 'Something went wrong.');
     }
 
     /**

@@ -21,7 +21,7 @@ Route::get('/search', function() {
   return view('search');
 });
 
-Route::resource('proteomes', ProteomeController::class);
+Route::resource('/proteomes', ProteomeController::class);
 
 Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
