@@ -29,7 +29,30 @@
                           <td>{{$p->name}}</td>
                           <td>{{$p->organism}}</td>
                           <td>36MB</td>
-                          <td><i class="fas fa-ban"></i></td>
+                          <td>
+                            <div class="d-flex flex-row">
+                            <form class="mr-2" method="POST" action="proteomes/{{$p->id}}">
+                              <input type="hidden" name="_method" value="delete" />
+                              @csrf
+
+                              <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-ban"></i>
+                              </button>
+
+                            </form>
+
+                            <form method="POST" action="proteomes/{{$p->id}}">
+                              <input type="hidden" name="_method" value="patch" />
+
+                              @csrf
+
+                              <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-pencil"></i></td>
+                              </button>
+
+                            </form>
+                          </div>
+                          </td>
                         </tr>
                         @endforeach
                       </tbody>
@@ -42,17 +65,7 @@
                 <div class="card-header">{{ __('Upload New Proteomes & Sequences') }}</div>
 
                 <div class="card-body">
-                  @if(session()->has('success'))
-                      <div class="alert alert-success">
-                          {{ session()->get('success') }}
-                      </div>
-                  @endif
 
-                  @if(session()->has('failure'))
-                      <div class="alert alert-success">
-                          {{ session()->get('failure') }}
-                      </div>
-                  @endif
 
                   <form method="POST" action="/proteomes" enctype="multipart/form-data">
                     @csrf
@@ -76,9 +89,11 @@
                     </div>
 
                     <div class="col-md-12 mb-3">
-                      <div class="form-group">
-                        <label>Upload new proteome</label>
-                        <input type="file" class="form-control-file" name="file">
+                      <div class="input-group">
+                        <div class="custom-file">
+                          <input type="file" name="file" class="custom-file-input" id="inputGroupFile01">
+                          <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        </div>
                       </div>
                     </div>
 

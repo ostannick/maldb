@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
-
+use App\Models\Proteome;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +18,11 @@ Route::get('/', function () {
 });
 
 Route::get('/search', function() {
-  return view('search');
+
+  $proteomes = Proteome::all();
+
+  return view('search')
+    ->with('proteomes', $proteomes);
 });
 
 Route::resource('/proteomes', ProteomeController::class);

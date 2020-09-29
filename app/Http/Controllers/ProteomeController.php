@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Storage;
 use App\Models\Proteome;
 use Illuminate\Http\Request;
 use Auth;
@@ -55,10 +56,10 @@ class ProteomeController extends Controller
       if($request->file())
       {
         $fileName = time().'_'.$request->file->getClientOriginalName();
-        $filePath = $request->file('file')->storeAs('proteomes/'.Auth::user()->id.'/', $fileName);
+        $filePath = $request->file('file')->storeAs('proteomes/'.Auth::user()->id, $fileName);
 
         $proteome->name = $request->input('name');
-        $proteome->path = '/storage/' . $filePath;
+        $proteome->path = $filePath;
         $proteome->description = $request->input('description');
         $proteome->organism = $request->input('organism');
         $proteome->user_id = Auth::user()->id;
@@ -69,8 +70,11 @@ class ProteomeController extends Controller
         ->with('success', 'Proteome uploaded.')
         ->with('file', $fileName);
       }
+      else
+      {
+        return back()->with('failure', 'Something went wrong.');
+      }
 
-      return back()->with('failure', 'Something went wrong.');
     }
 
     /**
@@ -113,8 +117,22 @@ class ProteomeController extends Controller
      * @param  \App\Models\Proteome  $proteome
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Proteome $proteome)
+    public function destroy(Request $request, $id)
     {
-        //
+        //Delete the model object in the database
+        $proteome = Proteome::findOrFail($id);
+
+        if($proteome && $proteome->user_id == Auth::user()->id)
+        {
+          //Delete the file
+          Storage::delete($proteome->path);
+          //Delete the database entry
+          $proteome->delete();
+          return back()->with('success', 'Protein collection successfully deleted.');
+        }
+        else{
+          return back()->with('failure', 'Something went wrong!');
+        }
+
     }
 }
