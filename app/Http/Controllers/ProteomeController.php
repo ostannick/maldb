@@ -6,6 +6,7 @@ use Auth;
 //For running processes like python scripts
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use App\Models\Proteome;
@@ -91,37 +92,37 @@ class ProteomeController extends Controller
       }
 
       //Name the table something unique for the user and the proteome
-      $tableName = $request->name .'_'. $proteome->id .'_'. Auth::user()->name;
+      $tableName = $request->name .'_'. $proteome->id .'_'. Auth::user()->id;
 
       //create a base peptide table
       Schema::create($tableName, function(Blueprint $table){
           $table->increments('id');
           $table->timestamps();
-          $table->string('parent');
-          $table->string('sequence');
-          $table->decimal('mz1_average');
-          $table->decimal('mz1_monoisotopic');
-          $table->string('enzyme');
+          $table->string('parent')->nullable();
+          $table->string('sequence')->nullable();
+          $table->decimal('mz1_average')->nullable();
+          $table->decimal('mz1_monoisotopic')->nullable();
+          $table->string('enzyme')->nullable();
 
-          $table->integer('C');
-          $table->integer('D');
-          $table->integer('E');
-          $table->integer('F');
-          $table->integer('G');
-          $table->integer('H');
-          $table->integer('I');
-          $table->integer('K');
-          $table->integer('L');
-          $table->integer('M');
-          $table->integer('N');
-          $table->integer('P');
-          $table->integer('Q');
-          $table->integer('R');
-          $table->integer('S');
-          $table->integer('T');
-          $table->integer('V');
-          $table->integer('W');
-          $table->integer('Y');
+          $table->integer('C')->nullable();
+          $table->integer('D')->nullable();
+          $table->integer('E')->nullable();
+          $table->integer('F')->nullable();
+          $table->integer('G')->nullable();
+          $table->integer('H')->nullable();
+          $table->integer('I')->nullable();
+          $table->integer('K')->nullable();
+          $table->integer('L')->nullable();
+          $table->integer('M')->nullable();
+          $table->integer('N')->nullable();
+          $table->integer('P')->nullable();
+          $table->integer('Q')->nullable();
+          $table->integer('R')->nullable();
+          $table->integer('S')->nullable();
+          $table->integer('T')->nullable();
+          $table->integer('V')->nullable();
+          $table->integer('W')->nullable();
+          $table->integer('Y')->nullable();
 
       });
 
@@ -153,23 +154,23 @@ class ProteomeController extends Controller
 
       $proteins = $listener->getJson();
 
-      //dd($proteins);
-
       foreach ($proteins as $protein) {
 
         foreach($protein as $peptide)
         {
-          $basePeptide = new BasePeptide();
+          DB::insert('insert into ' . $tableName . '(parent, sequence, mz1_monoisotopic) values (?, ?, ?)',
+          [
+            $peptide['parent'],
+            $peptide['sequence'],
+            $peptide['mz1'],
+            //$peptide['mz1_monoisotopic'],
+            //$peptide['mz1_average'],
+            //$peptide['enzyme'],
 
-          $basePeptide->parent            = $peptide['parent'];
-          $basePeptide->sequence          = $peptide['sequence'];
-          //$basePeptide->mz1_average       = $peptide['mz1_average'];
-          $basePeptide->mz1_monoisotopic  = $peptide['mz1'];
-          //$basePeptide->enzyme            = $peptide['enzyme'];
+            //$peptide['A'], //num alanines
+            //$peptide['C'], //num cysteines
 
-          //$basePeptide->C                 = $peptide['C'];
-
-
+          ]);
         }
 
       }

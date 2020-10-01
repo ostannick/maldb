@@ -14,3 +14,13 @@ require('./bootstrap');
 
 require('./components/Example');
 require('./components/Chart');
+
+//Enable settings modal
+$('.open-settings').on('mousedown', function () {
+  $('#settings-modal').modal();
+})
+
+//Enable all tooltips app-wide
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})

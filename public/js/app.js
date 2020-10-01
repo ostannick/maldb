@@ -66672,7 +66672,16 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 __webpack_require__(/*! ./components/Example */ "./resources/js/components/Example.js");
 
-__webpack_require__(/*! ./components/Chart */ "./resources/js/components/Chart.js");
+__webpack_require__(/*! ./components/Chart */ "./resources/js/components/Chart.js"); //Enable settings modal
+
+
+$('.open-settings').on('mousedown', function () {
+  $('#settings-modal').modal();
+}); //Enable all tooltips app-wide
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+});
 
 /***/ }),
 
@@ -66779,11 +66788,11 @@ var SummaryChart = /*#__PURE__*/function (_Component) {
           id: "Matches",
           width: "100%",
           events: {
-            markerClick: function markerClick(event, chartContext, _ref) {
+            dataPointSelection: function dataPointSelection(event, chartContext, _ref) {//DisplayAnalytics();
+
               var seriesIndex = _ref.seriesIndex,
                   dataPointIndex = _ref.dataPointIndex,
                   config = _ref.config;
-              alert(dataPointIndex);
             }
           }
         },
@@ -66794,15 +66803,15 @@ var SummaryChart = /*#__PURE__*/function (_Component) {
           size: 6
         },
         xaxis: {
-          categories: ["TbpB", "LbpB", "MBP", "HpuA", "AjjA", "SlpX", "YhhA", "TntA", "TnaA", "greP", "bbNa"]
+          categories: ["TbpB", "LbpB", "MBP", "HpuA", "AjjA", "SlpX", "YhhA", "TntA", "TnaA", "greP"]
         }
       },
       series: [{
         name: "Positive Matches",
-        data: [15, 6, 4, 3, 7, 1, 3, 4, 1, 6, 1, 7, 1, 3, 4, 1, 6, 1, 7, 1, 3, 4, 1, 6, 1, 7, 1, 3, 4, 1, 6, 1]
+        data: [24, 13, 7, 3, 2, 2, 2, 2, 1, 1]
       }, {
         name: "Negative Matches",
-        data: [2, 10, 12, 13, 6, 1, 4, 4, 3, 9, 11, 17, 15, 22, 8, 3, 6, 11, 11, 5, 5, 5, 8, 10, 2, 5, 7, 3, 3, 2, 11, 11]
+        data: [3, 12, 14, 18, 18, 16, 12, 18, 5, 12]
       }]
     };
     return _this;
@@ -66822,7 +66831,7 @@ var SummaryChart = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_apexcharts__WEBPACK_IMPORTED_MODULE_2___default.a, {
         options: this.state.options,
         series: this.state.series,
-        type: "line",
+        type: "bar",
         width: "100%"
       })))));
     }
