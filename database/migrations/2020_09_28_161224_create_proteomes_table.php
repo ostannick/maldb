@@ -21,6 +21,7 @@ class CreateProteomesTable extends Migration
             $table->string('organism', 100)->nullable();
             $table->string('description', 255)->nullable();
             $table->string('path', 255);
+            $table->string('table', 255)->nullable();
         });
     }
 
