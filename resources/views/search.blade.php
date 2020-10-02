@@ -78,7 +78,7 @@
                     <hr/>
 
                     <div class="col-12">
-                      <button class="btn btn-secondary"><i class="fas fa-fw fa-question"></i></button>
+                      <button class="btn btn-secondary search-help"><i class="fas fa-fw fa-question"></i></button>
                       <button class="btn btn-primary float-right"><i class="fas fa-fw fa-play"></i></button>
                     </div>
 
@@ -104,6 +104,8 @@
     </div>
 </div>
 
+<!-- MODALS -->
 @include('layouts.partials.search-settings')
+@include('layouts.partials.search-help')
 
 @endsection

@@ -20,6 +20,10 @@ $('.open-settings').on('mousedown', function () {
   $('#settings-modal').modal();
 })
 
+$('.search-help').on('click', function () {
+  $('#help-modal').modal();
+})
+
 //Enable all tooltips app-wide
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()

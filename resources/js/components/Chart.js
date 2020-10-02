@@ -33,9 +33,13 @@ class SummaryChart extends Component {
           data: [24, 13, 7, 3, 2, 2, 2, 2, 1, 1]
         },
         {
-          name: "Negative Matches",
+          name: "Missing Peptides",
           data: [3, 12, 14, 18, 18, 16, 12, 18, 5, 12]
-        }
+        },
+        {
+          name: "Unknown Source",
+          data: [2, 3, 6, 1, 5, 4, 1, 5, 6, 8]
+        },
       ]
     };
   }
