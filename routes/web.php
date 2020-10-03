@@ -25,6 +25,10 @@ Route::get('/search', function() {
     ->with('proteomes', $proteomes);
 });
 
+Route::post('/test', function() {
+  return 'Hello from the API';
+});
+
 Route::resource('/proteomes', ProteomeController::class);
 
 Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');

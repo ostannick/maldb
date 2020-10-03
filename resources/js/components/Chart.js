@@ -29,11 +29,11 @@ class SummaryChart extends Component {
       },
       series: [
         {
-          name: "Positive Matches",
+          name: "Positive Coverage",
           data: [24, 13, 7, 3, 2, 2, 2, 2, 1, 1]
         },
         {
-          name: "Missing Peptides",
+          name: "Negative Coverage",
           data: [3, 12, 14, 18, 18, 16, 12, 18, 5, 12]
         },
         {

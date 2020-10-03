@@ -14,6 +14,7 @@ require('./bootstrap');
 
 require('./components/Example');
 require('./components/Chart');
+require('./components/SearchForm');
 
 //Enable settings modal
 $('.open-settings').on('mousedown', function () {
