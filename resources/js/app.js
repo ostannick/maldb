@@ -12,9 +12,14 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-require('./components/Example');
-require('./components/Chart');
+require('./components/Job');
 require('./components/SearchForm');
+require('./components/Chart');
+
+
+require('./components/Example');
+
+
 
 //Enable settings modal
 $('.open-settings').on('mousedown', function () {

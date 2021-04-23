@@ -3,14 +3,15 @@ import ReactDOM from 'react-dom'
 import axios from 'axios';
 
 class SearchForm extends Component {
+
   constructor(props) {
     super(props);
 
     this.state = {
-      enzyme: 'trypsin',
-      missedCleavages: 1,
-      massList: "889.258\n1111.5525\n1568.2213\n1629.692\n",
-      tolerance: 1.15,
+      enzyme: props.params.enzyme,
+      missedCleavages: props.params.missedCleavages,
+      massList: props.params.dataset,
+      tolerance: props.params.tolerance,
     }
 
     this.handleEnzymeChange = this.handleEnzymeChange.bind(this);
@@ -35,16 +36,6 @@ class SearchForm extends Component {
 
   handleMassListChange(event) {
     this.setState({massList: event.target.value});
-  }
-
-  runSearch(event)
-  {
-    console.log('Running search...');
-    axios.post('/test')
-      .then(res => {
-        console.log(res);
-        console.log(res.data);
-      });
   }
 
   render() {
@@ -116,7 +107,7 @@ class SearchForm extends Component {
 
         <div className="col-12">
           <button className="btn btn-secondary search-help"><i className="fas fa-fw fa-question"></i></button>
-          <button id="start-search" onClick={this.runSearch} className="btn btn-primary float-right"><i className="fas fa-fw fa-play"></i></button>
+          <button id="start-search" onClick={this.props.searchCallback} className="btn btn-primary float-right"><i className="fas fa-fw fa-play"></i></button>
         </div>
 
       </form>
@@ -127,6 +118,8 @@ class SearchForm extends Component {
 
 export default SearchForm;
 
+/*
 if (document.getElementById('search-form')) {
     ReactDOM.render(<SearchForm />, document.getElementById('search-form'));
 }
+*/

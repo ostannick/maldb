@@ -36,7 +36,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                       <li class="nav-item">
-                          <a class="btn btn-primary" href="/search" role="button">
+                          <a class="btn btn-primary" href="{{route('job.create')}}" role="button">
                             <i class="fal fa-search"></i>
                             Perform Search
                           </a>
