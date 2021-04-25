@@ -41,10 +41,17 @@ class SearchForm extends Component {
 
   handleDoSearch(event)
   {
-    axios.post(`/test2`)
+    const sendData = {
+      tolerance: this.state.tolerance,
+      missedCleavages: this.state.missedCleavages,
+      massList: this.state.massList,
+    }
+
+    axios.post(`/test2`, sendData)
       .then(res => {
         const persons = res.data;
         this.setState({test: persons });
+        console.log(this.state.test);
       })
       .catch(function(e) {
         console.log(e.response.data.message);

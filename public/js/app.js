@@ -66959,9 +66959,12 @@ var Job = /*#__PURE__*/function (_Component) {
         enzyme: 'trypsin',
         missedCleavages: 1,
         tolerance: 1.15,
-        dataset: "889.258\n1111.5525\n1568.2213\n1629.692\n"
+        dataset: "500.0 600.0"
       },
-      chartData: {}
+      chartData: {
+        xlabels: {},
+        matches: {}
+      }
     };
     return _this;
   }
@@ -66972,7 +66975,9 @@ var Job = /*#__PURE__*/function (_Component) {
       console.log('Running search...');
       var params = {
         enzyme: this.state.searchParameters.enzyme,
-        missedCleavages: this.state.searchParameters.missedCleavages
+        missedCleavages: this.state.searchParameters.missedCleavages,
+        tolerance: this.state.searchParameters.tolerance,
+        massList: this.state.searchParameters.massList
       };
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/job', {
         params: params
@@ -67120,12 +67125,19 @@ var SearchForm = /*#__PURE__*/function (_Component) {
     value: function handleDoSearch(event) {
       var _this2 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/test2").then(function (res) {
+      var sendData = {
+        tolerance: this.state.tolerance,
+        missedCleavages: this.state.missedCleavages,
+        massList: this.state.massList
+      };
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/test2", sendData).then(function (res) {
         var persons = res.data;
 
         _this2.setState({
           test: persons
         });
+
+        console.log(_this2.state.test);
       })["catch"](function (e) {
         console.log(e.response.data.message);
       });

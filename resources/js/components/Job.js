@@ -15,10 +15,11 @@ class Job extends Component {
         enzyme: 'trypsin',
         missedCleavages: 1,
         tolerance: 1.15,
-        dataset: "889.258\n1111.5525\n1568.2213\n1629.692\n",
+        dataset: "500.0 600.0",
       },
       chartData: {
-
+        xlabels: {},
+        matches: {},
       },
     }
 
@@ -31,6 +32,8 @@ class Job extends Component {
     var params = {
       enzyme: this.state.searchParameters.enzyme,
       missedCleavages: this.state.searchParameters.missedCleavages,
+      tolerance: this.state.searchParameters.tolerance,
+      massList: this.state.searchParameters.massList
     };
 
 

@@ -1,7 +1,9 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Collection;
 use App\Models\Proteome;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,34 +28,59 @@ Route::get('/search', function() {
     ->with('proteomes', $proteomes);
 });
 
-Route::post('/test', function() {
-  return 'Hello from the API';
-});
+Route::post('/test2', function(Request $request) {
 
-Route::post('/test2', function() {
+  //Set up the data from the axios call
+  $enzyme             = $request->input('enzyme');
+  $missedCleavages    = $request->input('missedCleavages');
+  $tolerance          = $request->input('tolerance');
+  $massList           = $request->input('massList');
+
+  //Parse the mass list and cast to floats
+  $massList = preg_split('/\s+/', $massList);
+  for($i = 0; $i < count($massList); $i++)
+  {
+    $massList[$i] = (float)$massList[$i];
+  }
 
   //Create a dummy table
+  /*
   Schema::create('DUMMY_TABLE', function (Blueprint $table) {
     $table->id();
     $table->string('name');
     $table->string('email');
     $table->timestamps();
   });
-
+  */
 
   //Run python-based digestion
 
+
   //Fill the table
 
+
   //Query the table with the appropriate modifications
+  $merged = [];
+  foreach($massList as $mass)
+  {
+    $peptides = DB::select(DB::raw("select * FROM `tezt_119_1` where ABS(`mz1_monoisotopic` + (57.02146 * `C`) - $mass) <= $tolerance"));
+    $merged = array_merge($merged, $peptides);
+  }
+
+  //DB::select returns an array, so we create a Collection object out of the array using the collect() helper method
+  $results = collect($merged);
+  $results = $results->groupBy('parent');
 
   //Organize the results into JSON object
+
 
   //Drop the table (clean up)
   Schema::dropIfExists("DUMMY_TABLE");
 
+  //Create a 'results' object
+
   //Return the JSON object
-  return 'Finished.';
+  return json_encode($results);
 });
 
 Route::resource('/proteomes', ProteomeController::class);
