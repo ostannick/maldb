@@ -8,59 +8,12 @@ class SearchForm extends Component {
     super(props);
 
     this.state = {
-      enzyme: props.params.enzyme,
-      missedCleavages: props.params.missedCleavages,
-      massList: props.params.dataset,
-      tolerance: props.params.tolerance,
-      test: '',
+
     }
 
-    this.handleEnzymeChange = this.handleEnzymeChange.bind(this);
-    this.handleMissedCleavageChange = this.handleMissedCleavageChange.bind(this);
-    this.handleToleranceChange = this.handleToleranceChange.bind(this);
-    this.handleMassListChange = this.handleMassListChange.bind(this);
-    this.handleDoSearch = this.handleDoSearch.bind(this);
-
   }
 
-  handleEnzymeChange(event) {
-    this.setState({enzyme: event.target.value});
-  }
 
-  handleMissedCleavageChange(event) {
-    this.setState({missedCleavages: event.target.value});
-  }
-
-  handleToleranceChange(event) {
-    this.setState({tolerance: event.target.value});
-  }
-
-  handleMassListChange(event) {
-    this.setState({massList: event.target.value});
-  }
-
-  handleDoSearch(event)
-  {
-    const sendData = {
-      tolerance: this.state.tolerance,
-      missedCleavages: this.state.missedCleavages,
-      massList: this.state.massList,
-    }
-
-    axios.post(`/test2`, sendData)
-      .then(res => {
-        const persons = res.data;
-        this.setState({test: persons });
-        console.log(this.state.test);
-      })
-      .catch(function(e) {
-        console.log(e.response.data.message);
-      });
-
-    event.preventDefault();
-    event.stopPropagation();
-    event.nativeEvent.stopImmediatePropagation();
-  }
 
   render() {
     return (
@@ -69,7 +22,7 @@ class SearchForm extends Component {
         <div className="col-12">
           <div className="form-group">
             <label htmlFor="enzymeSelect">Enzyme</label>
-            <select value={this.state.enzyme} onChange={this.handleEnzymeChange} name="enzyme" className="form-control" id="enzymeSelect">
+            <select onChange={this.props.handleEnzymeChange} name="enzyme" className="form-control" id="enzymeSelect">
               <option value="Trypsin">Trypsin</option>
               <option value="Chymotrypsin">Chymotrypsin</option>
             </select>
@@ -79,7 +32,7 @@ class SearchForm extends Component {
         <div className="col-12">
           <div className="form-group">
             <label htmlFor="missedCleavages">Missed Cleavages</label>
-            <select value={this.state.missedCleavages} onChange={this.handleMissedCleavageChange} name="missedCleavages" className="form-control" id="missedCleavages">
+            <select onChange={this.props.handleMissedCleavageChange} name="missedCleavages" className="form-control" id="missedCleavages">
               <option value="0">0</option>
               <option value="1">1</option>
               <option value="2">2</option>
@@ -93,7 +46,7 @@ class SearchForm extends Component {
               <div className="input-group-prepend">
                 <span className="input-group-text" id="inputGroupPrepend2"><i className="fal fa-fw fa-arrows-h"></i></span>
               </div>
-              <input value={this.state.tolerance} onChange={this.handleToleranceChange} type="text" className="form-control" id="validationDefaultUsername" placeholder="Tolerance" required></input>
+              <input onChange={this.props.handleToleranceChange} type="text" className="form-control" id="validationDefaultUsername" placeholder="Tolerance" required></input>
             </div>
           </div>
         </div>
@@ -123,7 +76,7 @@ class SearchForm extends Component {
         <div className="col-12">
           <div className="form-group">
             <label htmlFor="tolerance">Dataset</label>
-            <textarea className="form-control" id="massList" rows="3" placeholder="Mass List" value={this.state.massList} onChange={this.handleMassListChange} />
+            <textarea className="form-control" id="massList" rows="3" placeholder="Mass List"  onChange={this.props.handleMassListChange} />
           </div>
         </div>
 
@@ -131,7 +84,7 @@ class SearchForm extends Component {
 
         <div className="col-12">
           <button className="btn btn-secondary search-help"><i className="fas fa-fw fa-question"></i></button>
-          <button id="start-search" onClick={this.handleDoSearch} className="btn btn-primary float-right"><i className="fas fa-fw fa-play"></i></button>
+          <button id="start-search" onClick={this.props.searchCallback} className="btn btn-primary float-right"><i className="fas fa-fw fa-play"></i></button>
         </div>
 
       </form>

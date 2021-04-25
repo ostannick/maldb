@@ -66852,10 +66852,6 @@ var SummaryChart = /*#__PURE__*/function (_Component) {
 
 /* harmony default export */ __webpack_exports__["default"] = (SummaryChart);
 
-if (document.getElementById('summarychart')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SummaryChart, null), document.getElementById('summarychart'));
-}
-
 /***/ }),
 
 /***/ "./resources/js/components/Example.js":
@@ -66955,35 +66951,100 @@ var Job = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
     _this.state = {
-      searchParameters: {
-        enzyme: 'trypsin',
-        missedCleavages: 1,
-        tolerance: 1.15,
-        dataset: "500.0 600.0"
-      },
+      enzyme: 'trypsin',
+      missedCleavages: 1,
+      tolerance: 1.15,
+      massList: "500.0 600.0",
       chartData: {
         xlabels: {},
         matches: {}
       }
     };
+    _this.handleEnzymeChange = _this.handleEnzymeChange.bind(_assertThisInitialized(_this));
+    _this.handleMissedCleavageChange = _this.handleMissedCleavageChange.bind(_assertThisInitialized(_this));
+    _this.handleToleranceChange = _this.handleToleranceChange.bind(_assertThisInitialized(_this));
+    _this.handleMassListChange = _this.handleMassListChange.bind(_assertThisInitialized(_this));
+    _this.runSearch = _this.runSearch.bind(_assertThisInitialized(_this));
+    _this.updateChart = _this.updateChart.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(Job, [{
     key: "runSearch",
     value: function runSearch(event) {
-      console.log('Running search...');
-      var params = {
-        enzyme: this.state.searchParameters.enzyme,
-        missedCleavages: this.state.searchParameters.missedCleavages,
-        tolerance: this.state.searchParameters.tolerance,
-        massList: this.state.searchParameters.massList
-      };
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/job', {
-        params: params
-      }).then(function (res) {
-        console.log(res);
-        console.log(res.data);
+      var _this2 = this;
+
+      //Stop the page from refreshing
+      event.preventDefault(); //Create some data object
+
+      var sendData = {
+        enzyme: this.state.enzyme,
+        missedCleavages: this.state.missedCleavages,
+        tolerance: this.state.tolerance,
+        massList: this.state.massList
+      }; //Make the AJAX call
+
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/test2", sendData).then(function (res) {
+        var response = res.data;
+        console.log(response); //Do something with the returned data
+
+        _this2.updateChart(response);
+      })["catch"](function (e) {
+        console.log(e.response.data.message);
+      });
+    } //This method is responsible for updating the chart.
+
+  }, {
+    key: "updateChart",
+    value: function updateChart(data) {
+      //Create our labels for top hits 0 to 9.
+      var topHits = Object.keys(data).slice(9); //Create an array for our positive matches
+
+      var posMatches = [];
+
+      for (var i = 0; i < topHits.length; i++) {
+        posMatches[i] = Object.keys(data[topHits[i]]).length;
+      } //Static method that executes updateOptions.
+
+
+      ApexCharts.exec('Matches', 'updateOptions', {
+        xaxis: {
+          categories: topHits
+        }
+      }); //Static method that executes updateSeries.
+
+      ApexCharts.exec('Matches', 'updateSeries', [{
+        data: posMatches
+      }]); //This is a static method that takes the chart ID (declared in the SummaryChart component) and executes the render method.
+
+      ApexCharts.exec('Matches', 'render');
+    }
+  }, {
+    key: "handleEnzymeChange",
+    value: function handleEnzymeChange(event) {
+      this.setState({
+        enzyme: event.target.value
+      });
+    }
+  }, {
+    key: "handleMissedCleavageChange",
+    value: function handleMissedCleavageChange(event) {
+      this.setState({
+        missedCleavages: event.target.value
+      });
+    }
+  }, {
+    key: "handleToleranceChange",
+    value: function handleToleranceChange(event) {
+      this.setState({
+        tolerance: event.target.value
+      });
+    }
+  }, {
+    key: "handleMassListChange",
+    value: function handleMassListChange(event) {
+      this.setState({
+        massList: event.target.value
       });
     }
   }, {
@@ -67001,7 +67062,11 @@ var Job = /*#__PURE__*/function (_Component) {
         className: "card-body"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_SearchForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
         params: this.state.searchParameters,
-        searchCallback: this.runSearch
+        searchCallback: this.runSearch,
+        handleEnzymeChange: this.handleEnzymeChange,
+        handleMassListChange: this.handleMassListChange,
+        handleToleranceChange: this.handleToleranceChange,
+        handleMissedCleavageChange: this.handleMissedCleavageChange
       })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-md-9"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -67077,75 +67142,11 @@ var SearchForm = /*#__PURE__*/function (_Component) {
     _classCallCheck(this, SearchForm);
 
     _this = _super.call(this, props);
-    _this.state = {
-      enzyme: props.params.enzyme,
-      missedCleavages: props.params.missedCleavages,
-      massList: props.params.dataset,
-      tolerance: props.params.tolerance,
-      test: ''
-    };
-    _this.handleEnzymeChange = _this.handleEnzymeChange.bind(_assertThisInitialized(_this));
-    _this.handleMissedCleavageChange = _this.handleMissedCleavageChange.bind(_assertThisInitialized(_this));
-    _this.handleToleranceChange = _this.handleToleranceChange.bind(_assertThisInitialized(_this));
-    _this.handleMassListChange = _this.handleMassListChange.bind(_assertThisInitialized(_this));
-    _this.handleDoSearch = _this.handleDoSearch.bind(_assertThisInitialized(_this));
+    _this.state = {};
     return _this;
   }
 
   _createClass(SearchForm, [{
-    key: "handleEnzymeChange",
-    value: function handleEnzymeChange(event) {
-      this.setState({
-        enzyme: event.target.value
-      });
-    }
-  }, {
-    key: "handleMissedCleavageChange",
-    value: function handleMissedCleavageChange(event) {
-      this.setState({
-        missedCleavages: event.target.value
-      });
-    }
-  }, {
-    key: "handleToleranceChange",
-    value: function handleToleranceChange(event) {
-      this.setState({
-        tolerance: event.target.value
-      });
-    }
-  }, {
-    key: "handleMassListChange",
-    value: function handleMassListChange(event) {
-      this.setState({
-        massList: event.target.value
-      });
-    }
-  }, {
-    key: "handleDoSearch",
-    value: function handleDoSearch(event) {
-      var _this2 = this;
-
-      var sendData = {
-        tolerance: this.state.tolerance,
-        missedCleavages: this.state.missedCleavages,
-        massList: this.state.massList
-      };
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/test2", sendData).then(function (res) {
-        var persons = res.data;
-
-        _this2.setState({
-          test: persons
-        });
-
-        console.log(_this2.state.test);
-      })["catch"](function (e) {
-        console.log(e.response.data.message);
-      });
-      event.preventDefault();
-      event.stopPropagation();
-      event.nativeEvent.stopImmediatePropagation();
-    }
-  }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -67157,8 +67158,7 @@ var SearchForm = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "enzymeSelect"
       }, "Enzyme"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-        value: this.state.enzyme,
-        onChange: this.handleEnzymeChange,
+        onChange: this.props.handleEnzymeChange,
         name: "enzyme",
         className: "form-control",
         id: "enzymeSelect"
@@ -67173,8 +67173,7 @@ var SearchForm = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "missedCleavages"
       }, "Missed Cleavages"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-        value: this.state.missedCleavages,
-        onChange: this.handleMissedCleavageChange,
+        onChange: this.props.handleMissedCleavageChange,
         name: "missedCleavages",
         className: "form-control",
         id: "missedCleavages"
@@ -67198,8 +67197,7 @@ var SearchForm = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "fal fa-fw fa-arrows-h"
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        value: this.state.tolerance,
-        onChange: this.handleToleranceChange,
+        onChange: this.props.handleToleranceChange,
         type: "text",
         className: "form-control",
         id: "validationDefaultUsername",
@@ -67255,8 +67253,7 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         id: "massList",
         rows: "3",
         placeholder: "Mass List",
-        value: this.state.massList,
-        onChange: this.handleMassListChange
+        onChange: this.props.handleMassListChange
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-12"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -67265,7 +67262,7 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         className: "fas fa-fw fa-question"
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         id: "start-search",
-        onClick: this.handleDoSearch,
+        onClick: this.props.searchCallback,
         className: "btn btn-primary float-right"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "fas fa-fw fa-play"

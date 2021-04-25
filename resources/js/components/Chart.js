@@ -65,7 +65,3 @@ class SummaryChart extends Component {
 }
 
 export default SummaryChart;
-
-if (document.getElementById('summarychart')) {
-    ReactDOM.render(<SummaryChart />, document.getElementById('summarychart'));
-}
