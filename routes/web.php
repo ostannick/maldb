@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Schema\Blueprint;
 use App\Models\Proteome;
 
 /*
@@ -27,6 +28,32 @@ Route::get('/search', function() {
 
 Route::post('/test', function() {
   return 'Hello from the API';
+});
+
+Route::post('/test2', function() {
+
+  //Create a dummy table
+  Schema::create('DUMMY_TABLE', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('email');
+    $table->timestamps();
+  });
+
+
+  //Run python-based digestion
+
+  //Fill the table
+
+  //Query the table with the appropriate modifications
+
+  //Organize the results into JSON object
+
+  //Drop the table (clean up)
+  Schema::dropIfExists("DUMMY_TABLE");
+
+  //Return the JSON object
+  return 'Finished.';
 });
 
 Route::resource('/proteomes', ProteomeController::class);

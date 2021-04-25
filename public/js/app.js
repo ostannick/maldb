@@ -67076,12 +67076,14 @@ var SearchForm = /*#__PURE__*/function (_Component) {
       enzyme: props.params.enzyme,
       missedCleavages: props.params.missedCleavages,
       massList: props.params.dataset,
-      tolerance: props.params.tolerance
+      tolerance: props.params.tolerance,
+      test: ''
     };
     _this.handleEnzymeChange = _this.handleEnzymeChange.bind(_assertThisInitialized(_this));
     _this.handleMissedCleavageChange = _this.handleMissedCleavageChange.bind(_assertThisInitialized(_this));
     _this.handleToleranceChange = _this.handleToleranceChange.bind(_assertThisInitialized(_this));
     _this.handleMassListChange = _this.handleMassListChange.bind(_assertThisInitialized(_this));
+    _this.handleDoSearch = _this.handleDoSearch.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -67112,6 +67114,24 @@ var SearchForm = /*#__PURE__*/function (_Component) {
       this.setState({
         massList: event.target.value
       });
+    }
+  }, {
+    key: "handleDoSearch",
+    value: function handleDoSearch(event) {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/test2").then(function (res) {
+        var persons = res.data;
+
+        _this2.setState({
+          test: persons
+        });
+      })["catch"](function (e) {
+        console.log(e.response.data.message);
+      });
+      event.preventDefault();
+      event.stopPropagation();
+      event.nativeEvent.stopImmediatePropagation();
     }
   }, {
     key: "render",
@@ -67233,7 +67253,7 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         className: "fas fa-fw fa-question"
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         id: "start-search",
-        onClick: this.props.searchCallback,
+        onClick: this.handleDoSearch,
         className: "btn btn-primary float-right"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "fas fa-fw fa-play"

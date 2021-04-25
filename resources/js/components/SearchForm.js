@@ -12,13 +12,14 @@ class SearchForm extends Component {
       missedCleavages: props.params.missedCleavages,
       massList: props.params.dataset,
       tolerance: props.params.tolerance,
+      test: '',
     }
 
     this.handleEnzymeChange = this.handleEnzymeChange.bind(this);
     this.handleMissedCleavageChange = this.handleMissedCleavageChange.bind(this);
     this.handleToleranceChange = this.handleToleranceChange.bind(this);
-
     this.handleMassListChange = this.handleMassListChange.bind(this);
+    this.handleDoSearch = this.handleDoSearch.bind(this);
 
   }
 
@@ -36,6 +37,22 @@ class SearchForm extends Component {
 
   handleMassListChange(event) {
     this.setState({massList: event.target.value});
+  }
+
+  handleDoSearch(event)
+  {
+    axios.post(`/test2`)
+      .then(res => {
+        const persons = res.data;
+        this.setState({test: persons });
+      })
+      .catch(function(e) {
+        console.log(e.response.data.message);
+      });
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
   }
 
   render() {
@@ -107,7 +124,7 @@ class SearchForm extends Component {
 
         <div className="col-12">
           <button className="btn btn-secondary search-help"><i className="fas fa-fw fa-question"></i></button>
-          <button id="start-search" onClick={this.props.searchCallback} className="btn btn-primary float-right"><i className="fas fa-fw fa-play"></i></button>
+          <button id="start-search" onClick={this.handleDoSearch} className="btn btn-primary float-right"><i className="fas fa-fw fa-play"></i></button>
         </div>
 
       </form>
