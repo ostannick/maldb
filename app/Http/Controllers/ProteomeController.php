@@ -104,25 +104,18 @@ class ProteomeController extends Controller
           $table->decimal('mz1_monoisotopic')->nullable();
           $table->string('enzyme')->nullable();
 
-          $table->integer('C')->nullable();
-          $table->integer('D')->nullable();
-          $table->integer('E')->nullable();
-          $table->integer('F')->nullable();
-          $table->integer('G')->nullable();
-          $table->integer('H')->nullable();
-          $table->integer('I')->nullable();
-          $table->integer('K')->nullable();
-          $table->integer('L')->nullable();
-          $table->integer('M')->nullable();
-          $table->integer('N')->nullable();
-          $table->integer('P')->nullable();
-          $table->integer('Q')->nullable();
-          $table->integer('R')->nullable();
-          $table->integer('S')->nullable();
-          $table->integer('T')->nullable();
-          $table->integer('V')->nullable();
-          $table->integer('W')->nullable();
-          $table->integer('Y')->nullable();
+          $table->integer('C')->default(0);
+          $table->integer('D')->default(0);
+          $table->integer('E')->default(0);
+          $table->integer('H')->default(0);
+          $table->integer('K')->default(0);
+          $table->integer('L')->default(0);
+          $table->integer('M')->default(0);
+          $table->integer('R')->default(0);
+          $table->integer('S')->default(0);
+          $table->integer('T')->default(0);
+          $table->integer('W')->default(0);
+          $table->integer('Y')->default(0);
 
       });
 

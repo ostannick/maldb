@@ -57,7 +57,7 @@ class SearchForm extends Component {
               <div className="input-group-prepend">
                 <span className="input-group-text" id="inputGroupPrepend2"><i className="fal fa-fw fa-plus"></i></span>
               </div>
-              <input type="text" className="form-control open-settings" id="validationDefaultUsername" placeholder="Modifications" aria-describedby="inputGroupPrepend2"></input>
+              <input type="text" className="form-control mass-mods" id="validationDefaultUsername" placeholder="Modifications" aria-describedby="inputGroupPrepend2"></input>
             </div>
           </div>
         </div>

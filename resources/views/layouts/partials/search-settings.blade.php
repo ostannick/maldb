@@ -14,10 +14,12 @@
 
           </div>
           <div class="col-md-6">
+            <h6>My Proteomes</h6>
             @foreach($proteomes as $p)
-            <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
-              {{$p->name}}
-            </button>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="{{$p->name}}">
+              <label class="custom-control-label" for="{{$p->name}}">{{$p->name}}</label>
+            </div>
 
             @endforeach
           </div>

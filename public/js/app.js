@@ -66682,6 +66682,9 @@ __webpack_require__(/*! ./components/Example */ "./resources/js/components/Examp
 $('.open-settings').on('mousedown', function () {
   $('#settings-modal').modal();
 });
+$('.mass-mods').on('click', function () {
+  $('#mass-mods-modal').modal();
+});
 $('.search-help').on('click', function () {
   $('#help-modal').modal();
 }); //Enable all tooltips app-wide
@@ -66955,6 +66958,19 @@ var Job = /*#__PURE__*/function (_Component) {
       missedCleavages: 1,
       tolerance: 1.15,
       massList: "500.0 600.0",
+      massMods: [{
+        name: 'carbamidomethyl_cys',
+        type: 'fixed',
+        enabled: true,
+        mass: 57.0214,
+        resi: 'C'
+      }, {
+        name: 'oxidation_met',
+        type: 'variable',
+        enabled: true,
+        mass: 16.0,
+        resi: 'M'
+      }],
       chartData: {
         xlabels: {},
         matches: {}
@@ -66981,7 +66997,8 @@ var Job = /*#__PURE__*/function (_Component) {
         enzyme: this.state.enzyme,
         missedCleavages: this.state.missedCleavages,
         tolerance: this.state.tolerance,
-        massList: this.state.massList
+        massList: this.state.massList,
+        massMods: this.state.massMods
       }; //Make the AJAX call
 
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/test2", sendData).then(function (res) {
@@ -66998,7 +67015,7 @@ var Job = /*#__PURE__*/function (_Component) {
     key: "updateChart",
     value: function updateChart(data) {
       //Create our labels for top hits 0 to 9.
-      var topHits = Object.keys(data).slice(9); //Create an array for our positive matches
+      var topHits = Object.keys(data).slice(0, 9); //Create an array for our positive matches
 
       var posMatches = [];
 
@@ -67218,7 +67235,7 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         className: "fal fa-fw fa-plus"
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
-        className: "form-control open-settings",
+        className: "form-control mass-mods",
         id: "validationDefaultUsername",
         placeholder: "Modifications",
         "aria-describedby": "inputGroupPrepend2"

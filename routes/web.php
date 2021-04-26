@@ -35,6 +35,18 @@ Route::post('/test2', function(Request $request) {
   $missedCleavages    = $request->input('missedCleavages');
   $tolerance          = $request->input('tolerance');
   $massList           = $request->input('massList');
+  $massMods           = $request->input('massMods');
+  $tables             = $request->input('tables');
+
+  //Concatenate a string. Refactor this later.
+  $fixed_mods_string = '';
+  foreach($massMods as $mod)
+  {
+    if($mod['type'] == 'fixed')
+    {
+      $fixed_mods_string = $fixed_mods_string . ' + (`' . $mod['resi'] . '` * ' . $mod['mass'] . ')';
+    }
+  }
 
   //Parse the mass list and cast to floats
   $massList = preg_split('/\s+/', $massList);
@@ -43,27 +55,13 @@ Route::post('/test2', function(Request $request) {
     $massList[$i] = (float)$massList[$i];
   }
 
-  //Create a dummy table
-  /*
-  Schema::create('DUMMY_TABLE', function (Blueprint $table) {
-    $table->id();
-    $table->string('name');
-    $table->string('email');
-    $table->timestamps();
-  });
-  */
-
-  //Run python-based digestion
-
-
-  //Fill the table
-
-
-  //Query the table with the appropriate modifications
+  //Query the appropriate table with the appropriate modifications
   $merged = [];
   foreach($massList as $mass)
   {
-    $peptides = DB::select(DB::raw("select * FROM `tezt_119_1` where ABS(`mz1_monoisotopic` + (57.02146 * `C`) - $mass) <= $tolerance"));
+    /*foreach table...*/
+    
+    $peptides = DB::select(DB::raw('select * FROM `tezt_119_1` where ABS(`mz1_monoisotopic`' . $fixed_mods_string . " - $mass) <= $tolerance"));
     $merged = array_merge($merged, $peptides);
   }
 

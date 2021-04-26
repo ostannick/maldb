@@ -15,6 +15,10 @@ class Job extends Component {
       missedCleavages: 1,
       tolerance: 1.15,
       massList: "500.0 600.0",
+      massMods: [
+        {name: 'carbamidomethyl_cys', type: 'fixed', enabled: true, mass: 57.0214, resi: 'C'},
+        {name: 'oxidation_met', type: 'variable', enabled: true, mass: 16.0, resi: 'M'},
+      ],
       chartData: {
         xlabels: {},
         matches: {},
@@ -41,7 +45,8 @@ class Job extends Component {
       enzyme: this.state.enzyme,
       missedCleavages: this.state.missedCleavages,
       tolerance: this.state.tolerance,
-      massList: this.state.massList
+      massList: this.state.massList,
+      massMods: this.state.massMods
     };
 
     //Make the AJAX call
@@ -63,7 +68,7 @@ class Job extends Component {
   {
 
     //Create our labels for top hits 0 to 9.
-    const topHits = Object.keys(data).slice(9);
+    const topHits = Object.keys(data).slice(0, 9);
     //Create an array for our positive matches
     const posMatches = [];
 
