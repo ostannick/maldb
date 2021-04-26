@@ -67001,7 +67001,7 @@ var Job = /*#__PURE__*/function (_Component) {
         massMods: this.state.massMods
       }; //Make the AJAX call
 
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/test2", sendData).then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/submit", sendData).then(function (res) {
         var response = res.data;
         console.log(response); //Do something with the returned data
 

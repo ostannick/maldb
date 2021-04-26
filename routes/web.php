@@ -28,7 +28,7 @@ Route::get('/search', function() {
     ->with('proteomes', $proteomes);
 });
 
-Route::post('/test2', function(Request $request) {
+Route::post('/submit', function(Request $request) {
 
   //Set up the data from the axios call
   $enzyme             = $request->input('enzyme');
@@ -60,7 +60,7 @@ Route::post('/test2', function(Request $request) {
   foreach($massList as $mass)
   {
     /*foreach table...*/
-    
+
     $peptides = DB::select(DB::raw('select * FROM `tezt_119_1` where ABS(`mz1_monoisotopic`' . $fixed_mods_string . " - $mass) <= $tolerance"));
     $merged = array_merge($merged, $peptides);
   }

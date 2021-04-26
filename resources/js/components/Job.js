@@ -50,7 +50,7 @@ class Job extends Component {
     };
 
     //Make the AJAX call
-    axios.post(`/test2`, sendData)
+    axios.post(`/submit`, sendData)
       .then(res => {
         const response = res.data;
         console.log(response);
