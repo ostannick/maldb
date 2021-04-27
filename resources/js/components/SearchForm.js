@@ -8,12 +8,27 @@ class SearchForm extends Component {
     super(props);
 
     this.state = {
-
+      searchIcon: 'fas fa-fw fa-play'
     }
 
+    this.doSearch = this.doSearch.bind(this);
   }
 
+  doSearch(event)
+  {
+    this.startSpin();
+    this.props.searchCallback(event);
+  }
 
+  startSpin()
+  {
+    this.setState({searchIcon: 'fas fa-cog fa-spin'});
+  }
+
+  stopSpin()
+  {
+    this.setState({searchIcon: 'fas fa-fw fa-play'});
+  }
 
   render() {
     return (
@@ -84,7 +99,7 @@ class SearchForm extends Component {
 
         <div className="col-12">
           <button className="btn btn-secondary search-help"><i className="fas fa-fw fa-question"></i></button>
-          <button id="start-search" onClick={this.props.searchCallback} className="btn btn-primary float-right"><i className="fas fa-fw fa-play"></i></button>
+          <button id="start-search" onClick={this.doSearch} className="btn btn-primary float-right"><i className={this.state.searchIcon}></i></button>
         </div>
 
       </form>

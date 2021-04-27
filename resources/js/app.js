@@ -14,9 +14,6 @@ require('./bootstrap');
 
 require('./components/Job');
 
-//Toasts
-$('.toast').toast(option)
-
 //Enable settings modal
 $('.open-settings').on('mousedown', function () {
   $('#settings-modal').modal();

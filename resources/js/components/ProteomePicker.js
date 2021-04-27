@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 import ProteomeSwitch from './ProteomeSwitch'
@@ -11,8 +11,28 @@ class ProteomePicker extends Component {
 
     this.state = {
       proteomes: [],
-      list: {},
+      selected: {},
     }
+
+    this.handleToggle = this.handleToggle.bind(this);
+  }
+
+  renderSwitch(proteome)
+  {
+    return (
+      <ProteomeSwitch
+      key={proteome.id}
+      id={proteome.id}
+      name={proteome.name}
+      toggleCallback={() => this.handleToggle(proteome.id, event)}
+    />
+    )
+  }
+
+  handleToggle(id, event)
+  {
+    var p = {id: event.target.checked};
+    this.setState(p)
   }
 
   componentDidMount()
@@ -52,11 +72,7 @@ class ProteomePicker extends Component {
 
                   {this.state.proteomes.map(proteome => (
 
-                    <ProteomeSwitch
-                      key={proteome.id}
-                      id={proteome.id}
-                      name={proteome.name}
-                    />
+                    this.renderSwitch(proteome)
 
                   ))}
 

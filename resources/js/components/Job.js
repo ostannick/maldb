@@ -27,6 +27,8 @@ class Job extends Component {
       },
     }
 
+    this.searchForm = React.createRef();
+
     this.handleEnzymeChange = this.handleEnzymeChange.bind(this);
     this.handleMissedCleavageChange = this.handleMissedCleavageChange.bind(this);
     this.handleToleranceChange = this.handleToleranceChange.bind(this);
@@ -35,6 +37,11 @@ class Job extends Component {
     this.runSearch = this.runSearch.bind(this);
     this.updateChart = this.updateChart.bind(this);
 
+  }
+
+  resetSearchButton()
+  {
+    this.searchForm.current.stopSpin();
   }
 
   runSearch(event)
@@ -60,6 +67,10 @@ class Job extends Component {
 
         //Do something with the returned data
         this.updateChart(response);
+
+        //Change spinner back to play button
+        this.resetSearchButton();
+
       })
       .catch(function(e) {
         console.log(e.response.data.message);
@@ -129,6 +140,7 @@ class Job extends Component {
                   <div className="card-body">
 
                     <SearchForm
+                      ref={this.searchForm}
                       params={this.state.searchParameters}
                       searchCallback={this.runSearch}
                       handleEnzymeChange={this.handleEnzymeChange}

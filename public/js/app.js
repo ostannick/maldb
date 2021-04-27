@@ -66670,10 +66670,8 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
  */
 
 
-__webpack_require__(/*! ./components/Job */ "./resources/js/components/Job.js"); //Toasts
+__webpack_require__(/*! ./components/Job */ "./resources/js/components/Job.js"); //Enable settings modal
 
-
-$('.toast').toast(option); //Enable settings modal
 
 $('.open-settings').on('mousedown', function () {
   $('#settings-modal').modal();
@@ -66935,6 +66933,7 @@ var Job = /*#__PURE__*/function (_Component) {
         matches: {}
       }
     };
+    _this.searchForm = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
     _this.handleEnzymeChange = _this.handleEnzymeChange.bind(_assertThisInitialized(_this));
     _this.handleMissedCleavageChange = _this.handleMissedCleavageChange.bind(_assertThisInitialized(_this));
     _this.handleToleranceChange = _this.handleToleranceChange.bind(_assertThisInitialized(_this));
@@ -66946,6 +66945,11 @@ var Job = /*#__PURE__*/function (_Component) {
   }
 
   _createClass(Job, [{
+    key: "resetSearchButton",
+    value: function resetSearchButton() {
+      this.searchForm.current.stopSpin();
+    }
+  }, {
     key: "runSearch",
     value: function runSearch(event) {
       var _this2 = this;
@@ -66965,7 +66969,10 @@ var Job = /*#__PURE__*/function (_Component) {
         var response = res.data;
         console.log(response); //Do something with the returned data
 
-        _this2.updateChart(response);
+        _this2.updateChart(response); //Change spinner back to play button
+
+
+        _this2.resetSearchButton();
       })["catch"](function (e) {
         console.log(e.response.data.message);
       });
@@ -67047,6 +67054,7 @@ var Job = /*#__PURE__*/function (_Component) {
       }, "Experimental Setup"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-body"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_SearchForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        ref: this.searchForm,
         params: this.state.searchParameters,
         searchCallback: this.runSearch,
         handleEnzymeChange: this.handleEnzymeChange,
@@ -67132,22 +67140,45 @@ var ProteomePicker = /*#__PURE__*/function (_Component) {
     _this = _super.call(this, props);
     _this.state = {
       proteomes: [],
-      list: {}
+      selected: {}
     };
+    _this.handleToggle = _this.handleToggle.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(ProteomePicker, [{
+    key: "renderSwitch",
+    value: function renderSwitch(proteome) {
+      var _this2 = this;
+
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ProteomeSwitch__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        key: proteome.id,
+        id: proteome.id,
+        name: proteome.name,
+        toggleCallback: function toggleCallback() {
+          return _this2.handleToggle(proteome.id, event);
+        }
+      });
+    }
+  }, {
+    key: "handleToggle",
+    value: function handleToggle(id, event) {
+      var p = {
+        id: event.target.checked
+      };
+      this.setState(p);
+    }
+  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this2 = this;
+      var _this3 = this;
 
       //Load the user's proteome tables via AJAX call to proteome API
       //Make the AJAX call
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/proteomes/list').then(function (res) {
         var response = res.data;
 
-        _this2.setState({
+        _this3.setState({
           proteomes: response
         });
 
@@ -67159,6 +67190,8 @@ var ProteomePicker = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      var _this4 = this;
+
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "modal fade",
         id: "settings-modal",
@@ -67192,11 +67225,7 @@ var ProteomePicker = /*#__PURE__*/function (_Component) {
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-md-6"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", null, "My Proteomes"), this.state.proteomes.map(function (proteome) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ProteomeSwitch__WEBPACK_IMPORTED_MODULE_3__["default"], {
-          key: proteome.id,
-          id: proteome.id,
-          name: proteome.name
-        });
+        return _this4.renderSwitch(proteome);
       })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "modal-footer"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -67278,7 +67307,8 @@ var ProteomeSwitch = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "checkbox",
         className: "custom-control-input",
-        id: this.props.name
+        id: this.props.name,
+        onClick: this.props.toggleCallback
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "custom-control-label",
         htmlFor: this.props.name
@@ -67345,11 +67375,34 @@ var SearchForm = /*#__PURE__*/function (_Component) {
     _classCallCheck(this, SearchForm);
 
     _this = _super.call(this, props);
-    _this.state = {};
+    _this.state = {
+      searchIcon: 'fas fa-fw fa-play'
+    };
+    _this.doSearch = _this.doSearch.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(SearchForm, [{
+    key: "doSearch",
+    value: function doSearch(event) {
+      this.startSpin();
+      this.props.searchCallback(event);
+    }
+  }, {
+    key: "startSpin",
+    value: function startSpin() {
+      this.setState({
+        searchIcon: 'fas fa-cog fa-spin'
+      });
+    }
+  }, {
+    key: "stopSpin",
+    value: function stopSpin() {
+      this.setState({
+        searchIcon: 'fas fa-fw fa-play'
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -67465,10 +67518,10 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         className: "fas fa-fw fa-question"
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         id: "start-search",
-        onClick: this.props.searchCallback,
+        onClick: this.doSearch,
         className: "btn btn-primary float-right"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "fas fa-fw fa-play"
+        className: this.state.searchIcon
       })))));
     }
   }]);
