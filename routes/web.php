@@ -20,12 +20,8 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/search', function() {
-
-  $proteomes = Proteome::all();
-
-  return view('search')
-    ->with('proteomes', $proteomes);
+Route::get('/proteomes/list', function(){
+  return json_encode(Proteome::all());
 });
 
 Route::post('/submit', function(Request $request) {
@@ -61,7 +57,7 @@ Route::post('/submit', function(Request $request) {
   {
     /*foreach table...*/
 
-    $peptides = DB::select(DB::raw('select * FROM `tezt_119_1` where ABS(`mz1_monoisotopic`' . $fixed_mods_string . " - $mass) <= $tolerance"));
+    $peptides = DB::select(DB::raw('select * FROM `k12_trunc_138_1` where ABS(`mz1_monoisotopic`' . $fixed_mods_string . " - $mass) <= $tolerance"));
     $merged = array_merge($merged, $peptides);
   }
 

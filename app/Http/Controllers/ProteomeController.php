@@ -191,7 +191,12 @@ class ProteomeController extends Controller
      */
     public function show(Proteome $proteome)
     {
-        //
+
+    }
+
+    public function list()
+    {
+      return json_encode(Proteome::all());
     }
 
     /**
@@ -234,6 +239,9 @@ class ProteomeController extends Controller
           Storage::delete($proteome->path);
           //Delete the database entry
           $proteome->delete();
+          //Delete the table
+          Schema::dropIfExists($proteome->table);
+
           return back()->with('success', 'Protein collection successfully deleted.');
         }
         else{

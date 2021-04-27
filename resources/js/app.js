@@ -13,13 +13,9 @@ require('./bootstrap');
  */
 
 require('./components/Job');
-require('./components/SearchForm');
-require('./components/Chart');
 
-
-require('./components/Example');
-
-
+//Toasts
+$('.toast').toast(option)
 
 //Enable settings modal
 $('.open-settings').on('mousedown', function () {

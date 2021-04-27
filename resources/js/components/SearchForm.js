@@ -68,7 +68,7 @@ class SearchForm extends Component {
               <div className="input-group-prepend">
                 <span className="input-group-text" id="inputGroupPrepend2"><i className="fal fa-fw fa-bacterium"></i></span>
               </div>
-              <input type="text" className="form-control open-settings" id="validationDefaultUsername" placeholder="Organisms" aria-describedby="inputGroupPrepend2" required></input>
+              <input type="text" className="form-control open-settings" id="validationDefaultUsername" placeholder="Proteomes" aria-describedby="inputGroupPrepend2" required></input>
             </div>
           </div>
         </div>

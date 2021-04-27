@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import SearchForm from './SearchForm';
 import SummaryChart from './Chart';
+import ProteomePicker from './ProteomePicker';
 
 class Job extends Component {
   constructor(props)
@@ -14,6 +15,7 @@ class Job extends Component {
       enzyme: 'trypsin',
       missedCleavages: 1,
       tolerance: 1.15,
+      proteomes: null,
       massList: "500.0 600.0",
       massMods: [
         {name: 'carbamidomethyl_cys', type: 'fixed', enabled: true, mass: 57.0214, resi: 'C'},
@@ -29,6 +31,7 @@ class Job extends Component {
     this.handleMissedCleavageChange = this.handleMissedCleavageChange.bind(this);
     this.handleToleranceChange = this.handleToleranceChange.bind(this);
     this.handleMassListChange = this.handleMassListChange.bind(this);
+    this.handleProteomeUpdate = this.handleProteomeUpdate.bind(this);
     this.runSearch = this.runSearch.bind(this);
     this.updateChart = this.updateChart.bind(this);
 
@@ -66,21 +69,23 @@ class Job extends Component {
   //This method is responsible for updating the chart.
   updateChart(data)
   {
-
     //Create our labels for top hits 0 to 9.
     const topHits = Object.keys(data).slice(0, 9);
+    const labels = [];
+
     //Create an array for our positive matches
     const posMatches = [];
 
     for(var i = 0; i < topHits.length; i++)
     {
+      labels[i] = topHits[i].split('|')[2].split(' ')[0];
       posMatches[i] = Object.keys(data[topHits[i]]).length;
     }
 
     //Static method that executes updateOptions.
     ApexCharts.exec('Matches', 'updateOptions', {
       xaxis: {
-        categories: topHits,
+        categories: labels,
       }
     });
 
@@ -109,6 +114,11 @@ class Job extends Component {
     this.setState({massList: event.target.value});
   }
 
+  handleProteomeUpdate(event)
+  {
+    this.setState({proteomes: event.target.value});
+  }
+
   render()
   {
     return (
@@ -125,7 +135,7 @@ class Job extends Component {
                       handleMassListChange={this.handleMassListChange}
                       handleToleranceChange={this.handleToleranceChange}
                       handleMissedCleavageChange={this.handleMissedCleavageChange}
-                      />
+                    />
 
                   </div>
 
@@ -142,7 +152,15 @@ class Job extends Component {
                 </div>
             </div>
           </div>
+
+
+          <ProteomePicker />
+
       </div>
+
+
+
+
     );
   }
 }
