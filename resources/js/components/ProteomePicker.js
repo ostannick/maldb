@@ -11,7 +11,7 @@ class ProteomePicker extends Component {
 
     this.state = {
       proteomes: [],
-      selected: {},
+      selected: [],
     }
 
     this.handleToggle = this.handleToggle.bind(this);

@@ -81,7 +81,7 @@ class Job extends Component {
   updateChart(data)
   {
     //Create our labels for top hits 0 to 9.
-    const topHits = Object.keys(data).slice(0, 9);
+    const topHits = Object.keys(data);
     const labels = [];
 
     //Create an array for our positive matches

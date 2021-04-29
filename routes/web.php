@@ -52,29 +52,37 @@ Route::post('/submit', function(Request $request) {
   }
 
   //Query the appropriate table with the appropriate modifications
-  $merged = [];
+  $merged = new Collection();
   foreach($massList as $mass)
   {
     /*foreach table...*/
 
     $peptides = DB::select(DB::raw('select * FROM `k12_142_1` where ABS(`mz1_monoisotopic`' . $fixed_mods_string . " - $mass) <= $tolerance"));
-    $merged = array_merge($merged, $peptides);
+
+    //Continually merge the results
+    $merged = $merged->merge(collect($peptides));
   }
 
   //DB::select returns an array, so we create a Collection object out of the array using the collect() helper method
-  $results = collect($merged);
-  $results = $results->groupBy('parent');
+  $results = $merged->groupBy('parent')->sortByDesc(function($item){
+    return count($item);
+  });
 
-  //Organize the results into JSON object
+  $match_counts = [];
+  foreach($results as $row)
+  {
+    array_push($match_counts, count($row));
+  }
 
+  $stdev = stats_standard_deviation($match_counts);
+
+  return $stdev;
 
   //Drop the table (clean up)
   Schema::dropIfExists("DUMMY_TABLE");
 
-  //Create a 'results' object
-
   //Return the JSON object
-  return json_encode($results);
+  return json_encode($results->take(50));
 });
 
 Route::resource('/proteomes', ProteomeController::class);

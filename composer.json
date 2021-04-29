@@ -36,6 +36,9 @@
         }
     },
     "autoload": {
+      "files": [
+        "app/Helpers/nkho_stats.php"
+    ],
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",

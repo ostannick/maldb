@@ -66982,7 +66982,7 @@ var Job = /*#__PURE__*/function (_Component) {
     key: "updateChart",
     value: function updateChart(data) {
       //Create our labels for top hits 0 to 9.
-      var topHits = Object.keys(data).slice(0, 9);
+      var topHits = Object.keys(data);
       var labels = []; //Create an array for our positive matches
 
       var posMatches = [];
@@ -67140,7 +67140,7 @@ var ProteomePicker = /*#__PURE__*/function (_Component) {
     _this = _super.call(this, props);
     _this.state = {
       proteomes: [],
-      selected: {}
+      selected: []
     };
     _this.handleToggle = _this.handleToggle.bind(_assertThisInitialized(_this));
     return _this;
