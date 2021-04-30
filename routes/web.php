@@ -75,14 +75,16 @@ Route::post('/submit', function(Request $request) {
   }
 
   $stdev = stats_standard_deviation($match_counts);
+  $mean = collect($match_counts)->average();
 
-  return $stdev;
-
-  //Drop the table (clean up)
-  Schema::dropIfExists("DUMMY_TABLE");
+  $json_results = [
+    'mean' => $mean,
+    'stdev' => $stdev,
+    'hits' => $results->take(50),
+  ];
 
   //Return the JSON object
-  return json_encode($results->take(50));
+  return json_encode($json_results);
 });
 
 Route::resource('/proteomes', ProteomeController::class);

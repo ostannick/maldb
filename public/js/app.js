@@ -66792,11 +66792,8 @@ var SummaryChart = /*#__PURE__*/function (_Component) {
           id: "Matches",
           width: "100%",
           events: {
-            dataPointSelection: function dataPointSelection(event, chartContext, _ref) {//DisplayAnalytics();
-
-              var seriesIndex = _ref.seriesIndex,
-                  dataPointIndex = _ref.dataPointIndex,
-                  config = _ref.config;
+            dataPointSelection: function dataPointSelection(event, chartContext, config) {
+              props.handleBarClick(config.dataPointIndex, event);
             }
           }
         },
@@ -66869,6 +66866,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SearchForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SearchForm */ "./resources/js/components/SearchForm.js");
 /* harmony import */ var _Chart__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Chart */ "./resources/js/components/Chart.js");
 /* harmony import */ var _ProteomePicker__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ProteomePicker */ "./resources/js/components/ProteomePicker.js");
+/* harmony import */ var _SequenceModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./SequenceModal */ "./resources/js/components/SequenceModal.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -66898,6 +66896,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var Job = /*#__PURE__*/function (_Component) {
   _inherits(Job, _Component);
 
@@ -66910,6 +66909,7 @@ var Job = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
     _this.state = {
+      selectedHit: null,
       enzyme: 'trypsin',
       missedCleavages: 1,
       tolerance: 1.15,
@@ -66941,6 +66941,7 @@ var Job = /*#__PURE__*/function (_Component) {
     _this.handleProteomeUpdate = _this.handleProteomeUpdate.bind(_assertThisInitialized(_this));
     _this.runSearch = _this.runSearch.bind(_assertThisInitialized(_this));
     _this.updateChart = _this.updateChart.bind(_assertThisInitialized(_this));
+    _this.getSequenceView = _this.getSequenceView.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -66967,7 +66968,12 @@ var Job = /*#__PURE__*/function (_Component) {
 
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/submit", sendData).then(function (res) {
         var response = res.data;
-        console.log(response); //Do something with the returned data
+        console.log(response);
+
+        _this2.setState({
+          results: response
+        }); //Do something with the returned data
+
 
         _this2.updateChart(response); //Change spinner back to play button
 
@@ -66982,14 +66988,14 @@ var Job = /*#__PURE__*/function (_Component) {
     key: "updateChart",
     value: function updateChart(data) {
       //Create our labels for top hits 0 to 9.
-      var topHits = Object.keys(data);
+      var topHits = Object.keys(data.hits);
       var labels = []; //Create an array for our positive matches
 
       var posMatches = [];
 
       for (var i = 0; i < topHits.length; i++) {
         labels[i] = topHits[i].split('|')[2].split(' ')[0];
-        posMatches[i] = Object.keys(data[topHits[i]]).length;
+        posMatches[i] = Object.keys(data.hits[topHits[i]]).length;
       } //Static method that executes updateOptions.
 
 
@@ -67041,8 +67047,18 @@ var Job = /*#__PURE__*/function (_Component) {
       });
     }
   }, {
+    key: "getSequenceView",
+    value: function getSequenceView(index, event) {
+      this.setState({
+        selectedHit: index
+      });
+      $('#sequence-view-modal').modal();
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row justify-content-center"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -67069,7 +67085,13 @@ var Job = /*#__PURE__*/function (_Component) {
         className: "card-header"
       }, "Result Summary"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-body"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Chart__WEBPACK_IMPORTED_MODULE_4__["default"], null)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ProteomePicker__WEBPACK_IMPORTED_MODULE_5__["default"], null));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Chart__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        handleBarClick: function handleBarClick(config, event) {
+          return _this3.getSequenceView(config, event);
+        }
+      })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ProteomePicker__WEBPACK_IMPORTED_MODULE_5__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_SequenceModal__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        hitId: this.state.selectedHit
+      }));
     }
   }]);
 
@@ -67535,6 +67557,110 @@ if (document.getElementById('search-form')) {
     ReactDOM.render(<SearchForm />, document.getElementById('search-form'));
 }
 */
+
+/***/ }),
+
+/***/ "./resources/js/components/SequenceModal.js":
+/*!**************************************************!*\
+  !*** ./resources/js/components/SequenceModal.js ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+
+var SequenceModal = /*#__PURE__*/function (_Component) {
+  _inherits(SequenceModal, _Component);
+
+  var _super = _createSuper(SequenceModal);
+
+  function SequenceModal(props) {
+    _classCallCheck(this, SequenceModal);
+
+    return _super.call(this, props);
+  }
+
+  _createClass(SequenceModal, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "modal fade",
+        id: "sequence-view-modal",
+        tabIndex: "-1",
+        role: "dialog",
+        "aria-labelledby": "exampleModalCenterTitle",
+        "aria-hidden": "true"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "modal-dialog modal-lg modal-dialog-centered",
+        role: "document"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "modal-content"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "modal-header"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
+        className: "modal-title",
+        id: "exampleModalLongTitle"
+      }, "Test.."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        type: "button",
+        className: "close",
+        "data-dismiss": "modal",
+        "aria-label": "Close"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        "aria-hidden": "true"
+      }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "modal-body"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "row"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-md-12"
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-md-6"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", null, this.props.hitId)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "modal-footer"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        type: "button",
+        className: "btn btn-secondary",
+        "data-dismiss": "modal"
+      }, "Close")))));
+    }
+  }]);
+
+  return SequenceModal;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (SequenceModal);
 
 /***/ }),
 

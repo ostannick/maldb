@@ -5,6 +5,7 @@ import axios from 'axios';
 import SearchForm from './SearchForm';
 import SummaryChart from './Chart';
 import ProteomePicker from './ProteomePicker';
+import SequenceModal from './SequenceModal';
 
 class Job extends Component {
   constructor(props)
@@ -12,11 +13,14 @@ class Job extends Component {
     super(props);
 
     this.state = {
+
       enzyme: 'trypsin',
       missedCleavages: 1,
       tolerance: 1.15,
       proteomes: null,
       massList: "500.0 600.0",
+      selectedHit: null,
+      results: null,
       massMods: [
         {name: 'carbamidomethyl_cys', type: 'fixed', enabled: true, mass: 57.0214, resi: 'C'},
         {name: 'oxidation_met', type: 'variable', enabled: true, mass: 16.0, resi: 'M'},
@@ -36,6 +40,8 @@ class Job extends Component {
     this.handleProteomeUpdate = this.handleProteomeUpdate.bind(this);
     this.runSearch = this.runSearch.bind(this);
     this.updateChart = this.updateChart.bind(this);
+
+    this.getSequenceView = this.getSequenceView.bind(this);
 
   }
 
@@ -64,6 +70,7 @@ class Job extends Component {
       .then(res => {
         const response = res.data;
         console.log(response);
+        this.setState({results: response});
 
         //Do something with the returned data
         this.updateChart(response);
@@ -81,7 +88,7 @@ class Job extends Component {
   updateChart(data)
   {
     //Create our labels for top hits 0 to 9.
-    const topHits = Object.keys(data);
+    const topHits = Object.keys(data.hits);
     const labels = [];
 
     //Create an array for our positive matches
@@ -90,7 +97,7 @@ class Job extends Component {
     for(var i = 0; i < topHits.length; i++)
     {
       labels[i] = topHits[i].split('|')[2].split(' ')[0];
-      posMatches[i] = Object.keys(data[topHits[i]]).length;
+      posMatches[i] = Object.keys(data.hits[topHits[i]]).length;
     }
 
     //Static method that executes updateOptions.
@@ -130,6 +137,12 @@ class Job extends Component {
     this.setState({proteomes: event.target.value});
   }
 
+  getSequenceView(index, event)
+  {
+    this.setState({selectedHit: index});
+    $('#sequence-view-modal').modal();
+  }
+
   render()
   {
     return (
@@ -159,7 +172,9 @@ class Job extends Component {
                 <div className="card-header">Result Summary</div>
                 <div className="card-body">
 
-                  <SummaryChart />
+                  <SummaryChart
+                    handleBarClick={(config, event) => this.getSequenceView(config, event)}
+                  />
 
                 </div>
             </div>
@@ -167,6 +182,9 @@ class Job extends Component {
 
 
           <ProteomePicker />
+          <SequenceModal
+            hitId={this.state.selectedHit}
+          />
 
       </div>
 
