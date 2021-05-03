@@ -46,7 +46,8 @@ Route::post('/submit', function(Request $request) {
 
   //Parse the mass list and cast to floats
   $massList = preg_split('/\s+/', $massList);
-  for($i = 0; $i < count($massList); $i++)
+  $num_masses = count($massList);
+  for($i = 0; $i < $num_masses; $i++)
   {
     $massList[$i] = (float)$massList[$i];
   }
@@ -68,23 +69,38 @@ Route::post('/submit', function(Request $request) {
     return count($item);
   });
 
+  //Get the theoretical results
+  //$theoretical = DB::select(DB::raw('select * FROM `k12_142_1` WHERE `parent` = ' . '\'' . $match . '\''));
+
   $match_counts = [];
   foreach($results as $row)
   {
     array_push($match_counts, count($row));
   }
-
   $stdev = stats_standard_deviation($match_counts);
   $mean = collect($match_counts)->average();
 
+  //Package up the info
   $json_results = [
+    'peak_count' => $num_masses,
     'mean' => $mean,
     'stdev' => $stdev,
-    'hits' => $results->take(50),
+    'hits' => $results->take(10),
   ];
+
+  //Drop the table (clean up)
+  Schema::dropIfExists("DUMMY_TABLE");
 
   //Return the JSON object
   return json_encode($json_results);
+});
+
+Route::post('/analysis', function(Request $request) {
+  $match = $request->input('protein');
+
+  $peptides = DB::select(DB::raw('select * FROM `k12_142_1` WHERE `parent` = ' . '\'' . $match . '\''));
+
+  return json_encode($peptides);
 });
 
 Route::resource('/proteomes', ProteomeController::class);

@@ -67,7 +67,7 @@ class ProteomePicker extends Component {
                 <div className="col-md-12">
 
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-12">
                   <h6>My Proteomes</h6>
 
                   {this.state.proteomes.map(proteome => (

@@ -61,7 +61,7 @@ class SearchForm extends Component {
               <div className="input-group-prepend">
                 <span className="input-group-text" id="inputGroupPrepend2"><i className="fal fa-fw fa-arrows-h"></i></span>
               </div>
-              <input onChange={this.props.handleToleranceChange} type="text" className="form-control" id="validationDefaultUsername" placeholder="Tolerance" required></input>
+              <input defaultValue="0.8" onChange={this.props.handleToleranceChange} type="text" className="form-control" id="validationDefaultUsername" placeholder="Tolerance" data-toggle="tooltip" data-placement="top" title="Tolerance" required></input>
             </div>
           </div>
         </div>
@@ -90,8 +90,8 @@ class SearchForm extends Component {
 
         <div className="col-12">
           <div className="form-group">
-            <label htmlFor="tolerance">Dataset</label>
-            <textarea className="form-control" id="massList" rows="3" placeholder="Mass List"  onChange={this.props.handleMassListChange} />
+            <label htmlFor="massList">Dataset</label>
+            <textarea className="form-control" id="massList" rows="3" placeholder="Mass List"  onChange={this.props.handleMassListChange} defaultValue="1170.260461 1375.483557 1653.520751 1752.469679 1765.517257 1849.43973 2105.47983 2128.467221 2178.484802 2211.44009 2222.209515 2389.285925 2424.412107 2551.361535 2668.518994 2855.366387"/>
           </div>
         </div>
 
@@ -109,9 +109,3 @@ class SearchForm extends Component {
 }
 
 export default SearchForm;
-
-/*
-if (document.getElementById('search-form')) {
-    ReactDOM.render(<SearchForm />, document.getElementById('search-form'));
-}
-*/

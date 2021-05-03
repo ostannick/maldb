@@ -18,9 +18,10 @@ class Job extends Component {
       missedCleavages: 1,
       tolerance: 1.15,
       proteomes: null,
-      massList: "500.0 600.0",
+      massList: "1170.260461 1375.483557 1653.520751 1752.469679 1765.517257 1849.43973 2105.47983 2128.467221 2178.484802 2211.44009 2222.209515 2389.285925 2424.412107 2551.361535 2668.518994 2855.366387",
       selectedHit: null,
       results: null,
+      analysis: null,
       massMods: [
         {name: 'carbamidomethyl_cys', type: 'fixed', enabled: true, mass: 57.0214, resi: 'C'},
         {name: 'oxidation_met', type: 'variable', enabled: true, mass: 16.0, resi: 'M'},
@@ -32,6 +33,7 @@ class Job extends Component {
     }
 
     this.searchForm = React.createRef();
+    this.analysisModal = React.createRef();
 
     this.handleEnzymeChange = this.handleEnzymeChange.bind(this);
     this.handleMissedCleavageChange = this.handleMissedCleavageChange.bind(this);
@@ -93,11 +95,13 @@ class Job extends Component {
 
     //Create an array for our positive matches
     const posMatches = [];
+    const unkMatches = [];
 
     for(var i = 0; i < topHits.length; i++)
     {
       labels[i] = topHits[i].split('|')[2].split(' ')[0];
       posMatches[i] = Object.keys(data.hits[topHits[i]]).length;
+      unkMatches[i] = data.peak_count - posMatches[i];
     }
 
     //Static method that executes updateOptions.
@@ -108,9 +112,10 @@ class Job extends Component {
     });
 
     //Static method that executes updateSeries.
-    ApexCharts.exec('Matches', 'updateSeries', [{
-      data: posMatches
-    }]);
+    ApexCharts.exec('Matches', 'updateSeries', [
+      {name: "Positive Coverage", data: posMatches},
+      {name: "Unknown Source", data: unkMatches}
+    ]);
 
     //This is a static method that takes the chart ID (declared in the SummaryChart component) and executes the render method.
     ApexCharts.exec('Matches', 'render');
@@ -139,8 +144,28 @@ class Job extends Component {
 
   getSequenceView(index, event)
   {
-    this.setState({selectedHit: index});
+    const keys = Object.keys(this.state.results.hits);
+    const experimentalData = this.state.results.hits[keys[index]];
+    console.log(experimentalData);
+
+    const sendData = {
+      protein: keys[index],
+    };
+
+    //Make the AJAX call to retrieve the peptides
+    axios.post(`/analysis`, sendData)
+      .then(res => {
+        const response = res.data;
+        this.analysisModal.current.updateMatch(response);
+        this.analysisModal.current.updateData(experimentalData);
+      })
+      .catch(function(e) {
+        console.log(e.response.data.message);
+      });
+
+    //Open the modal
     $('#sequence-view-modal').modal();
+
   }
 
   render()
@@ -183,6 +208,7 @@ class Job extends Component {
 
           <ProteomePicker />
           <SequenceModal
+            ref={this.analysisModal}
             hitId={this.state.selectedHit}
           />
 
