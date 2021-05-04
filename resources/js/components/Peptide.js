@@ -6,12 +6,16 @@ class Peptide extends Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      highlight: ""
+    }
   }
 
   render() {
     return(
       <span
-        className={this.props.observed ? "bg-success" : ""}
+        className={this.props.observed ? "bg-primary" : ""}
         data-toggle="tooltip"
         data-placement="top"
         title={this.props.data.mz1_monoisotopic + " Da"}>{this.props.data.sequence}</span>
