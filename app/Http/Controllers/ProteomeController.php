@@ -104,6 +104,7 @@ class ProteomeController extends Controller
           $table->decimal('mz1_average')->nullable();
           $table->decimal('mz1_monoisotopic')->nullable();
           $table->string('enzyme')->nullable();
+          $table->integer('missed_cleavages')->nullable();
 
           $table->integer('C')->default(0);
           $table->integer('D')->default(0);
@@ -165,12 +166,13 @@ class ProteomeController extends Controller
       //Insert into the table
       foreach ($peptides as $pep) {
 
-        DB::insert('insert into ' . $tableName . '(parent, sequence, mz1_monoisotopic, mz1_average, C, M) values (?, ?, ?, ?, ?, ?)',
+        DB::insert('insert into ' . $tableName . '(parent, sequence, mz1_monoisotopic, mz1_average, missed_cleavages, C, M) values (?, ?, ?, ?, ?, ?, ?)',
         [
           $parents[$pep['seq_id']]['name'],
           $pep['seq'],
           $pep['mz1'],
           $pep['avg'],
+          $pep['mc'],
           //AA Composition
           substr_count($pep['seq'], 'C'),
           substr_count($pep['seq'], 'M'),

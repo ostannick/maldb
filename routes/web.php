@@ -58,7 +58,7 @@ Route::post('/submit', function(Request $request) {
   {
     /*foreach table...*/
 
-    $peptides = DB::select(DB::raw('select * FROM `k12_142_1` where ABS(`mz1_monoisotopic`' . $fixed_mods_string . " - $mass) <= $tolerance"));
+    $peptides = DB::select(DB::raw('select * FROM `ecoli_k12_145_1` where `missed_cleavages` = 0 AND ABS(`mz1_monoisotopic`' . $fixed_mods_string . " - $mass) <= $tolerance"));
 
     //Continually merge the results
     $merged = $merged->merge(collect($peptides));
@@ -98,7 +98,7 @@ Route::post('/submit', function(Request $request) {
 Route::post('/analysis', function(Request $request) {
   $match = $request->input('protein');
 
-  $peptides = DB::select(DB::raw('select * FROM `k12_142_1` WHERE `parent` = ' . '\'' . $match . '\''));
+  $peptides = DB::select(DB::raw('select * FROM `ecoli_k12_145_1` WHERE `parent` = ' . '\'' . $match . '\' AND `missed_cleavages` = 0'));
 
   return json_encode($peptides);
 });
