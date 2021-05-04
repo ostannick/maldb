@@ -2,7 +2,8 @@ import os
 import argparse
 import json
 
-# Currently not keeping full composition matrix. Modify in make_peptide_dict()
+# # #  Toggle this variable to specify whether the full sequence composition matrix is saved for each peptide
+keep_full_composition_matrix = False
 
 # # #  Enzymatic digestions
 def trypsin_digest(sequence):
@@ -67,31 +68,34 @@ def seq_to_peptide_dicts(seq_id, sequence, enz_digest_fxn, missed_cleavages):
     raw_fragments = enz_digest_fxn(sequence)
     max_ind = len(raw_fragments) - 1
     for ind, frag in enumerate(raw_fragments):
-        pep = make_peptide_dict(seq_id, frag)
+        pep = make_peptide_dict(seq_id, frag, 0)
         if pep == None:
             print('Warning: discarding peptide due to unknown character in "{}"'.format(frag))
             continue
         elif args.min_weight <= pep['mz1'] <= args.max_weight:
             peptides.append(pep)
+        mc_frag = frag
         for offset in range(1, missed_cleavages+1):
             if ind+offset > max_ind:
                 break
-            frag += raw_fragments[ind+offset]
-            pep = make_peptide_dict(seq_id, frag)
+            mc_frag += raw_fragments[ind+offset]
+            pep = make_peptide_dict(seq_id, mc_frag, offset)
             if pep == None:
-                print('Warning: discarding peptide due to unknown character in "{}"'.format(frag))
+                print('Warning: discarding peptide due to unknown character in "{}"'.format(mc_frag))
                 break
             elif args.min_weight <= pep['mz1'] <= args.max_weight:
                 peptides.append(pep)
     return peptides
 
-def make_peptide_dict(seq_id, sequence):
+def make_peptide_dict(seq_id, sequence, missed_cleavages):
     try:
         pep = {'seq_id':seq_id, 'seq':sequence, 'mz1':calculate_mz1(sequence), 'avg':calculate_average_weight(sequence)}
     except KeyError: # Thrown when there's a non-standard character in the sequence
         return None
-    #for aa in aa_letters:
-    #    pep[aa] = sequence.count(aa)
+    pep['mc'] = missed_cleavages
+    if keep_full_composition_matrix:
+        for aa in aa_letters:
+            pep[aa] = sequence.count(aa)
     return pep
 
 
