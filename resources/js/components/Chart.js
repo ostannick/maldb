@@ -4,6 +4,7 @@ import Chart from "react-apexcharts";
 
 class SummaryChart extends Component {
   constructor(props) {
+
     super(props);
 
     this.state = {
@@ -12,8 +13,8 @@ class SummaryChart extends Component {
           id: "Matches",
           width: "100%",
           events: {
-            dataPointSelection:  function(event, chartContext, {seriesIndex, dataPointIndex, config}) {
-              //DisplayAnalytics();
+            dataPointSelection:  function(event, chartContext, config) {
+              props.handleBarClick(config.dataPointIndex, event)
             },
         }
         },
@@ -42,7 +43,10 @@ class SummaryChart extends Component {
         },
       ]
     };
+
+
   }
+
 
   render() {
     return (

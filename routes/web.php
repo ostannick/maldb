@@ -20,15 +20,11 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/search', function() {
-
-  $proteomes = Proteome::all();
-
-  return view('search')
-    ->with('proteomes', $proteomes);
+Route::get('/proteomes/list', function(){
+  return json_encode(Proteome::all());
 });
 
-Route::post('/test2', function(Request $request) {
+Route::post('/submit', function(Request $request) {
 
   //Set up the data from the axios call
   $enzyme             = $request->input('enzyme');
@@ -50,35 +46,61 @@ Route::post('/test2', function(Request $request) {
 
   //Parse the mass list and cast to floats
   $massList = preg_split('/\s+/', $massList);
-  for($i = 0; $i < count($massList); $i++)
+  $num_masses = count($massList);
+  for($i = 0; $i < $num_masses; $i++)
   {
     $massList[$i] = (float)$massList[$i];
   }
 
   //Query the appropriate table with the appropriate modifications
-  $merged = [];
+  $merged = new Collection();
   foreach($massList as $mass)
   {
     /*foreach table...*/
-    
-    $peptides = DB::select(DB::raw('select * FROM `tezt_119_1` where ABS(`mz1_monoisotopic`' . $fixed_mods_string . " - $mass) <= $tolerance"));
-    $merged = array_merge($merged, $peptides);
+
+    $peptides = DB::select(DB::raw('select * FROM `k12_142_1` where ABS(`mz1_monoisotopic`' . $fixed_mods_string . " - $mass) <= $tolerance"));
+
+    //Continually merge the results
+    $merged = $merged->merge(collect($peptides));
   }
 
   //DB::select returns an array, so we create a Collection object out of the array using the collect() helper method
-  $results = collect($merged);
-  $results = $results->groupBy('parent');
+  $results = $merged->groupBy('parent')->sortByDesc(function($item){
+    return count($item);
+  });
 
-  //Organize the results into JSON object
+  //Get the theoretical results
+  //$theoretical = DB::select(DB::raw('select * FROM `k12_142_1` WHERE `parent` = ' . '\'' . $match . '\''));
 
+  $match_counts = [];
+  foreach($results as $row)
+  {
+    array_push($match_counts, count($row));
+  }
+  $stdev = stats_standard_deviation($match_counts);
+  $mean = collect($match_counts)->average();
+
+  //Package up the info
+  $json_results = [
+    'peak_count' => $num_masses,
+    'mean' => $mean,
+    'stdev' => $stdev,
+    'hits' => $results->take(10),
+  ];
 
   //Drop the table (clean up)
   Schema::dropIfExists("DUMMY_TABLE");
 
-  //Create a 'results' object
-
   //Return the JSON object
-  return json_encode($results);
+  return json_encode($json_results);
+});
+
+Route::post('/analysis', function(Request $request) {
+  $match = $request->input('protein');
+
+  $peptides = DB::select(DB::raw('select * FROM `k12_142_1` WHERE `parent` = ' . '\'' . $match . '\''));
+
+  return json_encode($peptides);
 });
 
 Route::resource('/proteomes', ProteomeController::class);

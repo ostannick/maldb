@@ -74,6 +74,7 @@ class ProteomeController extends Controller
       if($request->file())
       {
         $fileName = time().'_'.$request->file->getClientOriginalName();
+        $fileNameNoExt = explode('.', $fileName)[0];
         $filePath = $request->file('file')->storeAs('proteomes/'.Auth::user()->id, $fileName);
 
         $proteome->name = $request->input('name');
@@ -124,17 +125,19 @@ class ProteomeController extends Controller
       $proteome->save();
 
 
-      $command = 'python '.
-      '../python/malDB_peptide_generator.py '.
-      '../storage/app/proteomes/' . Auth::user()->id .'/'. $fileName . ' ' .
-      'trypsin ' .
-      '../storage/app/proteomes/' . Auth::user()->id .'/'. $fileName . '_digest.json';
+      $command = 'py '.                                                                             //python executable
+      '../python/fasta_to_json.py '.                                                                //script name
+      '../storage/app/proteomes/' . Auth::user()->id .'/'. $fileName . ' ' .                        //path to fasta
+      '../storage/app/proteomes/' . Auth::user()->id .'/'. $fileNameNoExt . '_digest.json' . ' ' .  //path to digest output
+      '../storage/app/proteomes/' . Auth::user()->id .'/'. $fileNameNoExt . '_ids.json'. ' ' .      //path to relational database
+      'trypsin ';                                                                                   //enzyme to cleave with
+
+      shell_exec($command);
 
 
-      $output = shell_exec($command);
-
-
-      $stream = fopen('../storage/app/proteomes/' . Auth::user()->id .'/'. $fileName . '_digest.json', 'r');
+      //Open filestreams
+      $stream = fopen('../storage/app/proteomes/' . Auth::user()->id .'/'. $fileNameNoExt . '_digest.json', 'r');
+      $stream2 = fopen('../storage/app/proteomes/' . Auth::user()->id .'/'. $fileNameNoExt . '_ids.json', 'r');
       $listener = new \JsonStreamingParser\Listener\InMemoryListener();
       try {
         $parser = new \JsonStreamingParser\Parser($stream, $listener);
@@ -145,26 +148,33 @@ class ProteomeController extends Controller
         throw $e;
       }
 
-      $proteins = $listener->getJson();
+      $listener2 = new \JsonStreamingParser\Listener\InMemoryListener();
+      try {
+        $parser2 = new \JsonStreamingParser\Parser($stream2, $listener2);
+        $parser2->parse();
+        fclose($stream2);
+      } catch (Exception $e) {
+        fclose($stream2);
+        throw $e;
+      }
 
-      foreach ($proteins as $protein) {
+      //Place in memory
+      $peptides = $listener->getJson();
+      $parents = $listener2->getJson();
 
-        foreach($protein as $peptide)
-        {
-          DB::insert('insert into ' . $tableName . '(parent, sequence, mz1_monoisotopic) values (?, ?, ?)',
-          [
-            $peptide['parent'],
-            $peptide['sequence'],
-            $peptide['mz1'],
-            //$peptide['mz1_monoisotopic'],
-            //$peptide['mz1_average'],
-            //$peptide['enzyme'],
+      //Insert into the table
+      foreach ($peptides as $pep) {
 
-            //$peptide['A'], //num alanines
-            //$peptide['C'], //num cysteines
-
-          ]);
-        }
+        DB::insert('insert into ' . $tableName . '(parent, sequence, mz1_monoisotopic, mz1_average, C, M) values (?, ?, ?, ?, ?, ?)',
+        [
+          $parents[$pep['seq_id']]['name'],
+          $pep['seq'],
+          $pep['mz1'],
+          $pep['avg'],
+          //AA Composition
+          substr_count($pep['seq'], 'C'),
+          substr_count($pep['seq'], 'M'),
+        ]);
 
       }
 
@@ -181,7 +191,12 @@ class ProteomeController extends Controller
      */
     public function show(Proteome $proteome)
     {
-        //
+
+    }
+
+    public function list()
+    {
+      return json_encode(Proteome::all());
     }
 
     /**
@@ -224,6 +239,9 @@ class ProteomeController extends Controller
           Storage::delete($proteome->path);
           //Delete the database entry
           $proteome->delete();
+          //Delete the table
+          Schema::dropIfExists($proteome->table);
+
           return back()->with('success', 'Protein collection successfully deleted.');
         }
         else{
