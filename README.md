@@ -25,6 +25,7 @@ Installing malDB involves deploying a Laravel application on a machine that can 
 6. Clone this repository.
 7. Open the .env file in the repository root, and set the appropriate environment variables to connect to the MySQL database.
 8. In a terminal, migrate to the root of the repository folder.
+9. Runn `composer install --ignore-platform-reqs`
 9. Run `php artisan key:generate`
 10. Run `php artisan migrate`
 11. Run `php artisan serve`
