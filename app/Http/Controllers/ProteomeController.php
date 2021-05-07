@@ -24,14 +24,9 @@ class ProteomeController extends Controller
     public function index()
     {
       return view('proteomes', [
-        'proteomes' => $this->FetchProteomes(),
+        'proteomes' => Proteome::where('user_id', Auth::user()->id)->get()
 
       ]);
-    }
-
-    public function FetchProteomes()
-    {
-      return Proteome::all();
     }
 
     /**
@@ -54,28 +49,27 @@ class ProteomeController extends Controller
     {
 
       //File validation
-      /*
-      $request->validate([
-      'file' => 'required|mimes:txt,fa,fasta|max:2048'
-      ]);
-      */
+      //...
 
       //File names
       $fileNameFasta;
       $fileNameDigest;
 
       //User's storage path
-      $storagePath = '../storage/app/proteomes/' . Auth::user()->id . '/';
+      $storagePath = '../storage/app/' . Auth::user()->id . '/proteomes/';
 
       //Create a new proteome model for entry into the proteomes table
       $proteome = new Proteome;
+
+      //Check if the user already has a proteome with this name
+      //...return error if so
 
       //If the file exists, store it, and set the proteome properties
       if($request->file())
       {
         $fileName = time().'_'.$request->file->getClientOriginalName();
         $fileNameNoExt = explode('.', $fileName)[0];
-        $filePath = $request->file('file')->storeAs('proteomes/'.Auth::user()->id, $fileName);
+        $filePath = $request->file('file')->storeAs(Auth::user()->id.'/proteomes', $fileName);
 
         $proteome->name = $request->input('name');
         $proteome->path = $filePath;
@@ -84,41 +78,35 @@ class ProteomeController extends Controller
         $proteome->user_id = Auth::user()->id;
 
         $proteome->save();
-
-
       }
       else
       {
         return back()->with('failure', 'File not uploaded.');
       }
 
-      //Name the table something unique for the user and the proteome
-      $tableName = $request->name .'_'. $proteome->id .'_'. Auth::user()->id;
+      return back()
+      ->with('success', 'Proteome uploaded.')
+      ->with('file', $fileName);
 
-      //create a base peptide table
+      //Name the table something unique for the user and the proteome
+      $tableName = Auth::user()->id . '_' . $proteome->id . '_' . 'trypsin' . '_' . 'collection';
+
+      //create a proteome table
       Schema::create($tableName, function(Blueprint $table){
+        $table->increments('id');
+        $table->string('name');
+        $table->text('sequence');
+      });
+
+      //create a base peptide digest table
+      Schema::create($tableName . '_dig', function(Blueprint $table){
           $table->increments('id');
-          $table->timestamps();
           $table->string('parent')->nullable();
           $table->string('sequence')->nullable();
           $table->decimal('mz1_average')->nullable();
           $table->decimal('mz1_monoisotopic')->nullable();
-          $table->string('enzyme')->nullable();
           $table->integer('missed_cleavages')->nullable();
-
-          $table->integer('C')->default(0);
-          $table->integer('D')->default(0);
-          $table->integer('E')->default(0);
-          $table->integer('H')->default(0);
-          $table->integer('K')->default(0);
-          $table->integer('L')->default(0);
-          $table->integer('M')->default(0);
-          $table->integer('R')->default(0);
-          $table->integer('S')->default(0);
-          $table->integer('T')->default(0);
-          $table->integer('W')->default(0);
-          $table->integer('Y')->default(0);
-
+          $table->integer('met_ox_count')->nullable();
       });
 
       //Associate the proteome with its new table
@@ -166,16 +154,13 @@ class ProteomeController extends Controller
       //Insert into the table
       foreach ($peptides as $pep) {
 
-        DB::insert('insert into ' . $tableName . '(parent, sequence, mz1_monoisotopic, mz1_average, missed_cleavages, C, M) values (?, ?, ?, ?, ?, ?, ?)',
+        DB::insert('insert into ' . $tableName . '(parent, sequence, mz1_monoisotopic, mz1_average, missed_cleavages, met_ox_count) values (?, ?, ?, ?, ?, ?)',
         [
           $parents[$pep['seq_id']]['name'],
           $pep['seq'],
           $pep['mz1'],
           $pep['avg'],
           $pep['mc'],
-          //AA Composition
-          substr_count($pep['seq'], 'C'),
-          substr_count($pep['seq'], 'M'),
         ]);
 
       }
