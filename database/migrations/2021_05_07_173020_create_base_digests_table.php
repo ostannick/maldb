@@ -16,11 +16,13 @@ class CreateBaseDigestsTable extends Migration
         Schema::create('base_digests', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('owner');
+            $table->integer('user_id');
+            $table->integer('proteome_id');
             $table->string('table_name');
             $table->string('enzyme')->default('trypsin');
             $table->integer('max_mc')->default(0);
             $table->integer('size')->nullable();
+            $table->integer('status')->default(0);
         });
     }
 

@@ -5,6 +5,8 @@ use Illuminate\Support\Collection;
 use App\Models\Proteome;
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\BaseDigestController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -102,6 +104,8 @@ Route::post('/analysis', function(Request $request) {
 
   return json_encode($peptides);
 });
+
+Route::post('/proteomes/digest', [BaseDigestController::class, 'digest']);
 
 Route::resource('/proteomes', ProteomeController::class);
 
