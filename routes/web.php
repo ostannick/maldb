@@ -21,7 +21,7 @@ Route::get('/', function () {
 });
 
 Route::get('/proteomes/list', function(){
-  return json_encode(Proteome::all());
+  return json_encode(Proteome::where('user_id', Auth::user()->id)->get());
 });
 
 Route::post('/submit', function(Request $request) {

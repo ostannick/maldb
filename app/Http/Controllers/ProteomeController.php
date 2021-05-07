@@ -23,10 +23,7 @@ class ProteomeController extends Controller
      */
     public function index()
     {
-      return view('proteomes', [
-        'proteomes' => Proteome::where('user_id', Auth::user()->id)->get()
-
-      ]);
+      return view('proteomes');
     }
 
     /**
@@ -183,7 +180,7 @@ class ProteomeController extends Controller
 
     public function list()
     {
-      return json_encode(Proteome::all());
+      return json_encode(Proteome::where('user_id', Auth::user()->id)->get());
     }
 
     /**
