@@ -30,8 +30,8 @@
             <div class="col-sm-6">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">Train Neural Network</h5>
-                  <p class="card-text">Train a neural network that can predict peptide ionization.</p>
+                  <h5 class="card-title">Fingerprint Predictor</h5>
+                  <p class="card-text">Predict peptide mass fingerprints from protein sequence.</p>
                   <a href="#" class="btn btn-primary">Start Training</a>
                 </div>
               </div>
@@ -41,7 +41,7 @@
                 <div class="card-body">
                   <h5 class="card-title">Utilities</h5>
                   <p class="card-text">Other useful tools for MS analysis</p>
-                  <a href="#" class="btn btn-primary">Go</a>
+                  <a href="#" class="btn btn-primary">Utilities</a>
                 </div>
               </div>
             </div>

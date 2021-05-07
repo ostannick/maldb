@@ -3,6 +3,7 @@ require('./bootstrap');
 
 
 require('./components/Job');
+require('./components/Proteomes/ProteomeManager');
 
 //Enable settings modal
 $('.open-settings').on('mousedown', function () {

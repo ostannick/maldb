@@ -49,6 +49,18 @@ class SequenceModal extends Component {
     );
   }
 
+  renderTableRow(peptide)
+  {
+    return(
+      <tr key={peptide.id}>
+        <td>{peptide.sequence}</td>
+        <td>{peptide.mz1_monoisotopic}</td>
+        <td>{peptide.mz1_average}</td>
+        <td><i className="fa fa-check"></i></td>
+      </tr>
+    );
+  }
+
   checkIfObserved(peptideId)
   {
     if(this.state.observed.includes(peptideId))
@@ -67,7 +79,7 @@ class SequenceModal extends Component {
         <div className="modal-dialog modal-lg modal-dialog-centered" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLongTitle">Single Match Analysis</h5>
+              <h5 className="modal-title" id="exampleModalLongTitle">{this.state.name}</h5>
               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -78,7 +90,21 @@ class SequenceModal extends Component {
 
                 </div>
                 <div className="col-md-12">
-                  <h4>{this.state.name}</h4>
+
+                  <ul class="nav nav-pills">
+                    <li class="nav-item">
+                      <a class="nav-link active" href="#">Sequence Map</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">Table</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">Statistics</a>
+                    </li>
+
+                  </ul>
+
+                  <hr/>
 
                   <p className="text-monospace text-break">
                   {this.state.analysis.map(peptide => (
@@ -87,6 +113,28 @@ class SequenceModal extends Component {
 
                   ))}
                   </p>
+
+                  <div className="progress">
+                    <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{width: '75%'}}>75% Sequence Coverage</div>
+                  </div>
+
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Sequence</th>
+                        <th scope="col">Mono Mass</th>
+                        <th scope="col">Avg Mass</th>
+                        <th scope="col">Observed?</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {this.state.analysis.map(peptide => (
+
+                        this.renderTableRow(peptide)
+
+                      ))}
+                    </tbody>
+                  </table>
 
                 </div>
               </div>
