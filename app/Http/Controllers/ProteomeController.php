@@ -62,7 +62,7 @@ class ProteomeController extends Controller
       //...return error if so
 
       //If the file exists, store it, and set the proteome properties
-      if($request->file())
+      if($request->hasFile('file'))
       {
         $fileName = time().'_'.$request->file->getClientOriginalName();
         $fileNameNoExt = explode('.', $fileName)[0];
@@ -78,12 +78,10 @@ class ProteomeController extends Controller
       }
       else
       {
-        return back()->with('failure', 'File not uploaded.');
+        return 'The file did not make it onto the server.';
       }
 
-      return back()
-      ->with('success', 'Proteome uploaded.')
-      ->with('file', $fileName);
+      return 'Proteome uploaded!';
 
       //Name the table something unique for the user and the proteome
       $tableName = Auth::user()->id . '_' . $proteome->id . '_' . 'trypsin' . '_' . 'collection';

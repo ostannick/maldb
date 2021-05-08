@@ -1,5 +1,5 @@
 
-require('./bootstrap');
+window.bootstrap = require('./bootstrap');
 
 
 require('./components/Job');
@@ -17,8 +17,6 @@ $('.mass-mods').on('click', function () {
 $('.search-help').on('click', function () {
   $('#help-modal').modal();
 })
-
-$('.peptide').css('cursor', 'pointer');
 
 //Enable all tooltips app-wide
 $(function () {

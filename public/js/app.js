@@ -70458,7 +70458,7 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+window.bootstrap = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 __webpack_require__(/*! ./components/Job */ "./resources/js/components/Job.js");
 
@@ -70473,8 +70473,7 @@ $('.mass-mods').on('click', function () {
 });
 $('.search-help').on('click', function () {
   $('#help-modal').modal();
-});
-$('.peptide').css('cursor', 'pointer'); //Enable all tooltips app-wide
+}); //Enable all tooltips app-wide
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip();
@@ -71494,8 +71493,15 @@ var ProteomeManager = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
     _this.state = {
-      proteomes: []
+      proteomes: [],
+      newProteomeName: '',
+      newProteomeOrganism: '',
+      newProteomeFasta: null
     };
+    _this.handleNewName = _this.handleNewName.bind(_assertThisInitialized(_this));
+    _this.handleNewOrganism = _this.handleNewOrganism.bind(_assertThisInitialized(_this));
+    _this.handleNewFile = _this.handleNewFile.bind(_assertThisInitialized(_this));
+    _this.handleUpload = _this.handleUpload.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -71524,6 +71530,56 @@ var ProteomeManager = /*#__PURE__*/function (_Component) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Proteome__WEBPACK_IMPORTED_MODULE_3__["default"], {
         data: data,
         key: data.id
+      });
+    }
+  }, {
+    key: "handleNewName",
+    value: function handleNewName(event) {
+      this.setState({
+        newProteomeName: event.target.value
+      });
+    }
+  }, {
+    key: "handleNewOrganism",
+    value: function handleNewOrganism(event) {
+      this.setState({
+        newProteomeOrganism: event.target.value
+      });
+    }
+  }, {
+    key: "handleNewFile",
+    value: function handleNewFile(event) {
+      this.setState({
+        newProteomeFasta: event.target.files[0]
+      });
+      console.log(event.target.files[0]);
+    }
+  }, {
+    key: "handleUpload",
+    value: function handleUpload(event) {
+      //Validation
+      var formData = new FormData();
+      formData.append('name', this.state.newProteomeName);
+      formData.append('organism', this.state.newProteomeOrganism);
+      formData.append('file', this.state.newProteomeFasta);
+      var config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      };
+      console.log(formData); //Make the AJAX call
+
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/proteomes', formData, config).then(function (res) {
+        var response = res.data;
+        console.log(response);
+        var options = {
+          animation: true,
+          delay: 3000
+        };
+        var toastHTMLElement = document.getElementById("myToast");
+        var toastElement = new bootstrap.Toast(toastHTMLElement, options);
+      })["catch"](function (e) {
+        console.log(e.response.data.message);
       });
     }
   }, {
@@ -71556,70 +71612,58 @@ var ProteomeManager = /*#__PURE__*/function (_Component) {
         type: "button",
         "data-bs-toggle": "collapse",
         "data-bs-target": "#collapseOne",
-        "aria-expanded": "true",
+        "aria-expanded": "false",
         "aria-controls": "collapseOne"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-        className: "badge rounded-pill bg-light text-dark"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "fa fa-plus"
-      }), " "), " Add Proteome")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Add Proteome")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "collapseOne",
         className: "accordion-collapse collapse show",
         "aria-labelledby": "headingOne",
         "data-bs-parent": "#accordionExample"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "accordion-body"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
-        method: "POST",
-        action: "/proteomes",
-        encType: "multipart/form-data"
-      }, "@csrf", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-md-12 mb-3"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "form-row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "input-group mb-3"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "input-group-text",
+        id: "basic-addon1"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "fal fa-portrait"
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
-        name: "name",
         className: "form-control",
-        placeholder: "Protein collection name"
-      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-md-12 mb-3"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "form-row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        placeholder: "Proteome Name",
+        "aria-label": "Username",
+        "aria-describedby": "basic-addon1",
+        onChange: this.handleNewName
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "input-group mb-3"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "input-group-text",
+        id: "basic-addon1"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "fal fa-bacterium"
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
-        name: "organism",
         className: "form-control",
-        placeholder: "Organism (if relevant)"
-      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-md-12 mb-3"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "form-row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
-        className: "form-control",
-        name: "description",
-        rows: "5",
-        placeholder: "Description (optional)"
-      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-md-12 mb-3"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        placeholder: "Organism",
+        "aria-label": "Username",
+        "aria-describedby": "basic-addon1",
+        onChange: this.handleNewOrganism
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "input-group"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "custom-file"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "file",
-        name: "file",
-        className: "custom-file-input",
-        id: "inputGroupFile01"
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-        className: "custom-file-label",
-        htmlFor: "inputGroupFile01"
-      }, "Choose file")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-md-12 mb-3"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        type: "submit",
-        className: "btn btn-primary"
-      }, "Submit")))))))))));
+        className: "form-control",
+        id: "inputGroupFile04",
+        "aria-describedby": "inputGroupFileAddon04",
+        "aria-label": "Upload",
+        onChange: this.handleNewFile
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-primary",
+        type: "button",
+        id: "inputGroupFileAddon04",
+        onClick: this.handleUpload
+      }, "Upload"))))))))));
     }
   }]);
 

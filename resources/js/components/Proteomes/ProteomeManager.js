@@ -12,7 +12,16 @@ class ProteomeManager extends Component {
     this.state = {
       proteomes: [],
 
+      newProteomeName: '',
+      newProteomeOrganism: '',
+      newProteomeFasta: null,
+
     }
+
+    this.handleNewName = this.handleNewName.bind(this);
+    this.handleNewOrganism = this.handleNewOrganism.bind(this);
+    this.handleNewFile = this.handleNewFile.bind(this);
+    this.handleUpload = this.handleUpload.bind(this);
 
   }
 
@@ -41,6 +50,55 @@ class ProteomeManager extends Component {
     )
   }
 
+  handleNewName(event)
+  {
+    this.setState({newProteomeName: event.target.value});
+  }
+
+  handleNewOrganism(event)
+  {
+    this.setState({newProteomeOrganism: event.target.value});
+  }
+
+  handleNewFile(event)
+  {
+    this.setState({newProteomeFasta: event.target.files[0]});
+    console.log(event.target.files[0]);
+  }
+
+  handleUpload(event)
+  {
+    //Validation
+
+    const formData = new FormData();
+    formData.append('name', this.state.newProteomeName)
+    formData.append('organism', this.state.newProteomeOrganism)
+    formData.append('file', this.state.newProteomeFasta)
+
+    const config = {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }
+
+    console.log(formData);
+
+    //Make the AJAX call
+    axios.post('/proteomes', formData, config)
+      .then(res => {
+        const response = res.data;
+        console.log(response);
+
+        var options = {animation: true, delay: 3000};
+        var toastHTMLElement = document.getElementById("myToast");
+        var toastElement = new bootstrap.Toast(toastHTMLElement, options)
+
+      })
+      .catch(function(e) {
+        console.log(e.response.data.message);
+      });
+  }
+
   render()
   {
     return (
@@ -61,48 +119,27 @@ class ProteomeManager extends Component {
 
                           <div className="accordion-item">
                             <h2 className="accordion-header" id="upload_new">
-                              <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                <span className="badge rounded-pill bg-light text-dark"><i className="fa fa-plus"></i> </span> Add Proteome
+                              <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                Add Proteome
                               </button>
                             </h2>
                             <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                               <div className="accordion-body">
 
-                                <form method="POST" action="/proteomes" encType="multipart/form-data">
-                                  @csrf
+                              <div className="input-group mb-3">
+                                <span className="input-group-text" id="basic-addon1"><i className="fal fa-portrait"></i></span>
+                                <input type="text" className="form-control" placeholder="Proteome Name" aria-label="Username" aria-describedby="basic-addon1" onChange={this.handleNewName} />
+                              </div>
 
-                                  <div className="col-md-12 mb-3">
-                                    <div className="form-row">
-                                      <input type="text" name="name" className="form-control" placeholder="Protein collection name"></input>
-                                    </div>
-                                  </div>
+                              <div className="input-group mb-3">
+                                <span className="input-group-text" id="basic-addon1"><i className="fal fa-bacterium"></i></span>
+                                <input type="text" className="form-control" placeholder="Organism" aria-label="Username" aria-describedby="basic-addon1" onChange={this.handleNewOrganism} />
+                              </div>
 
-                                  <div className="col-md-12 mb-3">
-                                    <div className="form-row">
-                                      <input type="text" name="organism" className="form-control" placeholder="Organism (if relevant)"></input>
-                                    </div>
-                                  </div>
-
-                                  <div className="col-md-12 mb-3">
-                                    <div className="form-row">
-                                      <textarea className="form-control" name="description" rows="5" placeholder="Description (optional)"></textarea>
-                                    </div>
-                                  </div>
-
-                                  <div className="col-md-12 mb-3">
-                                    <div className="input-group">
-                                      <div className="custom-file">
-                                        <input type="file" name="file" className="custom-file-input" id="inputGroupFile01"></input>
-                                        <label className="custom-file-label" htmlFor="inputGroupFile01">Choose file</label>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="col-md-12 mb-3">
-                                    <button type="submit" className="btn btn-primary">Submit</button>
-                                  </div>
-
-                                </form>
+                              <div className="input-group">
+                                <input type="file" className="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" onChange={this.handleNewFile} />
+                                <button className="btn btn-primary" type="button" id="inputGroupFileAddon04" onClick={this.handleUpload}>Upload</button>
+                              </div>
 
                               </div>
                             </div>
