@@ -115,7 +115,7 @@ class Proteome extends Component {
                   <button type="button" className="btn btn-primary" onClick={this.handleDigest}>Generate Digestion Table</button>
                 </div>
 
-                
+
 
 
               </div>
