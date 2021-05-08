@@ -5,6 +5,7 @@ use Illuminate\Support\Collection;
 use App\Models\Proteome;
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\DigestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -103,13 +104,16 @@ Route::post('/analysis', function(Request $request) {
   return json_encode($peptides);
 });
 
-Route::post('/proteomes/digest', [BaseDigestController::class, 'digest']);
+
 
 Route::resource('/proteomes', ProteomeController::class);
 
 Route::resource('/job', JobController::class);
 
 Route::resource('/digest', DigestController::class);
+
+Route::post('/proteomes/digest', [DigestController::class, 'digest']); //Digests a proteome
+Route::post('/digest/list', [App\Http\Controllers\DigestController::class, 'list']);         //Gets a list of a proteome's digest tables
 
 Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']);

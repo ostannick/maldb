@@ -33,6 +33,11 @@ class DigestController extends Controller
         //
     }
 
+    public function list(Request $request)
+    {
+      return Proteome::find($request->proteome_id)->digests();
+    }
+
     /**
      * Store a newly created resource in storage.
      *

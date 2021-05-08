@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 
+import DigestTableEntry from './DigestTableEntry';
+
 class Proteome extends Component {
   constructor(props)
   {
@@ -10,6 +12,7 @@ class Proteome extends Component {
     this.state = {
       enzyme: 'trypsin',
       missedCleavages: 2,
+      digestTables: [],
     }
 
     this.handleEnzyme = this.handleEnzyme.bind(this);
@@ -44,6 +47,32 @@ class Proteome extends Component {
       .catch(function(e) {
         console.log(e.response.data.message);
       });
+  }
+
+  componentDidMount()
+  {
+    const sendData = {
+      proteome_id: this.props.data.id
+    };
+
+    axios.post('/digest/list', sendData)
+      .then(res => {
+        const response = res.data;
+        this.setState({digestTables: response});
+      })
+      .catch(function(e) {
+        console.log(e.response.data.message);
+      });
+  }
+
+  renderDigestTable(digestTable)
+  {
+    return(
+      <DigestTableEntry
+        key={digestTable.id}
+        data={digestTable}
+      />
+    )
   }
 
   render()
@@ -86,18 +115,7 @@ class Proteome extends Component {
                   <button type="button" className="btn btn-primary" onClick={this.handleDigest}>Generate Digestion Table</button>
                 </div>
 
-                {/* STATUS BAR */}
-                <div className="row">
-                  <div className="col-lg-6">
-                    <div className="progress">
-                      <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" style={{width: '35%'}}></div>
-                    </div>
-                  </div>
-
-                  <div className="col-lg-6">
-                  <p className="font-monospace"><i className="fal fa-cog fa-spin"></i> Status...</p>
-                  </div>
-                </div>
+                
 
 
               </div>
@@ -109,15 +127,13 @@ class Proteome extends Component {
 
                 <div className="list-group">
 
-                  <a href="#" className="list-group-item list-group-item-action bg-light" aria-current="true">
-                    <div className="d-flex w-100 justify-content-between">
-                      <h6 className="mb-1">242_Escherichia-coli_trypsin_dig</h6>
-                      <small><span className="badge rounded-pill bg-primary">665431 peptides</span></small>
-                    </div>
-                    <p className="mb-1">Trypsin</p>
-                  </a>
+                {this.state.digestTables.map(digestTable => (
 
-              </div>
+                  this.renderDigestTable(digestTable)
+
+                ))}
+
+                </div>
             </div>
 
           </div>

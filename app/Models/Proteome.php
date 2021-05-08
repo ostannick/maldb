@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Digest;
 
 class Proteome extends Model
 {
@@ -15,7 +16,10 @@ class Proteome extends Model
       'path',
       'organism',
       'description',
-      
-
     ];
+
+    public function digests()
+    {
+      return $this->hasMany(Digest::class)->get();
+    }
 }
