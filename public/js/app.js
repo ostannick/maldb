@@ -71306,6 +71306,7 @@ var Proteome = /*#__PURE__*/function (_Component) {
     };
     _this.handleEnzyme = _this.handleEnzyme.bind(_assertThisInitialized(_this));
     _this.handleMissedCleavages = _this.handleMissedCleavages.bind(_assertThisInitialized(_this));
+    _this.handleDigest = _this.handleDigest.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -71321,6 +71322,21 @@ var Proteome = /*#__PURE__*/function (_Component) {
     value: function handleMissedCleavages(event) {
       this.setState({
         missedCleavages: event.target.value
+      });
+    }
+  }, {
+    key: "handleDigest",
+    value: function handleDigest(event) {
+      var sendData = {
+        proteome_id: this.props.data.id,
+        opt_enzyme: this.state.enzyme,
+        opt_mc: this.state.missedCleavages
+      };
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/digest', sendData).then(function (res) {
+        var response = res.data;
+        console.log(response);
+      })["catch"](function (e) {
+        console.log(e.response.data.message);
       });
     }
   }, {
@@ -71389,7 +71405,8 @@ var Proteome = /*#__PURE__*/function (_Component) {
         className: "mb-3"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         type: "button",
-        className: "btn btn-primary"
+        className: "btn btn-primary",
+        onClick: this.handleDigest
       }, "Generate Digestion Table")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {

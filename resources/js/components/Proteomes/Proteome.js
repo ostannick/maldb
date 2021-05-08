@@ -14,6 +14,7 @@ class Proteome extends Component {
 
     this.handleEnzyme = this.handleEnzyme.bind(this);
     this.handleMissedCleavages = this.handleMissedCleavages.bind(this);
+    this.handleDigest = this.handleDigest.bind(this);
 
   }
 
@@ -25,6 +26,24 @@ class Proteome extends Component {
   handleMissedCleavages(event)
   {
     this.setState({missedCleavages: event.target.value});
+  }
+
+  handleDigest(event)
+  {
+    const sendData = {
+      proteome_id: this.props.data.id,
+      opt_enzyme: this.state.enzyme,
+      opt_mc: this.state.missedCleavages,
+    };
+
+    axios.post('/digest', sendData)
+      .then(res => {
+        const response = res.data;
+        console.log(response);
+      })
+      .catch(function(e) {
+        console.log(e.response.data.message);
+      });
   }
 
   render()
@@ -64,7 +83,7 @@ class Proteome extends Component {
                 </div>
 
                 <div className="mb-3">
-                  <button type="button" className="btn btn-primary">Generate Digestion Table</button>
+                  <button type="button" className="btn btn-primary" onClick={this.handleDigest}>Generate Digestion Table</button>
                 </div>
 
                 {/* STATUS BAR */}

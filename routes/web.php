@@ -5,8 +5,6 @@ use Illuminate\Support\Collection;
 use App\Models\Proteome;
 use Illuminate\Http\Request;
 
-use App\Http\Controllers\BaseDigestController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -110,6 +108,8 @@ Route::post('/proteomes/digest', [BaseDigestController::class, 'digest']);
 Route::resource('/proteomes', ProteomeController::class);
 
 Route::resource('/job', JobController::class);
+
+Route::resource('/digest', DigestController::class);
 
 Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']);

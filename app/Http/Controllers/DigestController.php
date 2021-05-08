@@ -9,9 +9,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Auth;
 
 use App\Models\Proteome;
-use App\Models\BaseDigest;
+use App\Models\Digest;
 
-class BaseDigestController extends Controller
+class DigestController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,7 +41,6 @@ class BaseDigestController extends Controller
      */
     public function store(Request $request)
     {
-
       //Get the proteome of interest.
       $proteome = Proteome::find($request->input('proteome_id'));
       $enzyme = $request->input('opt_enzyme');
@@ -79,7 +78,9 @@ class BaseDigestController extends Controller
           $table->integer('met_ox_count')->nullable();
       });
 
-      BaseDigest::create([
+      //Create the entry in the digests table
+      Digest::create([
+        'user_id' => Auth::user()->id,
         'proteome_id' => $proteome->id,
         'table_name' => $tableNameDigest,
         'enzyme' => $enzyme,
