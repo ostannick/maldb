@@ -20,7 +20,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body style="background-color: white">
+<body style="background-color: #330f4d">
     <div id="app">
 
       <nav class="navbar navbar-expand-lg navbar-light bg-light">

@@ -79,13 +79,13 @@ class Proteome extends Component {
   {
     return (
       <div className="accordion-item">
-        <h2 className="accordion-header">
-          <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={'proteome_' + this.props.data.id} aria-expanded="false" aria-controls={'proteome_' + this.props.data.id}>
+        <h2 className="accordion-header" id={'heading' + this.props.data.id}>
+          <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={'#proteome' + this.props.data.id} aria-expanded="true" aria-controls={'collapse' + this.props.data.id}>
           <span className="badge rounded-pill bg-light text-dark">{this.props.data.id + " - " + this.props.data.organism}</span>
             {this.props.data.name}
           </button>
         </h2>
-        <div id={'proteome_' + this.props.data.id} className="accordion-collapse collapse show" aria-labelledby={'proteome_' + this.props.data.id} data-bs-parent="#accordionExample">
+        <div id={'collapse' + this.props.data.id} className="accordion-collapse collapse show" aria-labelledby={'heading' + this.props.data.id} data-bs-parent="#proteome_manager">
           <div className="accordion-body">
 
             <div className="row">

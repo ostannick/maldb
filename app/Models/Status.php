@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Status extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+
+      'process_id',
+      'progress',
+      'description'
+
+    ];
+
 }

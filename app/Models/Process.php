@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Process extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+      'user_id',
+      'description'
+    ];
+
+    public function status()
+    {
+      return $this->hasMany(Status::class)->latest()->first();
+    }
 }

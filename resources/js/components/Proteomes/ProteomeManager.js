@@ -109,7 +109,7 @@ class ProteomeManager extends Component {
 
                   <div className="card-body">
 
-                      <div className="accordion" id="accordionExample">
+                      <div className="accordion" id="proteome_manager">
 
                           {this.state.proteomes.map(proteome => (
 

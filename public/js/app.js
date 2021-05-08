@@ -71474,21 +71474,22 @@ var Proteome = /*#__PURE__*/function (_Component) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "accordion-item"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
-        className: "accordion-header"
+        className: "accordion-header",
+        id: 'heading_' + this.props.data.id
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "accordion-button",
+        className: "accordion-button collapsed",
         type: "button",
         "data-bs-toggle": "collapse",
         "data-bs-target": 'proteome_' + this.props.data.id,
         "aria-expanded": "false",
-        "aria-controls": 'proteome_' + this.props.data.id
+        "aria-controls": 'collapse_' + this.props.data.id
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "badge rounded-pill bg-light text-dark"
       }, this.props.data.id + " - " + this.props.data.organism), this.props.data.name)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        id: 'proteome_' + this.props.data.id,
+        id: 'collapse_' + this.props.data.id,
         className: "accordion-collapse collapse show",
-        "aria-labelledby": 'proteome_' + this.props.data.id,
-        "data-bs-parent": "#accordionExample"
+        "aria-labelledby": 'heading_' + this.props.data.id,
+        "data-bs-parent": "#proteomes"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "accordion-body"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
