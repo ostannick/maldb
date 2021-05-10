@@ -11,7 +11,7 @@ use App\Models\Digest;
 use App\Models\Process;
 use App\Models\Status;
 
-use App\Jobs\ProcessProteome;
+use App\Jobs\ProcessDigest;
 
 class DigestController extends Controller
 {
@@ -49,7 +49,7 @@ class DigestController extends Controller
     public function store(Request $request)
     {
       //Dispatch the job to the default queue;
-      ProcessProteome::dispatch($request->all());
+      ProcessDigest::dispatch($request->all());
 
       return 'Made the table';
 
