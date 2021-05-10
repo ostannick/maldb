@@ -70,7 +70,6 @@ class ProteomeController extends Controller
 
         $proteome->name = $request->input('name');
         $proteome->path = $filePath;
-        $proteome->description = $request->input('description');
         $proteome->organism = $request->input('organism');
         $proteome->user_id = Auth::user()->id;
 

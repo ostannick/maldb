@@ -71475,21 +71475,21 @@ var Proteome = /*#__PURE__*/function (_Component) {
         className: "accordion-item"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
         className: "accordion-header",
-        id: 'heading_' + this.props.data.id
+        id: 'heading' + this.props.data.id
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "accordion-button collapsed",
+        className: "accordion-button",
         type: "button",
         "data-bs-toggle": "collapse",
-        "data-bs-target": 'proteome_' + this.props.data.id,
-        "aria-expanded": "false",
-        "aria-controls": 'collapse_' + this.props.data.id
+        "data-bs-target": '#proteome' + this.props.data.id,
+        "aria-expanded": "true",
+        "aria-controls": 'collapse' + this.props.data.id
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "badge rounded-pill bg-light text-dark"
       }, this.props.data.id + " - " + this.props.data.organism), this.props.data.name)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        id: 'collapse_' + this.props.data.id,
+        id: 'collapse' + this.props.data.id,
         className: "accordion-collapse collapse show",
-        "aria-labelledby": 'heading_' + this.props.data.id,
-        "data-bs-parent": "#proteomes"
+        "aria-labelledby": 'heading' + this.props.data.id,
+        "data-bs-parent": "#proteome_manager"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "accordion-body"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -71715,7 +71715,7 @@ var ProteomeManager = /*#__PURE__*/function (_Component) {
         className: "card-body"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "accordion",
-        id: "accordionExample"
+        id: "proteome_manager"
       }, this.state.proteomes.map(function (proteome) {
         return _this3.renderProteome(proteome);
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
