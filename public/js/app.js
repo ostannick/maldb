@@ -70464,18 +70464,7 @@ __webpack_require__(/*! ./components/Job */ "./resources/js/components/Job.js");
 
 __webpack_require__(/*! ./components/Toast */ "./resources/js/components/Toast.js");
 
-__webpack_require__(/*! ./components/Proteomes/ProteomeManager */ "./resources/js/components/Proteomes/ProteomeManager.js"); //Enable settings modal
-
-
-$('.open-settings').on('mousedown', function () {
-  $('#settings-modal').modal();
-});
-$('.mass-mods').on('click', function () {
-  $('#mass-mods-modal').modal();
-});
-$('.search-help').on('click', function () {
-  $('#help-modal').modal();
-});
+__webpack_require__(/*! ./components/Proteomes/ProteomeManager */ "./resources/js/components/Proteomes/ProteomeManager.js");
 
 /***/ }),
 
@@ -71926,7 +71915,16 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         "aria-labelledby": "panelsStayOpen-headingThree"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "accordion-body"
-      }, "CONTENT"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "mb-3"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "dataset",
+        className: "form-label"
+      }, "Mass List"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
+        className: "form-control",
+        id: "dataset",
+        rows: "3"
+      }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-lg-12 mt-3"
