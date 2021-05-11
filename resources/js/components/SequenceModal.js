@@ -91,15 +91,15 @@ class SequenceModal extends Component {
                 </div>
                 <div className="col-md-12">
 
-                  <ul class="nav nav-pills">
-                    <li class="nav-item">
-                      <a class="nav-link active" href="#">Sequence Map</a>
+                  <ul className="nav nav-pills">
+                    <li className="nav-item">
+                      <a className="nav-link active" href="#">Sequence Map</a>
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#">Table</a>
+                    <li className="nav-item">
+                      <a className="nav-link" href="#">Table</a>
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#">Statistics</a>
+                    <li className="nav-item">
+                      <a className="nav-link" href="#">Statistics</a>
                     </li>
 
                   </ul>
@@ -118,7 +118,7 @@ class SequenceModal extends Component {
                     <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{width: '75%'}}>75% Sequence Coverage</div>
                   </div>
 
-                  <table class="table">
+                  <table className="table">
                     <thead>
                       <tr>
                         <th scope="col">Sequence</th>

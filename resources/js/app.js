@@ -18,8 +18,3 @@ $('.mass-mods').on('click', function () {
 $('.search-help').on('click', function () {
   $('#help-modal').modal();
 })
-
-//Enable all tooltips app-wide
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})

@@ -4,7 +4,6 @@ import axios from 'axios';
 
 import SearchForm from './SearchForm';
 import SummaryChart from './Chart';
-import ProteomePicker from './ProteomePicker';
 import SequenceModal from './SequenceModal';
 
 class Job extends Component {
@@ -204,9 +203,7 @@ class Job extends Component {
                 </div>
             </div>
           </div>
-
-
-          <ProteomePicker />
+          
           <SequenceModal
             ref={this.analysisModal}
             hitId={this.state.selectedHit}

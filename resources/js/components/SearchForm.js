@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom'
 import axios from 'axios';
 
+import TablePicker from './TablePicker';
+import ModificationPicker from './ModificationPicker';
+
 class SearchForm extends Component {
 
   constructor(props) {
@@ -42,7 +45,7 @@ class SearchForm extends Component {
             </h2>
             <div id="panelsStayOpen-collapseOne" className="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
               <div className="accordion-body">
-                CONTENT
+                <TablePicker />
               </div>
             </div>
           </div>
@@ -54,7 +57,7 @@ class SearchForm extends Component {
             </h2>
             <div id="panelsStayOpen-collapseTwo" className="accordion-collapse show" aria-labelledby="panelsStayOpen-headingTwo">
               <div className="accordion-body">
-                CONTENT
+                <ModificationPicker />
               </div>
             </div>
           </div>
@@ -73,16 +76,16 @@ class SearchForm extends Component {
 
           <div className="row">
             <div className="col-lg-12 mt-3">
-              <div class="d-grid gap-2">
-                <button class="btn btn-lg btn-primary" type="button"><i class="fas fa-running"></i></button>
+              <div className="d-grid gap-2">
+                <button className="btn btn-lg btn-primary" type="button"><i className="fas fa-running"></i></button>
               </div>
             </div>
           </div>
 
           <div className="row">
             <div className="col-lg-12 mt-3">
-              <div class="progress">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{"width": "75%"}}></div>
+              <div className="progress">
+                <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{"width": "75%"}}></div>
               </div>
             </div>
           </div>
