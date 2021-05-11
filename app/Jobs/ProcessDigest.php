@@ -88,23 +88,31 @@ class ProcessDigest implements ShouldQueue
           'status' => 'Empty'
         ]);
 
+        //Run the digest script (PYTHON):
+
+        $command = implode(' ', [
+          'py',
+          '../python/fasta_to_json.py',
+          '../storage/app/' . $proteome->path,
+          '../storage/app/' . Auth::user()->id . '/proteomes/' . $tableNameDigest . '.json',
+          '../storage/app/' . Auth::user()->id . '/proteomes/' . $tableName . '.json',
+          $enzyme
+        ]);
+
+        shell_exec($command);
+
+        /*
+
           for($i = 0; $i < 15; $i++)
           {
             sleep(1);
 
-            $status = new Status();
-            $status->process_id = $process->id;
-            $status->progress = $i / 15;
-            $status->description = "Sleeping at " . $i;
-            $status->save();
+            update_status($process->id, $i/15, 'Added a bunch of peptides...');
           }
 
-          $status = new Status();
-          $status->process_id = $process->id;
-          $status->progress = 1;
-          $status->description = "Complete";
-          $status->save();
+          complete_process($process->id);
 
+        */
 
     }
 
