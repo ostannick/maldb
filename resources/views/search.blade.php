@@ -5,7 +5,7 @@
 
 <div class="container">
   <div id="job-app"></div>
-
+  <div id="toast"></div>
 </div>
 
 <!-- MODALS -->

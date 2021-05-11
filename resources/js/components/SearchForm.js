@@ -33,76 +33,62 @@ class SearchForm extends Component {
   render() {
     return (
       <div className="row">
-      <form>
-        <div className="col-12">
-          <div className="form-group">
-            <label htmlFor="enzymeSelect">Enzyme</label>
-            <select onChange={this.props.handleEnzymeChange} name="enzyme" className="form-control" id="enzymeSelect">
-              <option value="Trypsin">Trypsin</option>
-              <option value="Chymotrypsin">Chymotrypsin</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="col-12">
-          <div className="form-group">
-            <label htmlFor="missedCleavages">Missed Cleavages</label>
-            <select onChange={this.props.handleMissedCleavageChange} name="missedCleavages" className="form-control" id="missedCleavages">
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="col-12">
-          <div className="form-group">
-            <div className="input-group">
-              <div className="input-group-prepend">
-                <span className="input-group-text" id="inputGroupPrepend2"><i className="fal fa-fw fa-arrows-h"></i></span>
+        <div className="accordion" id="accordionPanelsStayOpenExample">
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="panelsStayOpen-headingOne">
+              <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                Tables
+              </button>
+            </h2>
+            <div id="panelsStayOpen-collapseOne" className="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+              <div className="accordion-body">
+                CONTENT
               </div>
-              <input defaultValue="0.8" onChange={this.props.handleToleranceChange} type="text" className="form-control" id="validationDefaultUsername" placeholder="Tolerance" data-toggle="tooltip" data-placement="top" title="Tolerance" required></input>
             </div>
           </div>
-        </div>
-
-        <div className="col-12">
-          <div className="form-group">
-            <div className="input-group">
-              <div className="input-group-prepend">
-                <span className="input-group-text" id="inputGroupPrepend2"><i className="fal fa-fw fa-plus"></i></span>
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="panelsStayOpen-headingTwo">
+              <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseTwo">
+                Mass Modifications
+              </button>
+            </h2>
+            <div id="panelsStayOpen-collapseTwo" className="accordion-collapse show" aria-labelledby="panelsStayOpen-headingTwo">
+              <div className="accordion-body">
+                CONTENT
               </div>
-              <input type="text" className="form-control mass-mods" id="validationDefaultUsername" placeholder="Modifications" aria-describedby="inputGroupPrepend2"></input>
             </div>
           </div>
-        </div>
-
-        <div className="col-12">
-          <div className="form-group">
-            <div className="input-group">
-              <div className="input-group-prepend">
-                <span className="input-group-text" id="inputGroupPrepend2"><i className="fal fa-fw fa-bacterium"></i></span>
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="panelsStayOpen-headingThree">
+              <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="true" aria-controls="panelsStayOpen-collapseThree">
+                Dataset
+              </button>
+            </h2>
+            <div id="panelsStayOpen-collapseThree" className="accordion-collapse show" aria-labelledby="panelsStayOpen-headingThree">
+              <div className="accordion-body">
+                  CONTENT
               </div>
-              <input type="text" className="form-control open-settings" id="validationDefaultUsername" placeholder="Proteomes" aria-describedby="inputGroupPrepend2" required></input>
             </div>
           </div>
-        </div>
 
-        <div className="col-12">
-          <div className="form-group">
-            <label htmlFor="massList">Dataset</label>
-            <textarea className="form-control" id="massList" rows="3" placeholder="Mass List"  onChange={this.props.handleMassListChange} defaultValue="1170.260461 1375.483557 1653.520751 1752.469679 1765.517257 1849.43973 2105.47983 2128.467221 2178.484802 2211.44009 2222.209515 2389.285925 2424.412107 2551.361535 2668.518994 2855.366387"/>
+          <div className="row">
+            <div className="col-lg-12 mt-3">
+              <div class="d-grid gap-2">
+                <button class="btn btn-lg btn-primary" type="button"><i class="fas fa-running"></i></button>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <hr/>
+          <div className="row">
+            <div className="col-lg-12 mt-3">
+              <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{"width": "75%"}}></div>
+              </div>
+            </div>
+          </div>
 
-        <div className="col-12">
-          <button className="btn btn-secondary search-help"><i className="fas fa-fw fa-question"></i></button>
-          <button id="start-search" onClick={this.doSearch} className="btn btn-primary float-right"><i className={this.state.searchIcon}></i></button>
-        </div>
+          </div>
 
-      </form>
       </div>
     );
   }

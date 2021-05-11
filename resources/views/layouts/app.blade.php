@@ -35,7 +35,7 @@
                 <a class="nav-link active" aria-current="page" href="/home">Dashboard</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/job/create">Perform Search</a>
+                <a class="nav-link" href="/maldb">Perform Search</a>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">

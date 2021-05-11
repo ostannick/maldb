@@ -62,6 +62,7 @@ class ProcessDigest implements ShouldQueue
       $process->save();
 
       //Has a sequence table already been generated for this proteome? If not, we need to make one.
+      $already_exists = False;
       if(!Schema::hasTable($tableName))
       {
         //create a proteome table
@@ -74,7 +75,8 @@ class ProcessDigest implements ShouldQueue
       else
       {
         //Clear aka truncate the table
-        DB::table($tableName)->truncate();
+        $already_exists = True;
+        \DB::table($tableName)->truncate();
       }
 
       if(!Schema::hasTable($tableNameDigest))
@@ -93,18 +95,29 @@ class ProcessDigest implements ShouldQueue
       else
       {
         //Clear aka truncate the table
-        DB::table($tableNameDigest)->truncate();
+        $already_exists = True; //Redundant assignment
+        \DB::table($tableNameDigest)->truncate();
       }
 
       //Create the entry in the digests table
-      Digest::create([
-        'user_id' => $this->user_id,
-        'proteome_id' => $proteome->id,
-        'table_name' => $tableNameDigest,
-        'enzyme' => $enzyme,
-        'max_mc' => $max_mc,
-        'status' => 'Empty'
-      ]);
+      if(!$already_exists)
+      {
+        Digest::create([
+          'user_id' => $this->user_id,
+          'proteome_id' => $proteome->id,
+          'table_name' => $tableNameDigest,
+          'enzyme' => $enzyme,
+          'max_mc' => $max_mc,
+          'process_id' => $process->id,
+          'status' => ''
+        ]);
+      }
+      else
+      {
+        $digest = Digest::where('table_name', $tableNameDigest)->first();
+        $digest->process_id = $process->id;
+        $digest->save();
+      }
 
       //Run the digest script (PYTHON):
       $file_fasta = 'storage/app/' . $proteome->path;

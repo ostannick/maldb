@@ -123,6 +123,7 @@ Route::resource('/digest', DigestController::class);
 
 Route::post('/proteomes/digest', 'DigestController@digest'); //Digests a proteome
 Route::post('/digest/list', 'DigestController@list');         //Gets a list of a proteome's digest tables
+Route::post('/digest/poll', 'DigestController@poll');
 
 Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
