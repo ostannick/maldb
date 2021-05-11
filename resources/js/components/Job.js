@@ -174,7 +174,7 @@ class Job extends Component {
       <div className="row justify-content-center">
           <div className="col-md-3">
               <div className="card">
-                  <div className="card-header">Experimental Setup</div>
+                  <div className="card-header">Search Space</div>
                   <div className="card-body">
 
                     <SearchForm
@@ -212,7 +212,11 @@ class Job extends Component {
             hitId={this.state.selectedHit}
           />
 
+
+
       </div>
+
+
 
 
 
