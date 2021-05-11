@@ -71297,11 +71297,55 @@ var DigestTableEntry = /*#__PURE__*/function (_Component) {
     _classCallCheck(this, DigestTableEntry);
 
     _this = _super.call(this, props);
-    _this.state = {};
+    _this.state = {
+      shouldPoll: true,
+      peptides: 0,
+      progress: 0,
+      status: 'Retrieving...',
+      console: ''
+    };
+    _this.poll = _this.poll.bind(_assertThisInitialized(_this));
+    _this.longPoll = _this.longPoll.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(DigestTableEntry, [{
+    key: "poll",
+    value: function poll() {
+      var _this2 = this;
+
+      var sendData = {
+        digest_id: this.props.data.id
+      };
+      axios.post('/digest/poll', sendData).then(function (res) {
+        var response = res.data;
+
+        _this2.setState({
+          progress: response.progress
+        });
+
+        _this2.setState({
+          console: response.description
+        });
+      })["catch"](function (e) {
+        console.log(e.response.data.message);
+      });
+    }
+  }, {
+    key: "longPoll",
+    value: function longPoll() {
+      var _this3 = this;
+
+      setInterval(function () {
+        _this3.poll();
+      }, 5000);
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.longPoll();
+    }
+  }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
@@ -71317,25 +71361,25 @@ var DigestTableEntry = /*#__PURE__*/function (_Component) {
       }, this.props.data.size, " peptides"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-lg-6"
+        className: "col-lg-12"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "progress"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "progress-bar progress-bar-striped progress-bar-animated",
         role: "progressbar",
-        "aria-valuenow": "35",
+        "aria-valuenow": this.state.progress * 100,
         "aria-valuemin": "0",
         "aria-valuemax": "100",
         style: {
-          width: '35%'
+          width: this.state.progress * 100 + "%"
         }
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-lg-6"
+        className: "col-lg-12"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "font-monospace"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "fal fa-cog fa-spin"
-      }), " Status..."))));
+      }), " ", this.state.console))));
     }
   }]);
 

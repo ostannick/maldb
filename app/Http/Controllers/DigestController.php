@@ -56,6 +56,13 @@ class DigestController extends Controller
       return 'Digest job was dispatched.';
     }
 
+    public function poll(Request $request)
+    {
+      $digest = Digest::where('id', $request->input('digest_id'))->first();
+      $status = Process::where('id', $digest->process_id)->first()->status();
+      return $status;
+    }
+
     /**
      * Display the specified resource.
      *

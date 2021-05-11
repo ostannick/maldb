@@ -7,8 +7,46 @@ class DigestTableEntry extends Component {
     super(props);
 
     this.state = {
-
+      shouldPoll: true,
+      peptides: 0,
+      progress: 0,
+      status: 'Retrieving...',
+      console: '',
     }
+
+    this.poll = this.poll.bind(this);
+    this.longPoll = this.longPoll.bind(this);
+  }
+
+  poll()
+  {
+    const sendData = {
+      digest_id: this.props.data.id
+    }
+
+    axios.post('/digest/poll', sendData)
+      .then(res => {
+        const response = res.data;
+
+        this.setState({progress: response.progress});
+        this.setState({console: response.description});
+
+      })
+      .catch(function(e) {
+        console.log(e.response.data.message);
+      });
+  }
+
+  longPoll()
+  {
+    setInterval(() => {
+      this.poll()
+    }, 5000);
+  }
+
+  componentDidMount()
+  {
+    this.longPoll();
   }
 
   render()
@@ -22,14 +60,14 @@ class DigestTableEntry extends Component {
 
         {/* STATUS BAR */}
         <div className="row">
-          <div className="col-lg-6">
+          <div className="col-lg-12">
             <div className="progress">
-              <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" style={{width: '35%'}}></div>
+              <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow={this.state.progress*100} aria-valuemin="0" aria-valuemax="100" style={{width: this.state.progress * 100 + "%"}}></div>
             </div>
           </div>
 
-          <div className="col-lg-6">
-          <p className="font-monospace"><i className="fal fa-cog fa-spin"></i> Status...</p>
+          <div className="col-lg-12">
+          <p className="font-monospace"><i className="fal fa-cog fa-spin"></i> {this.state.console}</p>
           </div>
         </div>
       </a>
