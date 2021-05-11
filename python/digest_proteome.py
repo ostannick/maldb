@@ -1,9 +1,23 @@
-import os
-import argparse
-import json
+"""Script to digest a proteome into peptides that may be detected by mass spectrometry.
 
-# # #  Toggle this variable to specify whether the full sequence composition matrix is saved for each peptide
-keep_full_composition_matrix = False
+Two JSON files are generated, a sequence file and a peptide file. In the peptide file, all mass values (fields "mz1" and "avg") are represented as strings, not floats, in order to maintain precision and prevent floating point error propagation during calculations.
+
+Fields in the sequence file:
+- seq_id: integer
+- name: string of the sequence name from the proteome file
+- peptides: integer of the number of peptides generated from the sequence
+
+Fields in the peptide file:
+- seq_id: integer
+- seq: string of the peptide sequence
+- mz1: string of the monoisotopic mass of the peptide
+- avg: string of the average molecular mass of the peptide
+- mc: integer of the number of missed cleavage sites required to generate this peptide
+- mso: integer of the number of oxidized methionines in this peptide
+"""
+import argparse, os, json
+from decimal import Decimal
+
 
 # # #  Enzymatic digestions
 def trypsin_digest(sequence):
@@ -25,8 +39,6 @@ digest_fxns = {
 }
 
 # Specificity taken from http://www.matrixscience.com/help/enzyme_help.html and https://web.expasy.org/peptide_cutter/peptidecutter_enzymes.html
-# If I do want to use regex (doesn't join frag with cut aa):
-#   tryp_re = re.compile(r'([RK]{1})(?=[^P]{1})'); re.split(tryp_re, sequence)
 def digest_after(sequence, sites):
     # 'sites' should be a set/tuple containing upper case amino acid symbols to cut after.
     frags = []
@@ -58,8 +70,10 @@ def digest_sequences(seqs, enzyme, missed_cleavages):
     peptide_db, seq_db = [], []
     for seq_id, seq in enumerate(seqs):
         peptides = seq_to_peptide_dicts(seq_id, seq.seq, enz_digest_fxn, missed_cleavages)
+        if len(peptides) == 0:
+            continue
         peptide_db.extend(peptides)
-        seq_db.append({'seq_id':seq_id, 'name':seq.name, 'fragments':len(peptides)})
+        seq_db.append({'seq_id':seq_id, 'name':seq.name, 'peptides':len(peptides)})
     return peptide_db, seq_db
 
 def seq_to_peptide_dicts(seq_id, sequence, enz_digest_fxn, missed_cleavages):
@@ -85,45 +99,61 @@ def seq_to_peptide_dicts(seq_id, sequence, enz_digest_fxn, missed_cleavages):
                 break
             elif args.min_weight <= pep['mz1'] <= args.max_weight:
                 peptides.append(pep)
+    # generate additional peptides to account for variable oxidation of methionine
+    if args.no_met_ox == False:
+        o_mono, o_avg = atomic_masses['O_mono'], atomic_masses['O_avg']
+        mso_peps = []
+        for pep in peptides:
+            m_count = pep['seq'].count('M')
+            for m_num in range(1, m_count+1):
+                mso_pep = pep.copy()
+                mso_pep['mso'] = m_num
+                mso_pep['mz1'] += (o_mono * m_num)
+                mso_pep['avg'] += (o_avg * m_num)
+                mso_peps.append(mso_pep)
+        peptides.extend(mso_peps)
+    # convert Decimal values to strings so they're JSON-able
+    for pep in peptides:
+        pep['mz1'] = str(pep['mz1'])
+        pep['avg'] = str(pep['avg'])
     return peptides
 
 def make_peptide_dict(seq_id, sequence, missed_cleavages):
     try:
-        pep = {'seq_id':seq_id, 'seq':sequence, 'mz1':calculate_mz1(sequence), 'avg':calculate_average_weight(sequence)}
+        pep = {'seq_id':seq_id, 'seq':sequence, 'mc':missed_cleavages, 'mso':0, 'mz1':calculate_mz1(sequence), 'avg':calculate_average_weight(sequence)}
     except KeyError: # Thrown when there's a non-standard character in the sequence
         return None
-    pep['mc'] = missed_cleavages
-    if keep_full_composition_matrix:
-        for aa in aa_letters:
-            pep[aa] = sequence.count(aa)
     return pep
 
 
 # # #  Molecular weight functions and attributes
 aa_letters = 'ACDEFGHIKLMNPQRSTVWY'
-# Weights taken from https://proteomicsresource.washington.edu/protocols06/masses.php
-aa_mono_weights = {
-    'A':71.037113805, 'C':103.009184505, 'D':115.026943065, 'E':129.042593135, 'F':147.068413945, 'G':57.021463735, 'H':137.058911875, 'I':113.084064015, 'K':128.094963050, 'L':113.084064015, 'M':131.040484645, 'N':114.042927470, 'P':97.052763875, 'Q':128.058577540, 'R':156.101111050, 'S':87.032028435, 'T':101.047678505, 'U':150.953633405, 'V':99.068413945, 'W':186.079312980, 'Y':163.063328575
+# Masses taken from https://proteomicsresource.washington.edu/protocols06/masses.php
+aa_mono_masses = {
+    'A':Decimal('71.037113805'), 'C':Decimal('103.009184505'), 'D':Decimal('115.026943065'), 'E':Decimal('129.042593135'), 'F':Decimal('147.068413945'), 'G':Decimal('57.021463735'), 'H':Decimal('137.058911875'), 'I':Decimal('113.084064015'), 'K':Decimal('128.094963050'), 'L':Decimal('113.084064015'), 'M':Decimal('131.040484645'), 'N':Decimal('114.042927470'), 'P':Decimal('97.052763875'), 'Q':Decimal('128.058577540'), 'R':Decimal('156.101111050'), 'S':Decimal('87.032028435'), 'T':Decimal('101.047678505'), 'U':Decimal('150.953633405'), 'V':Decimal('99.068413945'), 'W':Decimal('186.079312980'), 'Y':Decimal('163.063328575')
 }
-aa_avg_weights = {
-    'A':71.0779, 'C':103.1429, 'D':115.0874, 'E':129.11398, 'F':147.17386, 'G':57.05132, 'H':137.13928, 'I':113.15764, 'K':128.17228, 'L':113.15764, 'M':131.19606, 'N':114.10264, 'P':97.11518, 'Q':128.12922, 'R':156.18568, 'S':87.0773, 'T':101.10388, 'U':150.3079, 'V':99.13106, 'W':186.2099, 'Y':163.17326
+aa_avg_masses = {
+    'A':Decimal('71.0779'), 'C':Decimal('103.1429'), 'D':Decimal('115.0874'), 'E':Decimal('129.11398'), 'F':Decimal('147.17386'), 'G':Decimal('57.05132'), 'H':Decimal('137.13928'), 'I':Decimal('113.15764'), 'K':Decimal('128.17228'), 'L':Decimal('113.15764'), 'M':Decimal('131.19606'), 'N':Decimal('114.10264'), 'P':Decimal('97.11518'), 'Q':Decimal('128.12922'), 'R':Decimal('156.18568'), 'S':Decimal('87.0773'), 'T':Decimal('101.10388'), 'U':Decimal('150.3079'), 'V':Decimal('99.13106'), 'W':Decimal('186.2099'), 'Y':Decimal('163.17326')
+}
+# Masses taken from https://www.unimod.org/masses.html
+atomic_masses = {
+    'H_mono':Decimal('1.007825035'), 'H_avg':Decimal('1.00794'), 'O_mono':Decimal('15.99491463'), 'O_avg':Decimal('15.9994')
 }
 # Other weight calculators http://web.thu.edu.tw/fdlung/www/peptidemass.html https://www.peptidesynthetics.co.uk/tools/
-# Atom-level values, if needed, can be found at https://www.unimod.org/masses.html
 def calculate_mz1(sequence):
     # The returned weight includes an N-terminus H, a C-terminus OH, and one MALDI-induced extra H
-    proton, oxygen = 1.007825035, 15.99491463
+    proton, oxygen = atomic_masses['H_mono'], atomic_masses['O_mono']
     return peptide_molecular_weight(sequence) + 3*proton + oxygen
-def calculate_average_weight(sequence):
-    # The returned weight includes an N-terminus H, a C-terminus OH, and one MALDI-induced extra H
-    proton, oxygen = 1.00794, 15.9994
-    return average_peptide_molecular_weight(sequence) + 3*proton + oxygen
 def peptide_molecular_weight(sequence):
     # The monoisotopic mass, not including N- or C-terminus atoms
-    return sum(aa_mono_weights[aa] for aa in sequence)
+    return sum(aa_mono_masses[aa] for aa in sequence)
+def calculate_average_weight(sequence):
+    # The returned weight includes an N-terminus H, a C-terminus OH, and one MALDI-induced extra H
+    proton, oxygen = atomic_masses['H_avg'], atomic_masses['O_avg']
+    return average_peptide_molecular_weight(sequence) + 3*proton + oxygen
 def average_peptide_molecular_weight(sequence):
     # The average mass, not including N- or C-terminus atoms
-    return sum(aa_avg_weights[aa] for aa in sequence)
+    return sum(aa_avg_masses[aa] for aa in sequence)
 
 
 # # #  FASTA file parsing
@@ -163,7 +193,7 @@ class Sequence(object):
 
 # # #  Command line options
 def setup_parser():
-    prog_descrip = 'A script to take a protein sequence file in FASTA format, digest it into peptides, and save a peptide and sequence database file in JSON format.'
+    prog_descrip = 'A script to take a protein sequence file in FASTA format, digest it into peptides, and save the corresponding peptide and sequence database files in JSON format.'
     prog_epilog = '' # probably a couple example usages
     parser = argparse.ArgumentParser(description=prog_descrip, epilog=prog_epilog)
     add_arguments(parser)
@@ -178,6 +208,7 @@ def add_arguments(parser):
     parser.add_argument("-c", "--cleavages", type=int, default=1, help="Specify the number of missed cleavage sites allowed (default: %(default)s)")
     parser.add_argument("-n", "--min_weight", type=float, default=500.0, help="Discard peptides below this molecular weight threshold (default: %(default)s)")
     parser.add_argument("-x", "--max_weight", type=float, default=5000.0, help="Discard peptides above this molecular weight threshold (default: %(default)s)")
+    parser.add_argument("-o", "--no_met_ox", action='store_true', help="Use this flag to prevent the generation of additional peptides from the variable oxidation of methionine (default: %(default)s)")
 def get_and_validate_arguments(parser):
     args = parser.parse_args()
     # #  Positional arguments

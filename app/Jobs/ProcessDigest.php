@@ -113,7 +113,7 @@ class ProcessDigest implements ShouldQueue
 
       $command = implode(' ', [
         'py',
-        'python/fasta_to_json.py',
+        'python/digest_proteome.py',
         $file_fasta,
         $file_digest,
         $file_parents,
