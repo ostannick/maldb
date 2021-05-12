@@ -61,8 +61,7 @@ class ProcessDigest implements ShouldQueue
       $process->description = "Digesting " . $proteome->name . " with " . $enzyme;
       $process->save();
 
-      //Has a sequence table already been generated for this proteome? If not, we need to make one.
-      $already_exists = False;
+      //No need to remake the parent table for subsequent digests.
       if(!Schema::hasTable($tableName))
       {
         //create a proteome table
@@ -72,13 +71,8 @@ class ProcessDigest implements ShouldQueue
           $table->text('sequence');
         });
       }
-      else
-      {
-        //Clear aka truncate the table
-        $already_exists = True;
-        \DB::table($tableName)->truncate();
-      }
 
+      $already_exists = False;
       if(!Schema::hasTable($tableNameDigest))
       {
         //create a base peptide digest table

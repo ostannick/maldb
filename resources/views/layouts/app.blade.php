@@ -32,10 +32,10 @@
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/home">Dashboard</a>
+                <a class="nav-link" href="/maldb">Search</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/maldb">Perform Search</a>
+                <a class="nav-link" href="/learn">Learn</a>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">

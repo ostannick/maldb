@@ -63,6 +63,20 @@ class DigestController extends Controller
       return $status;
     }
 
+    public function sort(Request $request)
+    {
+      $enzyme = $request->input('enzyme');
+      $mc = $request->input('mc');
+
+      $tables = Digest::where([
+        ['user_id', Auth::user()->id],
+        ['enzyme', $enzyme],
+        ['max_mc', '>=', $mc]
+        ])->get();
+
+      return json_encode($tables);
+    }
+
     /**
      * Display the specified resource.
      *

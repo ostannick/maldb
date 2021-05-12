@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 
-import ProteomeSwitch from './ProteomeSwitch'
+import DigestTableSwitch from './DigestTableSwitch';
 
 class TablePicker extends Component {
 
@@ -10,45 +10,63 @@ class TablePicker extends Component {
     super(props);
 
     this.state = {
-      proteomes: [],
-      selected: [],
+      enzyme: "trypsin",
+      mc: 0,
+      tables: [],
     }
 
-    this.handleToggle = this.handleToggle.bind(this);
+    this.handleMissedCleavages = this.handleMissedCleavages.bind(this);
+    this.handleEnzyme = this.handleEnzyme.bind(this);
   }
 
-  renderSwitch(proteome)
+
+
+  handleEnzyme(event)
   {
-    return (
-      <ProteomeSwitch
-      key={proteome.id}
-      id={proteome.id}
-      name={proteome.name}
-      toggleCallback={() => this.handleToggle(proteome.id, event)}
-    />
-    )
+    this.setState({enzyme: event.target.value});
+    this.loadTables();
   }
 
-  handleToggle(id, event)
+  handleMissedCleavages(event)
   {
-    var p = {id: event.target.checked};
-    this.setState(p)
+    this.setState({missedCleavages: event.target.value});
+    this.loadTables();
   }
 
   componentDidMount()
   {
     //Load the user's proteome tables via AJAX call to proteome API
     //Make the AJAX call
-    axios.get('/proteomes/list')
+    this.loadTables();
+  }
+
+  loadTables()
+  {
+    const sendData = {
+      enzyme: this.state.enzyme,
+      mc: this.state.mc,
+    }
+
+    axios.post('/digest/sort', sendData)
       .then(res => {
         const response = res.data;
-        this.setState({proteomes: response});
+        this.setState({tables: response});
         console.log(response);
       })
       .catch(function(e) {
         console.log(e.response.data.message);
       });
+  }
 
+  renderSwitch(table)
+  {
+    return (
+      <DigestTableSwitch
+      key={table.id}
+      data={table}
+      toggleCallback={() => this.handleToggle(table.id, event)}
+    />
+    )
   }
 
   render() {
@@ -56,16 +74,16 @@ class TablePicker extends Component {
       <div>
 
       <div className="mb-3">
-        <label htmlFor="input-enzyme" className="form-label">Enzyme</label>
-        <select id="input-enzyme" className="form-select">
+        <label htmlFor="input-enzyme" className="form-label"><i className="fal fa-heart-broken fa-rotate-90"></i> Enzyme</label>
+        <select id="input-enzyme" className="form-select" onChange={this.handleEnzyme}>
           <option value="trypsin">Trypsin</option>
           <option value="chymotrypsin">Chymotrypsin</option>
         </select>
       </div>
 
       <div className="mb-3">
-        <label htmlFor="input-enzyme" className="form-label">Missed Cleavages</label>
-        <select id="input-enzyme" className="form-select">
+        <label htmlFor="input-enzyme" className="form-label"><i className="fal fa-compass-slash"></i> Missed Cleavages</label>
+        <select id="input-enzyme" className="form-select" onChange={this.handleMissedCleavages}>
           <option value="0">0</option>
           <option value="1">1</option>
           <option value="2">2</option>
@@ -74,6 +92,12 @@ class TablePicker extends Component {
           <option value="5">5</option>
         </select>
       </div>
+
+      {this.state.tables.map(table => (
+
+        this.renderSwitch(table)
+
+      ))}
 
       </div>
     );

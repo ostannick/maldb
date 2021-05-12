@@ -69,10 +69,17 @@ class SearchForm extends Component {
             </h2>
             <div id="panelsStayOpen-collapseThree" className="accordion-collapse show" aria-labelledby="panelsStayOpen-headingThree">
               <div className="accordion-body">
+
                 <div className="mb-3">
-                  <label htmlFor="dataset" className="form-label">Mass List</label>
+                  <label htmlFor="tolerance" className="form-label"><i class="fal fa-arrows-alt-h"></i> Tolerance (Da)</label>
+                  <input type="text" className="form-control" id="tolerance" defaultValue="0.8" />
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="dataset" className="form-label"><i class="fal fa-stream"></i> Mass List</label>
                   <textarea className="form-control" id="dataset" rows="3"></textarea>
                 </div>
+
               </div>
             </div>
           </div>

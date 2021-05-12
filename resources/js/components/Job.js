@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 import SearchForm from './SearchForm';
-import SummaryChart from './Chart';
+import Results from './Results';
 import SequenceModal from './SequenceModal';
 
 class Job extends Component {
@@ -193,17 +193,15 @@ class Job extends Component {
 
           <div className="col-md-9">
             <div className="card">
-                <div className="card-header">Result Summary</div>
+                <div className="card-header">Search Hits</div>
                 <div className="card-body">
 
-                  <SummaryChart
-                    handleBarClick={(config, event) => this.getSequenceView(config, event)}
-                  />
+                  <Results />
 
                 </div>
             </div>
           </div>
-          
+
           <SequenceModal
             ref={this.analysisModal}
             hitId={this.state.selectedHit}
