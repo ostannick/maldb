@@ -71112,11 +71112,11 @@ var DigestTableEntry = /*#__PURE__*/function (_Component) {
       shouldPoll: true,
       peptides: 0,
       progress: 0,
-      status: 'Retrieving...',
-      console: ''
+      status: 'init',
+      console: '',
+      interval: null
     };
     _this.poll = _this.poll.bind(_assertThisInitialized(_this));
-    _this.longPoll = _this.longPoll.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -71125,6 +71125,7 @@ var DigestTableEntry = /*#__PURE__*/function (_Component) {
     value: function poll() {
       var _this2 = this;
 
+      console.log('Polling...');
       var sendData = {
         digest_id: this.props.data.id
       };
@@ -71132,65 +71133,126 @@ var DigestTableEntry = /*#__PURE__*/function (_Component) {
         var response = res.data;
 
         _this2.setState({
-          progress: response.progress
+          progress: response.status.progress
         });
 
         _this2.setState({
-          console: response.description
+          console: response.status.description
         });
+
+        _this2.setState({
+          status: response.digest.status
+        });
+
+        if (_this2.state.status == 'ready') {
+          clearInterval(_this2.state.interval);
+        }
       })["catch"](function (e) {
         console.log(e.response.data.message);
       });
     }
   }, {
-    key: "longPoll",
-    value: function longPoll() {
-      var _this3 = this;
-
-      setInterval(function () {
-        _this3.poll();
-      }, 5000);
-    }
-  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.longPoll();
+      var _this3 = this;
+
+      var sendData = {
+        digest_id: this.props.data.id
+      };
+      axios.post('/digest/poll', sendData).then(function (res) {
+        var response = res.data;
+
+        _this3.setState({
+          progress: response.status.progress
+        });
+
+        _this3.setState({
+          console: response.status.description
+        });
+
+        _this3.setState({
+          status: response.digest.status
+        });
+
+        if (_this3.state.status == 'processing') {
+          _this3.setState({
+            interval: setInterval(function () {
+              _this3.poll();
+            }, 5000)
+          });
+        }
+      })["catch"](function (e) {
+        console.log(e.response.data.message);
+      });
     }
   }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "#",
-        className: "list-group-item list-group-item-action bg-light",
-        "aria-current": "true"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "d-flex w-100 justify-content-between"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", {
-        className: "mb-1"
-      }, this.props.data.table_name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("small", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-        className: "badge rounded-pill bg-primary"
-      }, this.props.data.size, " peptides"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-lg-12"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "progress"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "progress-bar progress-bar-striped progress-bar-animated",
-        role: "progressbar",
-        "aria-valuenow": this.state.progress * 100,
-        "aria-valuemin": "0",
-        "aria-valuemax": "100",
-        style: {
-          width: this.state.progress * 100 + "%"
-        }
-      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-lg-12"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-        className: "font-monospace"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "fal fa-cog fa-spin"
-      }), " ", this.state.console))));
+      switch (this.state.status) {
+        case 'init':
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+            href: "#",
+            className: "list-group-item list-group-item-action bg-light",
+            "aria-current": "true"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "d-flex w-100 justify-content-between"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", {
+            className: "mb-1"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+            "class": "fal fa-ellipsis-h-alt"
+          }), " ", this.props.data.table_name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("small", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+            className: "badge rounded-pill bg-primary"
+          }, this.props.data.size, "Initializing..."))));
+
+        case 'processing':
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+            href: "#",
+            className: "list-group-item list-group-item-action bg-light",
+            "aria-current": "true"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "d-flex w-100 justify-content-between"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", {
+            className: "mb-1"
+          }, this.props.data.table_name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("small", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+            className: "badge rounded-pill bg-primary"
+          }, this.props.data.size, " peptides"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "row"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "col-lg-12"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "progress"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "progress-bar progress-bar-striped progress-bar-animated",
+            role: "progressbar",
+            "aria-valuenow": this.state.progress * 100,
+            "aria-valuemin": "0",
+            "aria-valuemax": "100",
+            style: {
+              width: this.state.progress * 100 + "%"
+            }
+          }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "col-lg-12"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+            className: "font-monospace"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+            className: "fal fa-cog fa-spin"
+          }), " ", this.state.console))));
+
+        case 'ready':
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+            href: "#",
+            className: "list-group-item list-group-item-action bg-light",
+            "aria-current": "true"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "d-flex w-100 justify-content-between"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", {
+            className: "mb-1"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+            className: "fal fa-check"
+          }), " ", this.props.data.table_name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("small", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+            className: "badge rounded-pill bg-primary"
+          }, this.props.data.size, " peptides"))));
+      }
     }
   }]);
 
@@ -71730,11 +71792,7 @@ var Results = /*#__PURE__*/function (_Component) {
       if (this.state.status == 'init') {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
           className: "text-center display-6 text-primary"
-        }, "malDB initialized"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
-          className: "text-center display-6 text-primary"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          "class": "fal fa-arrow-left"
-        })));
+        }, "initialized"));
       } else if (this.state.status == 'searching') {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
           className: "text-center display-6 text-primary"

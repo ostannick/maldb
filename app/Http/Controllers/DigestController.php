@@ -60,7 +60,11 @@ class DigestController extends Controller
     {
       $digest = Digest::where('id', $request->input('digest_id'))->first();
       $status = Process::where('id', $digest->process_id)->first()->status();
-      return $status;
+      $data = [
+        'digest' => $digest,
+        'status' => $status
+      ];
+      return json_encode($data);
     }
 
     public function sort(Request $request)

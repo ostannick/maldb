@@ -19,8 +19,7 @@ export default class Results extends Component {
     {
       return(
         <div>
-          <h1 className="text-center display-6 text-primary">malDB initialized</h1>
-          <h1 className="text-center display-6 text-primary"><i class="fal fa-arrow-left"></i></h1>
+          <h1 className="text-center display-6 text-primary">initialized</h1>
         </div>
       );
     }

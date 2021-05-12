@@ -94,22 +94,24 @@ class ProcessDigest implements ShouldQueue
       }
 
       //Create the entry in the digests table
+      $digest;
       if(!$already_exists)
       {
-        Digest::create([
+        $digest = Digest::create([
           'user_id' => $this->user_id,
           'proteome_id' => $proteome->id,
           'table_name' => $tableNameDigest,
           'enzyme' => $enzyme,
           'max_mc' => $max_mc,
+          'status' => 'processing',
           'process_id' => $process->id,
-          'status' => ''
         ]);
       }
       else
       {
         $digest = Digest::where('table_name', $tableNameDigest)->first();
         $digest->process_id = $process->id;
+        $digest->status = 'processing';
         $digest->save();
       }
 
@@ -181,5 +183,7 @@ class ProcessDigest implements ShouldQueue
 
       //Set the process to complete.
       complete_process($process->id);
+      $digest->status = 'ready';
+      $digest->save();
     }
 }
