@@ -13,24 +13,42 @@ class TablePicker extends Component {
       enzyme: "trypsin",
       mc: 0,
       tables: [],
+      selectedTables: [],
     }
 
     this.handleMissedCleavages = this.handleMissedCleavages.bind(this);
     this.handleEnzyme = this.handleEnzyme.bind(this);
+    this.toggleTable = this.toggleTable.bind(this);
   }
 
 
 
   handleEnzyme(event)
   {
-    this.setState({enzyme: event.target.value});
-    this.loadTables();
+    this.setState({enzyme: event.target.value}, this.loadTables);
   }
 
   handleMissedCleavages(event)
   {
-    this.setState({missedCleavages: event.target.value});
-    this.loadTables();
+    this.setState({mc: event.target.value}, this.loadTables);
+  }
+
+  toggleTable(id)
+  {
+    //Remove the entry regardless 
+    var arr = this.state.selectedTables;
+    var index = arr.indexOf(id);
+    if (index !== -1) {
+      arr.splice(index, 1);
+    }
+    
+    if(event.target.checked)
+    {
+      arr.push(id);
+    }
+
+    this.setState({selectedTables: arr});
+
   }
 
   componentDidMount()
@@ -64,8 +82,8 @@ class TablePicker extends Component {
       <DigestTableSwitch
       key={table.id}
       data={table}
-      toggleCallback={() => this.handleToggle(table.id, event)}
-    />
+      toggleTable={(id) => this.toggleTable(table.id)}
+      />
     )
   }
 

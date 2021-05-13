@@ -20,7 +20,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body style="background-color: #330f4d">
+<body style="background-color: #0b1d36">
     <div id="app">
 
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -33,6 +33,9 @@
             <ul class="navbar-nav">
               <li class="nav-item">
                 <a class="nav-link" href="/maldb">Search</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/queue">Queue</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/learn">Learn</a>

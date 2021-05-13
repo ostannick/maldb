@@ -73,9 +73,10 @@ class DigestController extends Controller
       $mc = $request->input('mc');
 
       $tables = Digest::where([
-        ['user_id', Auth::user()->id],
-        ['enzyme', $enzyme],
-        ['max_mc', '>=', $mc]
+          ['user_id', Auth::user()->id],
+          ['enzyme', $enzyme],
+          ['max_mc', '>=', $mc],
+          ['status', 'ready']
         ])->get();
 
       return json_encode($tables);

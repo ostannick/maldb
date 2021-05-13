@@ -39,11 +39,11 @@ class SearchForm extends Component {
         <div className="accordion" id="accordionPanelsStayOpenExample">
           <div className="accordion-item">
             <h2 className="accordion-header" id="panelsStayOpen-headingOne">
-              <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+              <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
                 Tables
               </button>
             </h2>
-            <div id="panelsStayOpen-collapseOne" className="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+            <div id="panelsStayOpen-collapseOne" className="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
               <div className="accordion-body">
                 <TablePicker />
               </div>
@@ -51,11 +51,11 @@ class SearchForm extends Component {
           </div>
           <div className="accordion-item">
             <h2 className="accordion-header" id="panelsStayOpen-headingTwo">
-              <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseTwo">
+              <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
                 Mass Modifications
               </button>
             </h2>
-            <div id="panelsStayOpen-collapseTwo" className="accordion-collapse show" aria-labelledby="panelsStayOpen-headingTwo">
+            <div id="panelsStayOpen-collapseTwo" className="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
               <div className="accordion-body">
                 <ModificationPicker />
               </div>
@@ -63,20 +63,20 @@ class SearchForm extends Component {
           </div>
           <div className="accordion-item">
             <h2 className="accordion-header" id="panelsStayOpen-headingThree">
-              <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="true" aria-controls="panelsStayOpen-collapseThree">
+              <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
                 Dataset
               </button>
             </h2>
-            <div id="panelsStayOpen-collapseThree" className="accordion-collapse show" aria-labelledby="panelsStayOpen-headingThree">
+            <div id="panelsStayOpen-collapseThree" className="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
               <div className="accordion-body">
 
                 <div className="mb-3">
-                  <label htmlFor="tolerance" className="form-label"><i class="fal fa-arrows-alt-h"></i> Tolerance (Da)</label>
+                  <label htmlFor="tolerance" className="form-label"><i className="fal fa-arrows-alt-h"></i> Tolerance (Da)</label>
                   <input type="text" className="form-control" id="tolerance" defaultValue="0.8" />
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="dataset" className="form-label"><i class="fal fa-stream"></i> Mass List</label>
+                  <label htmlFor="dataset" className="form-label"><i className="fal fa-stream"></i> Mass List</label>
                   <textarea className="form-control" id="dataset" rows="3"></textarea>
                 </div>
 

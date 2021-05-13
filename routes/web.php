@@ -18,13 +18,28 @@ use Illuminate\Http\Request;
 
 Route::get('/test', function() {
 
-  $myJob = App\Jobs\ProcessProteome::dispatch();
-
-  return 'No error here.';
+  return DB::table('1_TestProteome_trypsin_dig')->select(DB::raw('count(*) as peptides'))->first()->peptides;
 });
 
 Route::get('/', function () {
     return view('home');
+});
+
+Route::get('/queue', function () {
+
+    $jobs = \DB::table('jobs')->get();
+    
+    foreach($jobs as $j)
+    {
+      $j->payload = json_decode($j->payload);
+    }
+    
+    $failed_jobs = \DB::table('failed_jobs')->orderBy('failed_at', 'desc')->limit(10)->get();
+
+    return view('queue')->with([
+      'jobs' => $jobs,
+      'failed_jobs' => $failed_jobs,
+    ]);
 });
 
 Route::get('/proteomes/list', function(){

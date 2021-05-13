@@ -70574,7 +70574,8 @@ var DigestTableSwitch = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         className: "form-check-input",
         type: "checkbox",
-        id: "digest_table_" + this.props.data.id
+        id: "digest_table_" + this.props.data.id,
+        onChange: this.props.toggleTable
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "form-check-label text-truncate",
         htmlFor: "digest_table_" + this.props.data.id
@@ -71989,15 +71990,15 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         className: "accordion-header",
         id: "panelsStayOpen-headingOne"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "accordion-button",
+        className: "accordion-button collapsed",
         type: "button",
         "data-bs-toggle": "collapse",
         "data-bs-target": "#panelsStayOpen-collapseOne",
-        "aria-expanded": "true",
+        "aria-expanded": "false",
         "aria-controls": "panelsStayOpen-collapseOne"
       }, "Tables")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "panelsStayOpen-collapseOne",
-        className: "accordion-collapse collapse show",
+        className: "accordion-collapse collapse",
         "aria-labelledby": "panelsStayOpen-headingOne"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "accordion-body"
@@ -72007,15 +72008,15 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         className: "accordion-header",
         id: "panelsStayOpen-headingTwo"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "accordion-button",
+        className: "accordion-button collapsed",
         type: "button",
         "data-bs-toggle": "collapse",
         "data-bs-target": "#panelsStayOpen-collapseTwo",
-        "aria-expanded": "true",
+        "aria-expanded": "false",
         "aria-controls": "panelsStayOpen-collapseTwo"
       }, "Mass Modifications")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "panelsStayOpen-collapseTwo",
-        className: "accordion-collapse show",
+        className: "accordion-collapse collapse",
         "aria-labelledby": "panelsStayOpen-headingTwo"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "accordion-body"
@@ -72025,15 +72026,15 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         className: "accordion-header",
         id: "panelsStayOpen-headingThree"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "accordion-button",
+        className: "accordion-button collapsed",
         type: "button",
         "data-bs-toggle": "collapse",
         "data-bs-target": "#panelsStayOpen-collapseThree",
-        "aria-expanded": "true",
+        "aria-expanded": "false",
         "aria-controls": "panelsStayOpen-collapseThree"
       }, "Dataset")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "panelsStayOpen-collapseThree",
-        className: "accordion-collapse show",
+        className: "accordion-collapse collapse",
         "aria-labelledby": "panelsStayOpen-headingThree"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "accordion-body"
@@ -72043,7 +72044,7 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         htmlFor: "tolerance",
         className: "form-label"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        "class": "fal fa-arrows-alt-h"
+        className: "fal fa-arrows-alt-h"
       }), " Tolerance (Da)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         className: "form-control",
@@ -72055,7 +72056,7 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         htmlFor: "dataset",
         className: "form-label"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        "class": "fal fa-stream"
+        className: "fal fa-stream"
       }), " Mass List"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
         className: "form-control",
         id: "dataset",
@@ -72373,10 +72374,12 @@ var TablePicker = /*#__PURE__*/function (_Component) {
     _this.state = {
       enzyme: "trypsin",
       mc: 0,
-      tables: []
+      tables: [],
+      selectedTables: []
     };
     _this.handleMissedCleavages = _this.handleMissedCleavages.bind(_assertThisInitialized(_this));
     _this.handleEnzyme = _this.handleEnzyme.bind(_assertThisInitialized(_this));
+    _this.toggleTable = _this.toggleTable.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -72385,16 +72388,33 @@ var TablePicker = /*#__PURE__*/function (_Component) {
     value: function handleEnzyme(event) {
       this.setState({
         enzyme: event.target.value
-      });
-      this.loadTables();
+      }, this.loadTables);
     }
   }, {
     key: "handleMissedCleavages",
     value: function handleMissedCleavages(event) {
       this.setState({
-        missedCleavages: event.target.value
+        mc: event.target.value
+      }, this.loadTables);
+    }
+  }, {
+    key: "toggleTable",
+    value: function toggleTable(id) {
+      //Remove the entry regardless 
+      var arr = this.state.selectedTables;
+      var index = arr.indexOf(id);
+
+      if (index !== -1) {
+        arr.splice(index, 1);
+      }
+
+      if (event.target.checked) {
+        arr.push(id);
+      }
+
+      this.setState({
+        selectedTables: arr
       });
-      this.loadTables();
     }
   }, {
     key: "componentDidMount",
@@ -72432,8 +72452,8 @@ var TablePicker = /*#__PURE__*/function (_Component) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DigestTableSwitch__WEBPACK_IMPORTED_MODULE_3__["default"], {
         key: table.id,
         data: table,
-        toggleCallback: function toggleCallback() {
-          return _this3.handleToggle(table.id, event);
+        toggleTable: function toggleTable(id) {
+          return _this3.toggleTable(table.id);
         }
       });
     }

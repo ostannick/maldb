@@ -184,6 +184,7 @@ class ProcessDigest implements ShouldQueue
       //Set the process to complete.
       complete_process($process->id);
       $digest->status = 'ready';
+      $digest->size = \DB::table($tableNameDigest)->select(DB::raw('count(*) as peptides'))->first()->peptides;
       $digest->save();
     }
 }
