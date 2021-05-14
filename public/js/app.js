@@ -70649,14 +70649,11 @@ var Job = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
     _this.state = {
-      enzyme: 'trypsin',
       missedCleavages: 1,
-      tolerance: 1.15,
-      proteomes: null,
+      tolerance: 0.8,
+      tableList: [],
       massList: "1170.260461 1375.483557 1653.520751 1752.469679 1765.517257 1849.43973 2105.47983 2128.467221 2178.484802 2211.44009 2222.209515 2389.285925 2424.412107 2551.361535 2668.518994 2855.366387",
-      selectedHit: null,
-      results: null,
-      analysis: null,
+      results: [],
       massMods: [{
         name: 'carbamidomethyl_cys',
         type: 'fixed',
@@ -70669,22 +70666,14 @@ var Job = /*#__PURE__*/function (_Component) {
         enabled: true,
         mass: 16.0,
         resi: 'M'
-      }],
-      chartData: {
-        xlabels: {},
-        matches: {}
-      }
+      }]
     };
     _this.searchForm = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
     _this.analysisModal = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
-    _this.handleEnzymeChange = _this.handleEnzymeChange.bind(_assertThisInitialized(_this));
     _this.handleMissedCleavageChange = _this.handleMissedCleavageChange.bind(_assertThisInitialized(_this));
     _this.handleToleranceChange = _this.handleToleranceChange.bind(_assertThisInitialized(_this));
     _this.handleMassListChange = _this.handleMassListChange.bind(_assertThisInitialized(_this));
-    _this.handleProteomeUpdate = _this.handleProteomeUpdate.bind(_assertThisInitialized(_this));
     _this.runSearch = _this.runSearch.bind(_assertThisInitialized(_this));
-    _this.updateChart = _this.updateChart.bind(_assertThisInitialized(_this));
-    _this.getSequenceView = _this.getSequenceView.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -70702,69 +70691,24 @@ var Job = /*#__PURE__*/function (_Component) {
       event.preventDefault(); //Create some data object
 
       var sendData = {
-        enzyme: this.state.enzyme,
         missedCleavages: this.state.missedCleavages,
         tolerance: this.state.tolerance,
         massList: this.state.massList,
         massMods: this.state.massMods
       }; //Make the AJAX call
 
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/submit", sendData).then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/search", sendData).then(function (res) {
         var response = res.data;
         console.log(response);
 
         _this2.setState({
           results: response
-        }); //Do something with the returned data
-
-
-        _this2.updateChart(response); //Change spinner back to play button
+        }); //Change spinner back to play button
 
 
         _this2.resetSearchButton();
       })["catch"](function (e) {
         console.log(e.response.data.message);
-      });
-    } //This method is responsible for updating the chart.
-
-  }, {
-    key: "updateChart",
-    value: function updateChart(data) {
-      //Create our labels for top hits 0 to 9.
-      var topHits = Object.keys(data.hits);
-      var labels = []; //Create an array for our positive matches
-
-      var posMatches = [];
-      var unkMatches = [];
-
-      for (var i = 0; i < topHits.length; i++) {
-        labels[i] = topHits[i].split('|')[2].split(' ')[0];
-        posMatches[i] = Object.keys(data.hits[topHits[i]]).length;
-        unkMatches[i] = data.peak_count - posMatches[i];
-      } //Static method that executes updateOptions.
-
-
-      ApexCharts.exec('Matches', 'updateOptions', {
-        xaxis: {
-          categories: labels
-        }
-      }); //Static method that executes updateSeries.
-
-      ApexCharts.exec('Matches', 'updateSeries', [{
-        name: "Positive Coverage",
-        data: posMatches
-      }, {
-        name: "Unknown Source",
-        data: unkMatches
-      }]); //This is a static method that takes the chart ID (declared in the SummaryChart component) and executes the render method.
-
-      ApexCharts.exec('Matches', 'render');
-    }
-  }, {
-    key: "handleEnzymeChange",
-    value: function handleEnzymeChange(event) {
-      this.setState({
-        enzyme: event.target.value
       });
     }
   }, {
@@ -70787,37 +70731,6 @@ var Job = /*#__PURE__*/function (_Component) {
       this.setState({
         massList: event.target.value
       });
-    }
-  }, {
-    key: "handleProteomeUpdate",
-    value: function handleProteomeUpdate(event) {
-      this.setState({
-        proteomes: event.target.value
-      });
-    }
-  }, {
-    key: "getSequenceView",
-    value: function getSequenceView(index, event) {
-      var _this3 = this;
-
-      var keys = Object.keys(this.state.results.hits);
-      var experimentalData = this.state.results.hits[keys[index]];
-      console.log(experimentalData);
-      var sendData = {
-        protein: keys[index]
-      }; //Make the AJAX call to retrieve the peptides
-
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/analysis", sendData).then(function (res) {
-        var response = res.data;
-
-        _this3.analysisModal.current.updateMatch(response);
-
-        _this3.analysisModal.current.updateData(experimentalData);
-      })["catch"](function (e) {
-        console.log(e.response.data.message);
-      }); //Open the modal
-
-      $('#sequence-view-modal').modal();
     }
   }, {
     key: "render",
@@ -70848,10 +70761,7 @@ var Job = /*#__PURE__*/function (_Component) {
         className: "card-header"
       }, "Search Hits"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-body"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Results__WEBPACK_IMPORTED_MODULE_4__["default"], null)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_SequenceModal__WEBPACK_IMPORTED_MODULE_5__["default"], {
-        ref: this.analysisModal,
-        hitId: this.state.selectedHit
-      }));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Results__WEBPACK_IMPORTED_MODULE_4__["default"], null)))));
     }
   }]);
 
@@ -71950,7 +71860,7 @@ var SearchForm = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
     _this.state = {
-      searchIcon: 'fas fa-fw fa-play'
+      searchIcon: 'fas fa-fw fa-running'
     };
     _this.doSearch = _this.doSearch.bind(_assertThisInitialized(_this));
     return _this;
@@ -71966,14 +71876,14 @@ var SearchForm = /*#__PURE__*/function (_Component) {
     key: "startSpin",
     value: function startSpin() {
       this.setState({
-        searchIcon: 'fas fa-cog fa-spin'
+        searchIcon: 'fas fa-fw fa-cog fa-spin'
       });
     }
   }, {
     key: "stopSpin",
     value: function stopSpin() {
       this.setState({
-        searchIcon: 'fas fa-fw fa-play'
+        searchIcon: 'fas fa-fw fa-running'
       });
     }
   }, {
@@ -72002,7 +71912,9 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         "aria-labelledby": "panelsStayOpen-headingOne"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "accordion-body"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TablePicker__WEBPACK_IMPORTED_MODULE_3__["default"], null)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TablePicker__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        updateTables: this.props.updateTables
+      })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "accordion-item"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
         className: "accordion-header",
@@ -72049,7 +71961,8 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         type: "text",
         className: "form-control",
         id: "tolerance",
-        defaultValue: "0.8"
+        defaultValue: "0.8",
+        onChange: this.props.handleToleranceChange
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "mb-3"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -72060,7 +71973,9 @@ var SearchForm = /*#__PURE__*/function (_Component) {
       }), " Mass List"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
         className: "form-control",
         id: "dataset",
-        rows: "3"
+        rows: "3",
+        onChange: this.props.handleMassListChange,
+        defaultValue: "1170.260461\r 1228.382739\r 1375.483557\r 1653.520751\r 1752.469679\r 1765.517257\r 1849.43973\r 2105.47983\r 2128.467221\r 2178.484802\r 2211.44009\r 2222.209515\r 2389.285925\r 2424.412107\r 2551.361535\r 2668.518994\r 2855.366387"
       }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -72069,9 +71984,10 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         className: "d-grid gap-2"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         className: "btn btn-lg btn-primary",
-        type: "button"
+        type: "button",
+        onClick: this.doSearch
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "fas fa-running"
+        className: this.state.searchIcon
       }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -72400,6 +72316,8 @@ var TablePicker = /*#__PURE__*/function (_Component) {
   }, {
     key: "toggleTable",
     value: function toggleTable(id) {
+      var _this2 = this;
+
       //Remove the entry regardless 
       var arr = this.state.selectedTables;
       var index = arr.indexOf(id);
@@ -72414,6 +72332,8 @@ var TablePicker = /*#__PURE__*/function (_Component) {
 
       this.setState({
         selectedTables: arr
+      }, function (tableList) {
+        return _this2.props.updateTables(_this2.state.selectedTables);
       });
     }
   }, {
@@ -72426,7 +72346,7 @@ var TablePicker = /*#__PURE__*/function (_Component) {
   }, {
     key: "loadTables",
     value: function loadTables() {
-      var _this2 = this;
+      var _this3 = this;
 
       var sendData = {
         enzyme: this.state.enzyme,
@@ -72435,7 +72355,7 @@ var TablePicker = /*#__PURE__*/function (_Component) {
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/digest/sort', sendData).then(function (res) {
         var response = res.data;
 
-        _this2.setState({
+        _this3.setState({
           tables: response
         });
 
@@ -72447,20 +72367,20 @@ var TablePicker = /*#__PURE__*/function (_Component) {
   }, {
     key: "renderSwitch",
     value: function renderSwitch(table) {
-      var _this3 = this;
+      var _this4 = this;
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DigestTableSwitch__WEBPACK_IMPORTED_MODULE_3__["default"], {
         key: table.id,
         data: table,
         toggleTable: function toggleTable(id) {
-          return _this3.toggleTable(table.id);
+          return _this4.toggleTable(table.id);
         }
       });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
+      var _this5 = this;
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "mb-3"
@@ -72501,7 +72421,7 @@ var TablePicker = /*#__PURE__*/function (_Component) {
       }, "4"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
         value: "5"
       }, "5"))), this.state.tables.map(function (table) {
-        return _this4.renderSwitch(table);
+        return _this5.renderSwitch(table);
       }));
     }
   }]);

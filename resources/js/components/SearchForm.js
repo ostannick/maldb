@@ -11,7 +11,7 @@ class SearchForm extends Component {
     super(props);
 
     this.state = {
-      searchIcon: 'fas fa-fw fa-play'
+      searchIcon: 'fas fa-fw fa-running'
     }
 
     this.doSearch = this.doSearch.bind(this);
@@ -25,12 +25,12 @@ class SearchForm extends Component {
 
   startSpin()
   {
-    this.setState({searchIcon: 'fas fa-cog fa-spin'});
+    this.setState({searchIcon: 'fas fa-fw fa-cog fa-spin'});
   }
 
   stopSpin()
   {
-    this.setState({searchIcon: 'fas fa-fw fa-play'});
+    this.setState({searchIcon: 'fas fa-fw fa-running'});
   }
 
   render() {
@@ -45,7 +45,9 @@ class SearchForm extends Component {
             </h2>
             <div id="panelsStayOpen-collapseOne" className="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
               <div className="accordion-body">
-                <TablePicker />
+                <TablePicker 
+                  updateTables={this.props.updateTables}
+                />
               </div>
             </div>
           </div>
@@ -72,12 +74,34 @@ class SearchForm extends Component {
 
                 <div className="mb-3">
                   <label htmlFor="tolerance" className="form-label"><i className="fal fa-arrows-alt-h"></i> Tolerance (Da)</label>
-                  <input type="text" className="form-control" id="tolerance" defaultValue="0.8" />
+                  <input type="text" className="form-control" id="tolerance" defaultValue="0.8" onChange={this.props.handleToleranceChange}/>
                 </div>
 
                 <div className="mb-3">
                   <label htmlFor="dataset" className="form-label"><i className="fal fa-stream"></i> Mass List</label>
-                  <textarea className="form-control" id="dataset" rows="3"></textarea>
+                  <textarea 
+                    className="form-control" 
+                    id="dataset" 
+                    rows="3" 
+                    onChange={this.props.handleMassListChange}
+                    defaultValue="1170.260461
+                    1228.382739
+                    1375.483557
+                    1653.520751
+                    1752.469679
+                    1765.517257
+                    1849.43973
+                    2105.47983
+                    2128.467221
+                    2178.484802
+                    2211.44009
+                    2222.209515
+                    2389.285925
+                    2424.412107
+                    2551.361535
+                    2668.518994
+                    2855.366387">
+                  </textarea>
                 </div>
 
               </div>
@@ -87,7 +111,7 @@ class SearchForm extends Component {
           <div className="row">
             <div className="col-lg-12 mt-3">
               <div className="d-grid gap-2">
-                <button className="btn btn-lg btn-primary" type="button"><i className="fas fa-running"></i></button>
+                <button className="btn btn-lg btn-primary" type="button" onClick={this.doSearch}><i className={this.state.searchIcon}></i></button>
               </div>
             </div>
           </div>

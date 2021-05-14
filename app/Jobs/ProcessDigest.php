@@ -16,8 +16,6 @@ use App\Models\Status;
 use App\Models\Proteome;
 use App\Models\Digest;
 
-use Auth;
-
 class ProcessDigest implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -80,8 +78,8 @@ class ProcessDigest implements ShouldQueue
             $table->increments('id');
             $table->string('parent')->nullable();
             $table->string('sequence')->nullable();
-            $table->decimal('mz1_average')->nullable();
-            $table->decimal('mz1_monoisotopic')->nullable();
+            $table->decimal('mz1_average')->index('mz1_average');;
+            $table->decimal('mz1_monoisotopic')->index('mz1_monoisotopic');;
             $table->integer('missed_cleavages')->nullable();
             $table->integer('met_ox_count')->nullable();
         });
@@ -184,7 +182,7 @@ class ProcessDigest implements ShouldQueue
       //Set the process to complete.
       complete_process($process->id);
       $digest->status = 'ready';
-      $digest->size = \DB::table($tableNameDigest)->select(DB::raw('count(*) as peptides'))->first()->peptides;
+      $digest->size = \DB::table($tableNameDigest)->select(\DB::raw('count(*) as peptides'))->first()->peptides;
       $digest->save();
     }
 }

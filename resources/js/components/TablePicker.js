@@ -47,7 +47,7 @@ class TablePicker extends Component {
       arr.push(id);
     }
 
-    this.setState({selectedTables: arr});
+    this.setState({selectedTables: arr}, (tableList) => this.props.updateTables(this.state.selectedTables));
 
   }
 
