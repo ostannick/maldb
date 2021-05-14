@@ -11,7 +11,7 @@ class Proteome extends Component {
 
     this.state = {
       enzyme: 'trypsin',
-      missedCleavages: 2,
+      missedCleavages: 1,
       digestTables: [],
     }
 
@@ -101,13 +101,17 @@ class Proteome extends Component {
 
                 <div className="mb-3">
                   <label htmlFor="enzyme" className="form-label">Include missed cleavages up to:</label>
-                  <select defaultValue="2" id="enzyme" className="form-select" onChange={this.handleMissedCleavages}>
+                  <select defaultValue="1" id="enzyme" className="form-select" onChange={this.handleMissedCleavages}>
                     <option value="0">0</option>
                     <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
+                    <option value="2" disabled>2</option>
+                    <option value="3" disabled>3</option>
+                    <option value="4" disabled>4</option>
+                    <option value="5" disabled>5</option>
+                    <option value="6" disabled>6</option>
+                    <option value="7" disabled>7</option>
+                    <option value="8" disabled>8</option>
+                    <option value="9" disabled>9</option>
                   </select>
                 </div>
 

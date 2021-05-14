@@ -71244,7 +71244,7 @@ var Proteome = /*#__PURE__*/function (_Component) {
     _this = _super.call(this, props);
     _this.state = {
       enzyme: 'trypsin',
-      missedCleavages: 2,
+      missedCleavages: 1,
       digestTables: []
     };
     _this.handleEnzyme = _this.handleEnzyme.bind(_assertThisInitialized(_this));
@@ -71357,7 +71357,7 @@ var Proteome = /*#__PURE__*/function (_Component) {
         htmlFor: "enzyme",
         className: "form-label"
       }, "Include missed cleavages up to:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-        defaultValue: "2",
+        defaultValue: "1",
         id: "enzyme",
         className: "form-select",
         onChange: this.handleMissedCleavages
@@ -71366,14 +71366,30 @@ var Proteome = /*#__PURE__*/function (_Component) {
       }, "0"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
         value: "1"
       }, "1"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-        value: "2"
+        value: "2",
+        disabled: true
       }, "2"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-        value: "3"
+        value: "3",
+        disabled: true
       }, "3"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-        value: "4"
+        value: "4",
+        disabled: true
       }, "4"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-        value: "5"
-      }, "5"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        value: "5",
+        disabled: true
+      }, "5"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "6",
+        disabled: true
+      }, "6"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "7",
+        disabled: true
+      }, "7"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "8",
+        disabled: true
+      }, "8"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "9",
+        disabled: true
+      }, "9"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "mb-3"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         "class": "btn-group",
