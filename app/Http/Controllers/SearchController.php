@@ -43,7 +43,7 @@ class SearchController extends Controller
         $mass_mods          = $request->input('massMods');
         $selectedTables     = $request->input('selectedTables');
 
-        
+        return $request->all();
     }
 
     /**

@@ -29,6 +29,7 @@ class Job extends Component {
     this.handleMissedCleavageChange = this.handleMissedCleavageChange.bind(this);
     this.handleToleranceChange = this.handleToleranceChange.bind(this);
     this.handleMassListChange = this.handleMassListChange.bind(this);
+    this.updateTables = this.updateTables.bind(this);
     this.runSearch = this.runSearch.bind(this);
 
   }
@@ -48,7 +49,8 @@ class Job extends Component {
       missedCleavages: this.state.missedCleavages,
       tolerance: this.state.tolerance,
       massList: this.state.massList,
-      massMods: this.state.massMods
+      massMods: this.state.massMods,
+      selectedTables: this.state.selectedTables,
     };
 
     //Make the AJAX call
@@ -80,6 +82,11 @@ class Job extends Component {
     this.setState({massList: event.target.value});
   }
 
+  updateTables(selectedTables, event)
+  {
+    this.setState({selectedTables: selectedTables});
+  }
+
 
   render()
   {
@@ -93,6 +100,7 @@ class Job extends Component {
                     <SearchForm
                       ref={this.searchForm}
                       params={this.state.searchParameters}
+                      updateTables={(selectedTables) => this.updateTables(selectedTables)}
                       searchCallback={this.runSearch}
                       handleEnzymeChange={this.handleEnzymeChange}
                       handleMassListChange={this.handleMassListChange}

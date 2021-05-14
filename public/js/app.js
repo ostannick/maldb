@@ -70673,6 +70673,7 @@ var Job = /*#__PURE__*/function (_Component) {
     _this.handleMissedCleavageChange = _this.handleMissedCleavageChange.bind(_assertThisInitialized(_this));
     _this.handleToleranceChange = _this.handleToleranceChange.bind(_assertThisInitialized(_this));
     _this.handleMassListChange = _this.handleMassListChange.bind(_assertThisInitialized(_this));
+    _this.updateTables = _this.updateTables.bind(_assertThisInitialized(_this));
     _this.runSearch = _this.runSearch.bind(_assertThisInitialized(_this));
     return _this;
   }
@@ -70694,7 +70695,8 @@ var Job = /*#__PURE__*/function (_Component) {
         missedCleavages: this.state.missedCleavages,
         tolerance: this.state.tolerance,
         massList: this.state.massList,
-        massMods: this.state.massMods
+        massMods: this.state.massMods,
+        selectedTables: this.state.selectedTables
       }; //Make the AJAX call
 
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/search", sendData).then(function (res) {
@@ -70733,8 +70735,17 @@ var Job = /*#__PURE__*/function (_Component) {
       });
     }
   }, {
+    key: "updateTables",
+    value: function updateTables(selectedTables, event) {
+      this.setState({
+        selectedTables: selectedTables
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row justify-content-center"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -70748,6 +70759,9 @@ var Job = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_SearchForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
         ref: this.searchForm,
         params: this.state.searchParameters,
+        updateTables: function updateTables(selectedTables) {
+          return _this3.updateTables(selectedTables);
+        },
         searchCallback: this.runSearch,
         handleEnzymeChange: this.handleEnzymeChange,
         handleMassListChange: this.handleMassListChange,
