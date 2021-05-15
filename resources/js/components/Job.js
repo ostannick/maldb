@@ -5,6 +5,7 @@ import axios from 'axios';
 import SearchForm from './SearchForm';
 import Results from './Results';
 import SequenceModal from './SequenceModal';
+import { initOnLoad } from "apexcharts";
 
 class Job extends Component {
   constructor(props)
@@ -16,7 +17,10 @@ class Job extends Component {
       tolerance: 0.8,
       tableList: [],
       massList: "1170.260461 1375.483557 1653.520751 1752.469679 1765.517257 1849.43973 2105.47983 2128.467221 2178.484802 2211.44009 2222.209515 2389.285925 2424.412107 2551.361535 2668.518994 2855.366387",
-      results: [],
+      results: {
+        code: 'init',
+      },
+      status: 'init',
       massMods: [
         {name: 'carbamidomethyl_cys', type: 'fixed', enabled: true, mass: 57.0214, resi: 'C'},
         {name: 'oxidation_met', type: 'variable', enabled: true, mass: 16.0, resi: 'M'},
@@ -44,6 +48,9 @@ class Job extends Component {
     //Stop the page from refreshing
     event.preventDefault();
 
+    //Set the status
+    this.setState({status: 'searching'});
+
     //Create some data object
     const sendData = {
       missedCleavages: this.state.missedCleavages,
@@ -59,6 +66,7 @@ class Job extends Component {
         const response = res.data;
         console.log(response);
         this.setState({results: response});
+        this.setState({status: response.code});
 
         //Change spinner back to play button
         this.resetSearchButton();
@@ -118,7 +126,9 @@ class Job extends Component {
                 <div className="card-header">Search Hits</div>
                 <div className="card-body">
 
-                  <Results />
+                  <Results 
+                    status={this.state.status}
+                  />
 
                 </div>
             </div>

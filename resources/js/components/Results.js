@@ -15,7 +15,7 @@ export default class Results extends Component {
 
 
   render() {
-    if(this.state.status == 'init')
+    if(this.props.status == 'init')
     {
       return(
         <div>
@@ -23,7 +23,7 @@ export default class Results extends Component {
         </div>
       );
     }
-    else if(this.state.status == 'searching')
+    else if(this.props.status == 'searching')
     {
       return (
         <div>
@@ -36,7 +36,7 @@ export default class Results extends Component {
         </div>
       );
     }
-    else if(this.state.status == 'failure')
+    else if(this.props.status == 'failure')
     {
       return (
         <div>
@@ -49,7 +49,7 @@ export default class Results extends Component {
         </div>
       );
     }
-    else if(this.state.status == 'results')
+    else if(this.props.status == 'results')
     {
       return (
         <div>

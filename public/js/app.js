@@ -70608,6 +70608,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SearchForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SearchForm */ "./resources/js/components/SearchForm.js");
 /* harmony import */ var _Results__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Results */ "./resources/js/components/Results.js");
 /* harmony import */ var _SequenceModal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SequenceModal */ "./resources/js/components/SequenceModal.js");
+/* harmony import */ var apexcharts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! apexcharts */ "./node_modules/apexcharts/dist/apexcharts.common.js");
+/* harmony import */ var apexcharts__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(apexcharts__WEBPACK_IMPORTED_MODULE_6__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -70637,6 +70639,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var Job = /*#__PURE__*/function (_Component) {
   _inherits(Job, _Component);
 
@@ -70653,7 +70656,10 @@ var Job = /*#__PURE__*/function (_Component) {
       tolerance: 0.8,
       tableList: [],
       massList: "1170.260461 1375.483557 1653.520751 1752.469679 1765.517257 1849.43973 2105.47983 2128.467221 2178.484802 2211.44009 2222.209515 2389.285925 2424.412107 2551.361535 2668.518994 2855.366387",
-      results: [],
+      results: {
+        code: 'init'
+      },
+      status: 'init',
       massMods: [{
         name: 'carbamidomethyl_cys',
         type: 'fixed',
@@ -70689,7 +70695,11 @@ var Job = /*#__PURE__*/function (_Component) {
       var _this2 = this;
 
       //Stop the page from refreshing
-      event.preventDefault(); //Create some data object
+      event.preventDefault(); //Set the status
+
+      this.setState({
+        status: 'searching'
+      }); //Create some data object
 
       var sendData = {
         missedCleavages: this.state.missedCleavages,
@@ -70705,6 +70715,10 @@ var Job = /*#__PURE__*/function (_Component) {
 
         _this2.setState({
           results: response
+        });
+
+        _this2.setState({
+          status: response.code
         }); //Change spinner back to play button
 
 
@@ -70775,7 +70789,9 @@ var Job = /*#__PURE__*/function (_Component) {
         className: "card-header"
       }, "Search Hits"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-body"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Results__WEBPACK_IMPORTED_MODULE_4__["default"], null)))));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Results__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        status: this.state.status
+      })))));
     }
   }]);
 
@@ -71730,11 +71746,11 @@ var Results = /*#__PURE__*/function (_Component) {
   _createClass(Results, [{
     key: "render",
     value: function render() {
-      if (this.state.status == 'init') {
+      if (this.props.status == 'init') {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
           className: "text-center display-6 text-primary"
         }, "initialized"));
-      } else if (this.state.status == 'searching') {
+      } else if (this.props.status == 'searching') {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
           className: "text-center display-6 text-primary"
         }, "now searching"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -71745,7 +71761,7 @@ var Results = /*#__PURE__*/function (_Component) {
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "visually-hidden"
         }, "Loading..."))));
-      } else if (this.state.status == 'failure') {
+      } else if (this.props.status == 'failure') {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
           className: "text-center display-6 text-primary"
         }, "something went wrong"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
@@ -71757,7 +71773,7 @@ var Results = /*#__PURE__*/function (_Component) {
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
           className: "text-center font-monospace"
         }, "There was a snake in your boot.")));
-      } else if (this.state.status == 'results') {
+      } else if (this.props.status == 'results') {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           "class": "accordion",
           id: "results-accordion"
