@@ -70657,7 +70657,8 @@ var Job = /*#__PURE__*/function (_Component) {
       tableList: [],
       massList: "1170.260461 1375.483557 1653.520751 1752.469679 1765.517257 1849.43973 2105.47983 2128.467221 2178.484802 2211.44009 2222.209515 2389.285925 2424.412107 2551.361535 2668.518994 2855.366387",
       results: {
-        code: 'init'
+        code: 'init',
+        message: '0x00000'
       },
       status: 'init',
       massMods: [{
@@ -70784,7 +70785,8 @@ var Job = /*#__PURE__*/function (_Component) {
       }, "Search Hits"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-body"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Results__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        status: this.state.status
+        status: this.state.status,
+        message: this.state.results.message
       })))));
     }
   }]);
@@ -71754,7 +71756,22 @@ var Results = /*#__PURE__*/function (_Component) {
           role: "status"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "visually-hidden"
-        }, "Loading..."))));
+        }, "Loading..."))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "row"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "col-lg-12 mt-3"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "progress"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "progress-bar progress-bar-striped progress-bar-animated",
+          role: "progressbar",
+          "aria-valuenow": "75",
+          "aria-valuemin": "0",
+          "aria-valuemax": "100",
+          style: {
+            "width": "75%"
+          }
+        })))));
       } else if (this.props.status == 'failure') {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
           className: "text-center display-6 text-primary"
@@ -71766,7 +71783,7 @@ var Results = /*#__PURE__*/function (_Component) {
           className: "d-flex justify-content-center"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
           className: "text-center font-monospace"
-        }, "There was a snake in your boot.")));
+        }, this.props.message)));
       } else if (this.props.status == 'results') {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           "class": "accordion",
@@ -72028,22 +72045,7 @@ var SearchForm = /*#__PURE__*/function (_Component) {
         onClick: this.doSearch
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: this.state.searchIcon
-      }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-lg-12 mt-3"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "progress"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "progress-bar progress-bar-striped progress-bar-animated",
-        role: "progressbar",
-        "aria-valuenow": "75",
-        "aria-valuemin": "0",
-        "aria-valuemax": "100",
-        style: {
-          "width": "75%"
-        }
-      }))))));
+      })))))));
     }
   }]);
 
@@ -72443,7 +72445,7 @@ var TablePicker = /*#__PURE__*/function (_Component) {
         htmlFor: "input-enzyme",
         className: "form-label"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "fal fa-compass-slash"
+        className: "fal fa-scalpel-path"
       }), " Missed Cleavages"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
         id: "input-enzyme",
         className: "form-select",

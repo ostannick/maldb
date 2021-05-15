@@ -100,7 +100,7 @@ class TablePicker extends Component {
       </div>
 
       <div className="mb-3">
-        <label htmlFor="input-enzyme" className="form-label"><i className="fal fa-compass-slash"></i> Missed Cleavages</label>
+        <label htmlFor="input-enzyme" className="form-label"><i className="fal fa-scalpel-path"></i> Missed Cleavages</label>
         <select id="input-enzyme" className="form-select" onChange={this.handleMissedCleavages}>
           <option value="0">0</option>
           <option value="1">1</option>

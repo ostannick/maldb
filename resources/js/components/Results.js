@@ -32,6 +32,15 @@ export default class Results extends Component {
             <span className="visually-hidden">Loading...</span>
           </div>
           </div>
+
+          <div className="row">
+            <div className="col-lg-12 mt-3">
+              <div className="progress">
+                <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{"width": "75%"}}></div>
+              </div>
+            </div>
+          </div>
+
         </div>
       );
     }
@@ -43,7 +52,7 @@ export default class Results extends Component {
           <h1 className="text-center display-6 text-primary"><i class="fal fa-times"></i></h1>
           <div className="d-flex justify-content-center">
 
-            <p className="text-center font-monospace">There was a snake in your boot.</p>
+            <p className="text-center font-monospace">{this.props.message}</p>
           </div>
         </div>
       );

@@ -32,7 +32,7 @@
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" href="/search">Search</a>
+                <a class="nav-link text-primary" href="/search"><i class="fal fa-search"></i> Search</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/queue">Queue</a>
