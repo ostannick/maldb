@@ -17,7 +17,7 @@ class SearchController extends Controller
      */
     public function index()
     {
-        //
+        return view('search');
     }
 
     /**
@@ -46,7 +46,7 @@ class SearchController extends Controller
         $mass_mods          = $request->input('massMods');
         $selected_tables    = $request->input('selectedTables');
         $match_limit        = $request->input('matchLimit');
-        $match_limit        = 5;
+        $match_limit        = 10;
 
 
         //Creates an array with the table names the user wants to search
@@ -84,13 +84,11 @@ class SearchController extends Controller
 
 
         $response = [
-            'code' => 'results',
-            'message' => 'A toast to the people',
-            'table' => $tables,
-            'mods'  => $mass_mods,
-            'fmod'  => fixed_mods_string($mass_mods),
-            'query' => $query,
-            'results' => $results->take($match_limit),
+            'code'          => 'results',
+            'message'       => 'A toast to the people',
+            'tables'        => $tables,
+            'mods'          => $mass_mods,
+            'results'       => $results->take($match_limit),
         ];
 
         return json_encode($response);
@@ -172,7 +170,7 @@ function fixed_mods_string(array $modifications)
 
         //Append/concatenate the string.
         //This string looks in the sequence column and calculates the number of a particular amino acid by subtracrting the preg_replaced string length with the original string length.
-        $s .= " + ($mod->mass * CHAR_LENGTH(`sequence`) - CHAR_LENGTH( REPLACE (`sequence`, '$mod->aa', '')))";
+        $s .= " + ($mod->mass * (CHAR_LENGTH(`sequence`) - CHAR_LENGTH( REPLACE (`sequence`, '$mod->aa', ''))))";
     }
 
     //Return the string.

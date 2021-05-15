@@ -20,7 +20,7 @@
                 <div class="card-body">
                   <h5 class="card-title">Search malDB</h5>
                   <p class="card-text">Search your database using mass lists from experiment.</p>
-                  <a href="/maldb" class="btn btn-primary">Start Searching</a>
+                  <a href="/search" class="btn btn-primary">Start Searching</a>
                 </div>
               </div>
             </div>
