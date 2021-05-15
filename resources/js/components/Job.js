@@ -23,7 +23,6 @@ class Job extends Component {
       status: 'init',
       massMods: [
         {name: 'carbamidomethyl_cys', type: 'fixed', enabled: true, mass: 57.0214, resi: 'C'},
-        {name: 'oxidation_met', type: 'variable', enabled: true, mass: 16.0, resi: 'M'},
       ],
     }
 

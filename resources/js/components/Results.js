@@ -13,7 +13,6 @@ export default class Results extends Component {
     }
   }
 
-
   render() {
     if(this.props.status == 'init')
     {

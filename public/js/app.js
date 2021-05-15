@@ -70666,12 +70666,6 @@ var Job = /*#__PURE__*/function (_Component) {
         enabled: true,
         mass: 57.0214,
         resi: 'C'
-      }, {
-        name: 'oxidation_met',
-        type: 'variable',
-        enabled: true,
-        mass: 16.0,
-        resi: 'M'
       }]
     };
     _this.searchForm = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
@@ -72466,7 +72460,15 @@ var TablePicker = /*#__PURE__*/function (_Component) {
         value: "4"
       }, "4"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
         value: "5"
-      }, "5"))), this.state.tables.map(function (table) {
+      }, "5"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "6"
+      }, "6"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "7"
+      }, "7"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "8"
+      }, "8"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        value: "9"
+      }, "9"))), this.state.tables.map(function (table) {
         return _this5.renderSwitch(table);
       }));
     }

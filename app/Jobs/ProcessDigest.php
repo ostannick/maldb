@@ -171,6 +171,7 @@ class ProcessDigest implements ShouldQueue
           0
         ]);
 
+        //Insert a status update into the database for the user every 500 peptides. This will be long-polled to fill a progress bar.
         if($i % 500 == 0)
         {
           $progress = $i/count($peptides);

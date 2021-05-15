@@ -45,6 +45,9 @@ class SearchController extends Controller
         $mass_list          = $request->input('massList');
         $mass_mods          = $request->input('massMods');
         $selected_tables    = $request->input('selectedTables');
+        $match_limit        = $request->input('matchLimit');
+        $match_limit        = 5;
+
 
         //Creates an array with the table names the user wants to search
         $tables = get_tables($selected_tables);
@@ -53,22 +56,18 @@ class SearchController extends Controller
         $masses = mass_list_to_array($mass_list);
 
         //Construct the fixed mass modifications string
-        //$fixed_mods_string = fixed_mods_string($mass_mods);
-
-        
-
+        $fixed_mods_string = fixed_mods_string($mass_mods);
 
         //Create a new collection to continually append to
         $merged = new Collection();
 
-        
         foreach($masses as $mass)
         {
             //Create the query strings for each table
             $queries = [];
             foreach($tables as $t)
             {
-                array_push($queries, base_query_string($t, $missed_cleavages, $mass, $tolerance));
+                array_push($queries, base_query_string($t, $missed_cleavages, $mass, $tolerance, $fixed_mods_string));
             }
             $query = query_unioner($queries);
 
@@ -81,15 +80,17 @@ class SearchController extends Controller
         
         $results = $merged->groupBy('parent')->sortByDesc(function($item){
             return count($item);
-          })->take(5);        
+          });        
 
 
         $response = [
             'code' => 'results',
-            'message' => 'Any error, warning, or success message to include',
+            'message' => 'A toast to the people',
             'table' => $tables,
+            'mods'  => $mass_mods,
+            'fmod'  => fixed_mods_string($mass_mods),
             'query' => $query,
-            'results' => $results,
+            'results' => $results->take($match_limit),
         ];
 
         return json_encode($response);
@@ -154,25 +155,24 @@ function get_tables(array $table_ids): array
     return $tables;
 }
 
-function base_query_string(string $table_name, int $missed_cleavages, float $mz1, float $tolerance)
+function base_query_string(string $table_name, int $missed_cleavages, float $mz1, float $tolerance, string $fixed_mods_string)
 {
-    return("SELECT `id`, `parent`, `met_ox_count`, '$table_name' AS `source` FROM `$table_name` WHERE `missed_cleavages` <= $missed_cleavages AND ABS(`mz1_monoisotopic` - $mz1) < $tolerance");
+    return("SELECT `id`, `parent`, `met_ox_count`, '$table_name' AS `source` FROM `$table_name` WHERE `missed_cleavages` <= $missed_cleavages AND ABS(`mz1_monoisotopic` $fixed_mods_string - $mz1) < $tolerance");
 }
 
 function fixed_mods_string(array $modifications)
 {
-    //Create an empty string.
+
     $s = '';
     
     foreach($modifications as $m)
     {
-        //Why isnt this loop running?
-
         //Create a mod object. Probably not necessary but I wanna try using PHP objects.
         $mod = new Mod($m['mass'], $m['resi']);
 
         //Append/concatenate the string.
-        $s . " + ($mod->mass * CHAR_LENGTH(`sequence`) - CHAR_LENGTH( REPLACE (`sequence`, '$mod->aa', '')))";
+        //This string looks in the sequence column and calculates the number of a particular amino acid by subtracrting the preg_replaced string length with the original string length.
+        $s .= " + ($mod->mass * CHAR_LENGTH(`sequence`) - CHAR_LENGTH( REPLACE (`sequence`, '$mod->aa', '')))";
     }
 
     //Return the string.
