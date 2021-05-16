@@ -74,7 +74,7 @@ class DigestTableEntry extends Component {
     {
       case 'init':
         return(
-          <a href="#" className="list-group-item list-group-item-action bg-light" aria-current="true">
+          <a className="list-group-item list-group-item-action bg-light" aria-current="true">
             <div className="d-flex w-100 justify-content-between">
               <h6 className="mb-1"><i class="fal fa-ellipsis-h-alt"></i> {this.props.data.table_name}</h6>
               <small><span className="badge rounded-pill bg-primary">{this.props.data.size}Initializing...</span></small>
@@ -83,7 +83,7 @@ class DigestTableEntry extends Component {
         );
       case 'processing':
         return(
-          <a href="#" className="list-group-item list-group-item-action bg-light" aria-current="true">
+          <a href={'/digest/' + this.props.data.id} className="list-group-item list-group-item-action bg-light" aria-current="true">
             <div className="d-flex w-100 justify-content-between">
               <h6 className="mb-1">{this.props.data.table_name}</h6>
               <small><span className="badge rounded-pill bg-primary">{this.props.data.size} peptides</span></small>
@@ -105,7 +105,7 @@ class DigestTableEntry extends Component {
         );
       case 'ready':
         return(
-          <a href="#" className="list-group-item list-group-item-action bg-light" aria-current="true">
+          <a href={'/digest/' + this.props.data.id} className="list-group-item list-group-item-action bg-light" aria-current="true">
             <div className="d-flex w-100 justify-content-between">
               <h6 className="mb-1"><i className="fal fa-check"></i> {this.props.data.table_name}</h6>
               <small><span className="badge rounded-pill bg-primary">{this.props.data.size} peptides</span></small>

@@ -71128,7 +71128,6 @@ var DigestTableEntry = /*#__PURE__*/function (_Component) {
       switch (this.state.status) {
         case 'init':
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-            href: "#",
             className: "list-group-item list-group-item-action bg-light",
             "aria-current": "true"
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -71143,7 +71142,7 @@ var DigestTableEntry = /*#__PURE__*/function (_Component) {
 
         case 'processing':
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-            href: "#",
+            href: '/digest/' + this.props.data.id,
             className: "list-group-item list-group-item-action bg-light",
             "aria-current": "true"
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -71177,7 +71176,7 @@ var DigestTableEntry = /*#__PURE__*/function (_Component) {
 
         case 'ready':
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-            href: "#",
+            href: '/digest/' + this.props.data.id,
             className: "list-group-item list-group-item-action bg-light",
             "aria-current": "true"
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
