@@ -11,7 +11,8 @@ class SearchForm extends Component {
     super(props);
 
     this.state = {
-      searchIcon: 'fas fa-fw fa-running'
+      searchIcon: 'fas fa-fw fa-running',
+      searchPermission: 'btn btn-lg btn-primary',
     }
 
     this.doSearch = this.doSearch.bind(this);
@@ -26,11 +27,13 @@ class SearchForm extends Component {
   startSpin()
   {
     this.setState({searchIcon: 'fas fa-fw fa-cog fa-spin'});
+    this.setState({searchPermission: 'btn btn-lg btn-primary disabled'})
   }
 
   stopSpin()
   {
     this.setState({searchIcon: 'fas fa-fw fa-running'});
+    this.setState({searchPermission: 'btn btn-lg btn-primary'})
   }
 
   render() {
@@ -111,7 +114,7 @@ class SearchForm extends Component {
           <div className="row">
             <div className="col-lg-12 mt-3">
               <div className="d-grid gap-2">
-                <button className="btn btn-lg btn-primary" type="button" onClick={this.doSearch}><i className={this.state.searchIcon}></i></button>
+                <button className={this.state.searchPermission} type="button" onClick={this.doSearch}><i className={this.state.searchIcon}></i></button>
               </div>
             </div>
           </div>

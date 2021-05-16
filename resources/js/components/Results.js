@@ -2,13 +2,15 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom'
 import Chart from "react-apexcharts";
 
+import TabGroup from './TabGroup';
+
 export default class Results extends Component {
   constructor(props) {
 
     super(props);
 
     this.state = {
-      status: 'init',
+      status: 'results',
       hits: [],
     }
   }
@@ -49,7 +51,7 @@ export default class Results extends Component {
       return (
         <div>
           <h1 className="text-center display-6 text-primary">something went wrong</h1>
-          <h1 className="text-center display-6 text-primary"><i class="fal fa-times"></i></h1>
+          <h1 className="text-center display-6 text-primary"><i className="fal fa-times"></i></h1>
           <div className="d-flex justify-content-center">
 
             <p className="text-center font-monospace">{this.props.message}</p>
@@ -61,38 +63,22 @@ export default class Results extends Component {
     {
       return (
         <div>
-        <div class="accordion" id="results-accordion">
+        <div className="accordion" id="results-accordion">
 
 
           {/*A SINGLE ACCORDION ITEM.. MAP THESE TO RESULTS ARRAY*/}
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="hit-1">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#hit-1-body" aria-expanded="true" aria-controls="hit-1-body">
-                <span class="badge rounded-pill bg-primary"><i class="fas fa-star"></i> Score: 85</span>
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="hit-1">
+              <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#hit-1-body" aria-expanded="true" aria-controls="hit-1-body">
+                <span className="badge rounded-pill bg-primary"><i className="fas fa-star"></i> Score: 85</span>
                 &nbsp;
                 glmS Glutamine oxo de fructose hydrogenase
               </button>
             </h2>
-            <div id="hit-1-body" class="accordion-collapse collapse show" aria-labelledby="hit-1">
-              <div class="accordion-body">
+            <div id="hit-1-body" className="accordion-collapse collapse show" aria-labelledby="hit-1">
+              <div className="accordion-body">
 
-              <ul class="nav nav-tabs mb-3">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="#">Sequence Map</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Fingerprint</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Table</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Statistics</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Controls</a>
-                </li>
-              </ul>
+              <TabGroup />
 
               <div className="row">
 
