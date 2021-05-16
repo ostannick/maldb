@@ -51,7 +51,7 @@
                   @else
                       <li><a class="dropdown-item disabled" href="#">{{ Auth::user()->name }}</a></li>
                       <li><a class="dropdown-item" href="/proteomes">Proteome Manager</a></li>
-                      <li><a class="dropdown-item" href="/proteomes">Mass Modification Manager</a></li>
+                      <li><a class="dropdown-item" href="/modifications">Mass Modification Manager</a></li>
                       <li><a class="dropdown-item" href="/logout">Log Out</a></li>
                   @endguest
                 </ul>
@@ -66,13 +66,19 @@
           <div class="container">
             @if(session()->has('success'))
                 <div class="alert alert-success">
-                    {{ session()->get('success') }}
+                  <i class="fal fa-check"></i>&nbsp;{{ session()->get('success') }}
+                </div>
+            @endif
+
+            @if(session()->has('warning'))
+                <div class="alert alert-warning">
+                  <i class="fal fa-exclamation-triangle"></i>&nbsp;{{ session()->get('warning') }}
                 </div>
             @endif
 
             @if(session()->has('failure'))
                 <div class="alert alert-success">
-                    {{ session()->get('failure') }}
+                  <i class="fal fa-times"></i>&nbsp;{{ session()->get('failure') }}
                 </div>
             @endif
           </div>

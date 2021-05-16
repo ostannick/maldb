@@ -92,7 +92,7 @@ class ProteomeController extends Controller
      */
     public function show(Proteome $proteome)
     {
-
+      return('awhaa');
     }
 
     public function list()
@@ -126,7 +126,12 @@ class ProteomeController extends Controller
      */
     public function update(Request $request, Proteome $proteome)
     {
-        //
+        file_put_contents('../storage/app/' . $proteome->path, $request->input('fasta'));
+
+        return back()->with([
+          'success' => 'Proteome FASTA file saved.',
+          'warning' => 'You now need to re-digest this proteome to include your changes in your search!' 
+        ]);
     }
 
     /**
@@ -137,15 +142,24 @@ class ProteomeController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        //Delete the model object in the database
+        //Get the proteome model
         $proteome = Proteome::findOrFail($id);
 
         if($proteome && $proteome->user_id == Auth::user()->id)
         {
-          //Delete the file
+          //Delete the fasta
           Storage::delete($proteome->path);
+
+          //Delete the digests;
+          $digests = $proteome->digests();
+          foreach($digests as $d)
+          {
+            $d->delete();
+          }
+
           //Delete the database entry
           $proteome->delete();
+
           //Delete the table
           Schema::dropIfExists($proteome->table);
 

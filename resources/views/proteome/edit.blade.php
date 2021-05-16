@@ -15,15 +15,16 @@
             <strong>{{$proteome->name}}</strong></div>
 
             <div class="card-body">
-            <form>
-
+            <form method="POST" action="/proteomes/{{$proteome->id}}">
+              @csrf
+              @method('PUT')
               <div class="col-lg-12 mb-3 flex justify-content-right">
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="20">{{$fasta}}</textarea>
+                <textarea name="fasta" class="form-control" id="exampleFormControlTextarea1" rows="20">{{$fasta}}</textarea>
               </div>
               
               <div class="col-lg-12 mb-1 d-flex justify-content-end">
-                <button type="button" class="btn btn-light btn-sm">Discard Changes</button>
-                <button type="button" class="btn btn-primary btn-sm">Save Changes</button>
+                <a href="/proteomes" class="btn btn-light">Discard Changes</a>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
               </div>
 
             </form>

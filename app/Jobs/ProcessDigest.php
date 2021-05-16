@@ -166,7 +166,7 @@ class ProcessDigest implements ShouldQueue
         \DB::insert('insert into ' . $tableName . '(name, sequence) values (?, ?)',
         [
           $parents[$i]['name'],
-          'placeholderSequence',
+          'placeHolderSequence',
         ]);
 
         if($i % 500 == 0)
@@ -187,7 +187,7 @@ class ProcessDigest implements ShouldQueue
           $peptides[$i]['mz1'],
           $peptides[$i]['avg'],
           $peptides[$i]['mc'],
-          0
+          $peptides[$i]['mso']
         ]);
 
         //Insert a status update into the database for the user every 500 peptides. This will be long-polled to fill a progress bar.
