@@ -108,7 +108,13 @@ class ProteomeController extends Controller
      */
     public function edit(Proteome $proteome)
     {
-        //
+      
+      $fasta = file_get_contents('../storage/app/' . $proteome->path);
+
+        return view('proteome/edit')->with([
+          'proteome' => $proteome,
+          'fasta' => $fasta,
+        ]);
     }
 
     /**

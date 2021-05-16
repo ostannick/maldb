@@ -69,6 +69,9 @@ class ProcessDigest implements ShouldQueue
           $table->text('sequence');
         });
       }
+      else{
+        \DB::table($tableName)->truncate();
+      }
 
       $already_exists = False;
       if(!Schema::hasTable($tableNameDigest))
@@ -157,6 +160,22 @@ class ProcessDigest implements ShouldQueue
       //Load them into variables
       $parents  = $listener1->getJson();
       $peptides = $listener2->getJson();
+
+      for($i = 0; $i < count($parents); $i++)
+      {
+        \DB::insert('insert into ' . $tableName . '(name, sequence) values (?, ?)',
+        [
+          $parents[$i]['name'],
+          'placeholderSequence',
+        ]);
+
+        if($i % 500 == 0)
+        {
+          $progress = $i/count($parents);
+          $description = 'Processed ' . $i . ' of ' . count($parents) . ' parent sequences';
+          update_status($process->id, $progress, $description);
+        }
+      }
 
       //Iterate through and log the progress
       for($i = 0; $i < count($peptides); $i++)

@@ -118,7 +118,7 @@ class Proteome extends Component {
                 <div className="mb-3">
                   <div class="btn-group" role="group">
                     <button type="button" class="btn btn-primary" onClick={this.handleDigest}><i className="fas fa-running"></i></button>
-                    <button type="button" class="btn btn-light"><i class="fal fa-pencil"></i></button>
+                    <a href={'/proteomes/' + this.props.data.id + '/edit'} class="btn btn-light"><i class="fal fa-pencil"></i></a>
                     <button type="button" class="btn btn-light"><i class="fal fa-trash-alt"></i></button>
                   </div>
                 </div>

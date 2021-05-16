@@ -51,6 +51,7 @@
                   @else
                       <li><a class="dropdown-item disabled" href="#">{{ Auth::user()->name }}</a></li>
                       <li><a class="dropdown-item" href="/proteomes">Proteome Manager</a></li>
+                      <li><a class="dropdown-item" href="/proteomes">Mass Modification Manager</a></li>
                       <li><a class="dropdown-item" href="/logout">Log Out</a></li>
                   @endguest
                 </ul>

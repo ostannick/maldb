@@ -90,7 +90,7 @@ class DigestController extends Controller
      */
     public function show($id)
     {
-        $peptides = \DB::table(Digest::find($id)->table_name)->select('*')->limit(50)->get();
+        $peptides = \DB::table(Digest::find($id)->table_name)->select('*')->limit(1000)->get();
 
         return view('digests/table')->with([
           'peptides' => $peptides
