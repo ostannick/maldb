@@ -74,6 +74,9 @@ class Job extends Component {
       })
       .catch(function(e) {
         console.log(e.response.data.message);
+
+        //Change spinner back to play button
+        this.resetSearchButton();
       });
   }
 
