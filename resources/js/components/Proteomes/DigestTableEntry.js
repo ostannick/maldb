@@ -76,7 +76,7 @@ class DigestTableEntry extends Component {
         return(
           <a className="list-group-item list-group-item-action bg-light" aria-current="true">
             <div className="d-flex w-100 justify-content-between">
-              <h6 className="mb-1"><i class="fal fa-ellipsis-h-alt"></i> {this.props.data.table_name}</h6>
+              <h6 className="mb-1"><i className="fal fa-ellipsis-h-alt"></i> {this.props.data.table_name}</h6>
               <small><span className="badge rounded-pill bg-primary">{this.props.data.size}Initializing...</span></small>
             </div>
           </a>

@@ -116,10 +116,10 @@ class Proteome extends Component {
                 </div>
 
                 <div className="mb-3">
-                  <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-primary" onClick={this.handleDigest}><i className="fas fa-running"></i></button>
-                    <a href={'/proteomes/' + this.props.data.id + '/edit'} class="btn btn-light"><i class="fal fa-pencil"></i></a>
-                    <button type="button" class="btn btn-light"><i class="fal fa-trash-alt"></i></button>
+                  <div className="btn-group" role="group">
+                    <button type="button" className="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top" onClick={this.handleDigest}><i className="fas fa-play"></i></button>
+                    <a href={'/proteomes/' + this.props.data.id + '/edit'} className="btn btn-primary"><i className="fad fa-pen"></i></a>
+                    <button type="button" className="btn btn-primary"><i className="fas fa-minus-circle"></i></button>
                   </div>
                 </div>
 
