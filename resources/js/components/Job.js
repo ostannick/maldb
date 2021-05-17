@@ -132,7 +132,7 @@ class Job extends Component {
                   <Results 
                     status={this.state.status}
                     message={this.state.results.message}
-                    hits={this.state.results.results}
+                    hits={this.state.results}
                   />
 
                 </div>

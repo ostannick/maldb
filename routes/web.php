@@ -66,6 +66,7 @@ Route::resource('/digest', DigestController::class);
 Route::resource('/search', SearchController::class);
 
 Route::post('/proteomes/digest', 'DigestController@digest');  //Digests a proteome
+Route::post('/proteomes/delete', 'ProteomeController@delete');
 Route::post('/digest/list', 'DigestController@list');         //Gets a list of a proteome's digest tables
 Route::post('/digest/poll', 'DigestController@poll');
 Route::post('/digest/sort', 'DigestController@sort');

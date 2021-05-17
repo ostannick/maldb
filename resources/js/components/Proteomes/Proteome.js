@@ -18,7 +18,7 @@ class Proteome extends Component {
     this.handleEnzyme = this.handleEnzyme.bind(this);
     this.handleMissedCleavages = this.handleMissedCleavages.bind(this);
     this.handleDigest = this.handleDigest.bind(this);
-
+    this.handleDeleteProteome = this.handleDeleteProteome.bind(this);
   }
 
   handleEnzyme(event)
@@ -45,6 +45,22 @@ class Proteome extends Component {
         console.log(response);
       })
       .catch(function(e) {
+        console.log(e.response.data.message);
+      });
+  }
+
+  handleDeleteProteome()
+  {
+    const sendData = {
+      proteome_id: this.props.data.id,
+    };
+
+    axios.post('/proteomes/delete', sendData)
+      .then(res => {
+        const response = res.data;
+        console.log(response);
+      })
+      .catch(function (e) {
         console.log(e.response.data.message);
       });
   }
@@ -79,13 +95,13 @@ class Proteome extends Component {
   {
     return (
       <div className="accordion-item">
-        <h2 className="accordion-header" id={'heading' + this.props.data.id}>
-          <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={'#proteome' + this.props.data.id} aria-expanded="true" aria-controls={'collapse' + this.props.data.id}>
-          <span className="badge rounded-pill bg-light text-dark">{this.props.data.id + " - " + this.props.data.organism}</span>
+        <h2 className="accordion-header collapsed" id={'proteome-' + this.props.data.id}>
+          <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={'#proteome-' + this.props.data.id + '-body'} aria-expanded="false" aria-controls={'proteome-' + this.props.data.id + '-body'}>
+            <span className="badge rounded-pill bg-primary"><i className="fal fa-bacterium"></i> &nbsp; {this.props.data.organism}</span> &nbsp;
             {this.props.data.name}
           </button>
         </h2>
-        <div id={'collapse' + this.props.data.id} className="accordion-collapse collapse show" aria-labelledby={'heading' + this.props.data.id} data-bs-parent="#proteome_manager">
+        <div id={'proteome-' + this.props.data.id + '-body'} className="accordion-collapse collapse" aria-labelledby={'heading' + this.props.data.id} data-bs-parent="#proteome_manager">
           <div className="accordion-body">
 
             <div className="row">
@@ -117,9 +133,12 @@ class Proteome extends Component {
 
                 <div className="mb-3">
                   <div className="btn-group" role="group">
+                    
                     <button type="button" className="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top" onClick={this.handleDigest}><i className="fas fa-play"></i></button>
+                    
                     <a href={'/proteomes/' + this.props.data.id + '/edit'} className="btn btn-primary"><i className="fad fa-pen"></i></a>
-                    <button type="button" className="btn btn-primary"><i className="fas fa-minus-circle"></i></button>
+                    
+                    <button type="button" className="btn btn-primary" onClick={this.handleDeleteProteome}><i className="fas fa-minus-circle"></i></button>
                   </div>
                 </div>
 

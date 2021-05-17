@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Schema;
 
 class Digest extends Model
 {
@@ -19,4 +20,13 @@ class Digest extends Model
       'status',
       'process_id'
     ];
+
+    public function delete_everything()
+    {
+      //Delete the table
+      Schema::dropIfExists($this->table_name);
+
+      //Delete the table
+      $this->delete();
+    }
 }

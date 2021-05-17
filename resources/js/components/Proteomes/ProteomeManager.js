@@ -89,9 +89,7 @@ class ProteomeManager extends Component {
         const response = res.data;
         console.log(response);
 
-        var options = {animation: true, delay: 3000};
-        var toastHTMLElement = document.getElementById("myToast");
-        var toastElement = new bootstrap.Toast(toastHTMLElement, options)
+        location.reload();
 
       })
       .catch(function(e) {
@@ -118,12 +116,12 @@ class ProteomeManager extends Component {
                           ))}
 
                           <div className="accordion-item">
-                            <h2 className="accordion-header" id="upload_new">
+                            <h2 className="accordion-header collapsed" id="upload_new">
                               <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                Add Proteome
+                                <i class="fad fa-plus-circle"></i> &nbsp; Upload New Proteome
                               </button>
                             </h2>
-                            <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                               <div className="accordion-body">
 
                               <div className="input-group mb-3">
