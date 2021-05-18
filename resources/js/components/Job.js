@@ -4,8 +4,6 @@ import axios from 'axios';
 
 import SearchForm from './SearchForm';
 import Results from './Results';
-import SequenceModal from './SequenceModal';
-import { initOnLoad } from "apexcharts";
 
 class Job extends Component {
   constructor(props)
@@ -14,6 +12,9 @@ class Job extends Component {
 
     this.state = {
       missedCleavages: 1,
+      massMods: [
+        {name: 'carbamidomethyl_cys', type: 'fixed', enabled: true, mass: 57.0214, resi: 'C'},
+      ],
       tolerance: 0.8,
       tableList: [],
       massList: "1170.260461 1375.483557 1653.520751 1752.469679 1765.517257 1849.43973 2105.47983 2128.467221 2178.484802 2211.44009 2222.209515 2389.285925 2424.412107 2551.361535 2668.518994 2855.366387",
@@ -22,9 +23,8 @@ class Job extends Component {
         message: '0x00000',
       },
       status: 'init',
-      massMods: [
-        {name: 'carbamidomethyl_cys', type: 'fixed', enabled: true, mass: 57.0214, resi: 'C'},
-      ],
+      
+      matchLimit: 5,
     }
 
     this.searchForm = React.createRef();
@@ -38,10 +38,7 @@ class Job extends Component {
 
   }
 
-  resetSearchButton()
-  {
-    this.searchForm.current.stopSpin();
-  }
+
 
   runSearch(event)
   {
@@ -58,6 +55,7 @@ class Job extends Component {
       massList: this.state.massList,
       massMods: this.state.massMods,
       selectedTables: this.state.selectedTables,
+      matchLimit: this.state.matchLimit,
     };
 
     //Make the AJAX call
@@ -98,6 +96,10 @@ class Job extends Component {
     this.setState({selectedTables: selectedTables});
   }
 
+  resetSearchButton()
+  {
+    this.searchForm.current.stopSpin();
+  }
 
   render()
   {

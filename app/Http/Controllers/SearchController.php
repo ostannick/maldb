@@ -46,7 +46,6 @@ class SearchController extends Controller
         $mass_mods          = $request->input('massMods');
         $selected_tables    = $request->input('selectedTables');
         $match_limit        = $request->input('matchLimit');
-        $match_limit        = 10;
 
 
         //Creates an array with the table names the user wants to search
@@ -78,10 +77,13 @@ class SearchController extends Controller
             $merged = $merged->merge(collect($matches));
         }
         
-        $results = $merged->groupBy('parent')->sortByDesc(function($item){
-            return count($item);
-          });        
-
+        //Group peptides by the table they're from, then the parent they belong to.
+        //Somehow sort the nested array, and then limit it to top 5
+        $results = $merged
+                        ->groupBy(['source', 'parent'])
+                        ->sortByDesc(function($item){return count(collect($item));});
+                        
+        
 
         $response = [
             'code'          => 'results',

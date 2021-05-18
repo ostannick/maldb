@@ -21,8 +21,11 @@ export default class ResultHit extends Component {
         <div className="accordion-item">
           <h2 className="accordion-header collapsed" id={"hit-" + this.props.id}>
             <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={"#hit-" + this.props.id + "-body"} aria-expanded="false" aria-controls={"hit-" + this.props.id + "-body"}>
+              
               <span className="badge rounded-pill bg-primary"><i className="fas fa-star"></i> Score: 85</span>
                 &nbsp;
+                <span className="badge rounded-pill bg-light text-dark"><i class="fal fa-table"></i> name_of_table</span>
+
                 {this.props.id}
               </button>
           </h2>
