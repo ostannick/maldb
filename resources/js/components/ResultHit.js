@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom'
 import Chart from "react-apexcharts";
 
-import TabGroup from './TabGroup'
+import TabGroup from './Tabs/TabGroup';
+
+import SequenceView from './Analysis/SequenceView';
+import TableView from './Analysis/TableView';
 
 export default class ResultHit extends Component {
   constructor(props) {
@@ -30,15 +33,19 @@ export default class ResultHit extends Component {
           <div id={"hit-" + this.props.id + "-body"} className="accordion-collapse collapse" aria-labelledby={"hit-" + this.props.id}>
             <div className="accordion-body">
 
-              <TabGroup />
+              <TabGroup 
+                tabContent={
+                  {
+                    0: <SequenceView />,
+                    1: "test1", 
+                    2: <TableView />, 
+                    3: "test3", 
+                    4: "test4"
+                  }
+                }
+              />
 
               <div className="row">
-
-                {/*SEQUENCE VIEW*/}
-                <div className="col-lg-12 mb-3">
-                  <div className="font-monospace">CTISQPEWFKCRRWQWRMKKLGAPSITCVRRAFALECIRAIAEKKADAVTLDGGMVFEACRDPYKLRPVAAEIYGTKESPQTHYYAVAVVKKGSNFQLDQLQGRKSCHTGLGRSAGWIIPMGILRPYLSWTESLEPLQGAVAKFFSASCVPCIDRQAYPNLCQLCKGEGENQCACSSREPYFGYSGAFKCLQDGAGDVAFVKETTVFENLPEKADRDQYELLCLNNSRAPVDAFKECHLAQVPSHAVVARSVDGKEDLIWKLLSKAQEKFGKNKSRSFQLFGSPPGQRDLLFKDSALGFLRIPSKVDSALYLGSRYLTTLKNLRETAEEVKARYTRVVWCAVGPEEQKKCQQWSQQSGQNVTCATASTTDDCIVLVLKGEADALNLDGGYIYTAGKCGLVPVLAENRKSSKHSSLDCVLRPTEGYLAVAVVKKANEGLTWNSLKDKKSCHTAVDRTAGWNIPMGLIVNQTGSCAFDEFFSQSCAPGADPKSRLCALCAGDDQGLDKCVPNSKEKYYGYTGAFRCLAEDVGDVAFVKNDTVWENTNGESTADWAKNLNREDFRLLCLDGTRKPVTEAQSCHLAVAPNHAVVSRSDRAAHVKQVLLHQQALFGKNGKNCPDKFCLFKSETKNLLFNDNTECLAKLGGRPTYEEYLGTEYVTAIANLKKCSTSPLLEACAFLTRR
-                  </div>
-                </div>
 
                 {/*APEX CHART*/}
                 <div className="col-lg-12 mb-3">
