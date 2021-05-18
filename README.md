@@ -22,8 +22,8 @@ Installing malDB involves deploying a Laravel application on a machine that can 
 3. [Download MySQL](https://dev.mysql.com/downloads/installer/) and install MySQL server and MySQL workbench.
 4. In the PHP folder, open php.ini and uncomment the following lines by removing the semicolon:
 
-`;extension=pdo_mysql` => `extension=pdo_mysql` 
-`;extension=fileinfo`  => `extension=fileinfo`
+`;extension=pdo_mysql` => `extension=pdo_mysql` \
+`;extension=fileinfo`  => `extension=fileinfo`  \
 
 5. Add a schema to your MySQL database called 'maldb'.
 6. Clone this repository.
