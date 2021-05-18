@@ -13,6 +13,7 @@ class Digest extends Model
     protected $fillable = [
       'user_id',
       'proteome_id',
+      'parent_table_name',
       'table_name',
       'enzyme',
       'max_mc',
@@ -24,6 +25,7 @@ class Digest extends Model
     public function delete_everything()
     {
       //Delete the table
+      Schema::dropIfExists($this->parent_table_name);
       Schema::dropIfExists($this->table_name);
 
       //Delete the table

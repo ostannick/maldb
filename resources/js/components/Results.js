@@ -29,7 +29,6 @@ export default class Results extends Component {
     }
     else if(this.props.status == 'results')
     {
-      console.log(Object.entries(this.props.hits.results));
       return (
         <div>
           <div className="accordion" id="results-accordion">

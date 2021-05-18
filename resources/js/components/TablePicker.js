@@ -69,7 +69,6 @@ class TablePicker extends Component {
       .then(res => {
         const response = res.data;
         this.setState({tables: response});
-        console.log(response);
       })
       .catch(function(e) {
         console.log(e.response.data.message);

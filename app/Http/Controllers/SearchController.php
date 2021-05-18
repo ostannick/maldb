@@ -81,13 +81,22 @@ class SearchController extends Controller
         //Somehow sort the nested array, and then limit it to top 5
         
         $results = $merged
+                        //Group them so that the results from separate tables are not merged, altering statistical scores
                         ->groupBy(['source', 'parent'])
+                        //Flatten the collection (array) to remove the source (table) grouping, allowing easy access to the nested array for sorting.
                         ->flatten(1)
+                        //Count the number of children eat hit (parent) has, and order descending so top hits are at the top of list
                         ->sortByDesc(function($item){
                             return count($item);
                         })
+                        //This is necessary to call for some reason after using sortByDesc. Maybe something with immutability
                         ->values()
-                        ->take(5);
+                        //Take the top 20 hits. This is likely unnecessary, only need 5-10
+                        ->take(5)
+                        //Into each hit, grab the name of the parent instead of just the ID.
+                        ->each(function($item){
+                            return $item->put("parent_name", \DB::table(Digest::where('table_name', $item[0]->source)->first()->parent_table_name)->find($item[0]->parent)->name);
+                        });
                         
         
 

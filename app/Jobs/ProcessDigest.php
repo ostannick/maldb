@@ -101,6 +101,7 @@ class ProcessDigest implements ShouldQueue
         $digest = Digest::create([
           'user_id' => $this->user_id,
           'proteome_id' => $proteome->id,
+          'parent_table_name' => $tableName,
           'table_name' => $tableNameDigest,
           'enzyme' => $enzyme,
           'max_mc' => $max_mc,

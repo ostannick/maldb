@@ -24,9 +24,7 @@ export default class ResultHit extends Component {
               
               <span className="badge rounded-pill bg-primary"><i className="fas fa-star"></i> Score: 85</span>
                 &nbsp;
-                <span className="badge rounded-pill bg-light text-dark"><i className="fal fa-table"></i> &nbsp;{this.props.data[0].source}</span>
-
-                {this.props.data[0].parent}
+                <small>{this.props.data.parent_name}</small>
               </button>
           </h2>
           <div id={"hit-" + this.props.id + "-body"} className="accordion-collapse collapse" aria-labelledby={"hit-" + this.props.id}>
