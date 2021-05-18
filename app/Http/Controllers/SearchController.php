@@ -79,9 +79,15 @@ class SearchController extends Controller
         
         //Group peptides by the table they're from, then the parent they belong to.
         //Somehow sort the nested array, and then limit it to top 5
+        
         $results = $merged
                         ->groupBy(['source', 'parent'])
-                        ->sortByDesc(function($item){return count(collect($item));});
+                        ->flatten(1)
+                        ->sortByDesc(function($item){
+                            return count($item);
+                        })
+                        ->values()
+                        ->take(5);
                         
         
 
@@ -90,7 +96,7 @@ class SearchController extends Controller
             'message'       => 'A toast to the people',
             'tables'        => $tables,
             'mods'          => $mass_mods,
-            'results'       => $results->take($match_limit),
+            'results'       => $results,
         ];
 
         return json_encode($response);
