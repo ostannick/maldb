@@ -76,7 +76,7 @@ class Job extends Component {
         //Change spinner back to play button
         this.resetSearchButton();
       });
-  }
+    }
 
 
   handleMissedCleavageChange(event) {

@@ -6,6 +6,8 @@ import TabGroup from './Tabs/TabGroup';
 
 import SequenceView from './Analysis/SequenceView';
 import TableView from './Analysis/TableView';
+import ControlsView from './Analysis/ControlsView';
+import FingerprintView from "./Analysis/FingerprintView";
 
 export default class ResultHit extends Component {
   constructor(props) {
@@ -36,11 +38,11 @@ export default class ResultHit extends Component {
               <TabGroup 
                 tabContent={
                   {
-                    0: <SequenceView />,
-                    1: "test1", 
-                    2: <TableView />, 
+                    0: <SequenceView data={this.props.data}/>,
+                    1: <FingerprintView data={this.props.data}/>,
+                    2: <TableView data={this.props.data}/>, 
                     3: "test3", 
-                    4: "test4"
+                    4: <ControlsView data={this.props.data}/>
                   }
                 }
               />
