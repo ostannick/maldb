@@ -105,7 +105,7 @@ class Job extends Component {
   {
     return (
       <div className="row justify-content-center">
-          <div className="col-md-3">
+          <div className="col-md-3 mb-3">
               <div className="card">
                   <div className="card-header">Search Space</div>
                   <div className="card-body">

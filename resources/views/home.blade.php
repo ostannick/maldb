@@ -6,7 +6,7 @@
         <div class="col-md-12">
 
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-6 mb-3">
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Upload Proteomes</h5>
@@ -27,7 +27,7 @@
           </div>
 
           <div class="row mt-3">
-            <div class="col-sm-6">
+            <div class="col-sm-6 mb-3">
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Fingerprint Predictor</h5>
@@ -36,7 +36,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6 mb-3">
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Utilities</h5>
