@@ -114,12 +114,17 @@ class TablePicker extends Component {
         </select>
       </div>
 
-      {this.state.tables.map(table => (
+      <div className="mb-3">
+        <label className="form-label"><i className="fal fa-table"></i> Digest Tables</label>
+        
+        {this.state.tables.map(table => (
 
-        this.renderSwitch(table)
+          this.renderSwitch(table)
 
-      ))}
+        ))}
 
+      </div>
+      
       </div>
     );
   }
