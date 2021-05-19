@@ -44,9 +44,15 @@ export default class FingerprintView extends Component {
         labels: ['A'],
         xaxis: {
           type: 'numeric',
+          title: {
+            text: 'm/z'
+          }
         },
         yaxis: {
-          opposite: false
+          opposite: false,
+          title: {
+            text: 'Ionization Probability'
+          }
         },
         legend: {
           horizontalAlign: 'left'
