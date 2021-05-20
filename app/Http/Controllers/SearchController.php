@@ -92,15 +92,32 @@ class SearchController extends Controller
                         //This is necessary to call for some reason after using sortByDesc. Maybe something with immutability
                         ->values()
                         //Take the top 20 hits. This is likely unnecessary, only need 5-10
-                        ->take(5)
+                        ->take(10)
+                        //Make an entry for match count.
+                        ->each(function($item){
+                            return $item->put("matches", count($item));
+                        })
+                        //Make an entry for theoretical peaks in this spectra count based on the user's defined search space.
+                        ->each(function($item) use(&$missed_cleavages){
+
+                            $theos = \DB::table($item[0]->source)->where([
+                                ['parent', '=', $item[0]->parent],
+                                ['missed_cleavages', '=', 0],
+                            ])->get()->count();
+
+                            return $item->put("theos", $theos);
+                        })
                         //Into each hit, grab the name of the parent instead of just the ID.
                         ->each(function($item){
                             return $item->put("parent_name", \DB::table(Digest::where('table_name', $item[0]->source)->first()->parent_table_name)->find($item[0]->parent)->name);
                         })
                         //Calculate the score for each hit
-                        ->each(function($item){
-                            return $item->put("score", 100);
-                        });
+                        ->each(function($item) use(&$tolerance){
+                            return $item->put("score", calculate_maldb_score($tolerance, 4000-650, $item['theos'], $item['matches']));
+                        })
+                        ->sortByDesc('score')
+                        ->values();
+                        //Determine significance
                         
         
 

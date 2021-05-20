@@ -16,7 +16,8 @@
         "laravel/tinker": "^2.0",
         "rogervila/laravel-legacy-ui": "^3.0",
         "salsify/json-streaming-parser": "^8.2",
-        "symfony/process": "^5.1"
+        "symfony/process": "^5.1",
+        "markrogoyski/math-php": "2.*"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",
