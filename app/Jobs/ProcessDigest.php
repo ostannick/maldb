@@ -64,7 +64,7 @@ class ProcessDigest implements ShouldQueue
       {
         //create a proteome table
         Schema::create($tableName, function(Blueprint $table){
-          $table->increments('id');
+          $table->integer('id');
           $table->string('name');
           $table->text('sequence');
         });
@@ -164,8 +164,9 @@ class ProcessDigest implements ShouldQueue
 
       for($i = 0; $i < count($parents); $i++)
       {
-        \DB::insert('insert into ' . $tableName . '(name, sequence) values (?, ?)',
+        \DB::insert('insert into ' . $tableName . '(id, name, sequence) values (?, ?, ?)',
         [
+          $parents[$i]['seq_id'],
           $parents[$i]['name'],
           'placeHolderSequence',
         ]);

@@ -72,6 +72,7 @@ Route::post('/digest/poll', 'DigestController@poll');
 Route::post('/digest/sort', 'DigestController@sort');
 
 Route::post('/analysis/table', 'AnalysisController@get_table');
+Route::post('/analysis/appendnn', 'AnalysisController@append_to_nntrain');
 
 Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']);

@@ -15,7 +15,7 @@ class Job extends Component {
       massMods: [
         {name: 'carbamidomethyl_cys', type: 'fixed', enabled: true, mass: 57.0214, resi: 'C'},
       ],
-      tolerance: 0.8,
+      tolerance: 1.2,
       tableList: [],
       massList: "1170.260461 1375.483557 1653.520751 1752.469679 1765.517257 1849.43973 2105.47983 2128.467221 2178.484802 2211.44009 2222.209515 2389.285925 2424.412107 2551.361535 2668.518994 2855.366387",
       results: {
@@ -23,7 +23,6 @@ class Job extends Component {
         message: '0x00000',
       },
       status: 'init',
-      
       matchLimit: 5,
     }
 

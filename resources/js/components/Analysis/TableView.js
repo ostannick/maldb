@@ -22,7 +22,7 @@ export default class TableView extends Component {
       }
       else
       {
-        icon = <i class="fad fa-eye-slash text-danger"></i> 
+        icon = <i className="fad fa-eye-slash text-danger"></i> 
       }
     }
 
