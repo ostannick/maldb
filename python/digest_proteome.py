@@ -1,15 +1,17 @@
 """Script to digest a proteome into peptides that may be detected by mass spectrometry.
 
-Two JSON files are generated, a sequence file and a peptide file. In the peptide file, all mass values (fields "mz1" and "avg") are represented as strings, not floats, in order to maintain precision and prevent floating point error propagation during calculations.
+Two JSON files are generated, a sequence file and a peptide file. In the peptide file, all mass values (fields "mz1" and "avg") are strings as they are represented by Decimal objects, not floats, in order to maintain precision and prevent floating point error propagation during calculations. The peptide indices are 0-based, but unlike standard Python indices both the start and end are inclusive (meaning start=4, end=9 represents a peptide of length 6 that maps to positions 4, 5, 6, 7, 8, 9 in the protein; the next peptide would have start=10).
 
 Fields in the sequence file:
-- seq_id: integer
+- seq_id: integer used as an internal ID
 - name: string of the sequence name from the proteome file
+- seq: string of the amino acid sequence
 - peptides: integer of the number of peptides generated from the sequence
 
 Fields in the peptide file:
-- seq_id: integer
-- seq: string of the peptide sequence
+- seq_id: integer used as an internal ID
+- start: integer of the peptide's first position in the sequence; 0-based and inclusive
+- end: integer of the peptide's last position in the sequence; 0-based and inclusive
 - mz1: string of the monoisotopic mass of the peptide
 - avg: string of the average molecular mass of the peptide
 - mc: integer of the number of missed cleavage sites required to generate this peptide
@@ -64,66 +66,19 @@ def digest_after_blocked(sequence, sites):
     return frags
 
 
-# # #  Processing code
-def digest_sequences(seqs, enzyme, missed_cleavages):
-    enz_digest_fxn = digest_fxns[enzyme]
-    peptide_db, seq_db = [], []
-    for seq_id, seq in enumerate(seqs):
-        peptides = seq_to_peptide_dicts(seq_id, seq.seq, enz_digest_fxn, missed_cleavages)
-        if len(peptides) == 0:
-            continue
-        peptide_db.extend(peptides)
-        seq_db.append({'seq_id':seq_id, 'name':seq.name, 'peptides':len(peptides)})
-    return peptide_db, seq_db
-
-def seq_to_peptide_dicts(seq_id, sequence, enz_digest_fxn, missed_cleavages):
-    # enz_digest_fxn is the cutting function for the enzyme of interest
-    peptides = []
-    raw_fragments = enz_digest_fxn(sequence)
-    max_ind = len(raw_fragments) - 1
-    for ind, frag in enumerate(raw_fragments):
-        pep = make_peptide_dict(seq_id, frag, 0)
-        if pep == None:
-            print('Warning: discarding peptide due to unknown character in "{}"'.format(frag))
-            continue
-        elif args.min_weight <= pep['mz1'] <= args.max_weight:
-            peptides.append(pep)
-        mc_frag = frag
-        for offset in range(1, missed_cleavages+1):
-            if ind+offset > max_ind:
-                break
-            mc_frag += raw_fragments[ind+offset]
-            pep = make_peptide_dict(seq_id, mc_frag, offset)
-            if pep == None:
-                print('Warning: discarding peptide due to unknown character in "{}"'.format(mc_frag))
-                break
-            elif args.min_weight <= pep['mz1'] <= args.max_weight:
-                peptides.append(pep)
+# # #  Mass modifications
+def apply_mass_modifications(base_pep, sequence):
+    mod_peps = []
     # generate additional peptides to account for variable oxidation of methionine
     if args.no_met_ox == False:
-        o_mono, o_avg = atomic_masses['O_mono'], atomic_masses['O_avg']
-        mso_peps = []
-        for pep in peptides:
-            m_count = pep['seq'].count('M')
-            for m_num in range(1, m_count+1):
-                mso_pep = pep.copy()
-                mso_pep['mso'] = m_num
-                mso_pep['mz1'] += (o_mono * m_num)
-                mso_pep['avg'] += (o_avg * m_num)
-                mso_peps.append(mso_pep)
-        peptides.extend(mso_peps)
-    # convert Decimal values to strings so they're JSON-able
-    for pep in peptides:
-        pep['mz1'] = str(pep['mz1'])
-        pep['avg'] = str(pep['avg'])
-    return peptides
-
-def make_peptide_dict(seq_id, sequence, missed_cleavages):
-    try:
-        pep = {'seq_id':seq_id, 'seq':sequence, 'mc':missed_cleavages, 'mso':0, 'mz1':calculate_mz1(sequence), 'avg':calculate_average_weight(sequence)}
-    except KeyError: # Thrown when there's a non-standard character in the sequence
-        return None
-    return pep
+        m_count = sequence.count('M')
+        for m_num in range(1, m_count+1):
+            mso_pep = base_pep.copy()
+            mso_pep['mso'] = m_num
+            mso_pep['mz1'] += (atomic_masses['O_mono'] * m_num)
+            mso_pep['avg'] += (atomic_masses['O_avg'] * m_num)
+            mod_peps.append(mso_pep)
+    return mod_peps
 
 
 # # #  Molecular weight functions and attributes
@@ -189,6 +144,67 @@ class Sequence(object):
         self.name = name
         self.sequence = sequence.upper()
         self.seq = self.sequence
+
+
+# # #  Processing code
+def digest_sequences(seqs, enzyme, missed_cleavages):
+    enz_digest_fxn = digest_fxns[enzyme]
+    peptide_db, seq_db = [], []
+    for seq_id, seq in enumerate(seqs):
+        peptides = seq_to_peptide_dicts(seq_id, seq.seq, enz_digest_fxn, missed_cleavages)
+        if len(peptides) == 0:
+            continue
+        peptide_db.extend(peptides)
+        seq_dict = make_sequence_dict(seq_id, seq, len(peptides))
+        seq_db.append(seq_dict)
+    return peptide_db, seq_db
+def seq_to_peptide_dicts(seq_id, sequence, enz_digest_fxn, missed_cleavages):
+    # enz_digest_fxn is the cutting function for the enzyme of interest
+    raw_fragments = enz_digest_fxn(sequence)
+    max_ind = len(raw_fragments) - 1
+    seq_end_ind = 0
+    peptides = []
+    for ind, frag in enumerate(raw_fragments):
+        seq_start_ind = seq_end_ind
+        seq_end_ind += len(frag)
+        peps = make_peptide_dicts(seq_id, seq_start_ind, frag, 0)
+        if peps == None:
+            continue # Unknown character, can't use frag or its derivitives
+        peptides.extend(peps)
+        for offset in range(1, missed_cleavages+1):
+            if ind+offset > max_ind:
+                break
+            frag += raw_fragments[ind+offset]
+            peps = make_peptide_dicts(seq_id, seq_start_ind, frag, offset)
+            if peps == None:
+                break # Unknown character, can't use frag or its derivitives
+            peptides.extend(peps)
+    # sort peptides by start index, then missed cleavages, then mz1 mass
+    peptides.sort(key=lambda pep: (pep['start'], pep['mc'], pep['mz1']))
+    # convert Decimal values to strings so they're JSON-able
+    for pep in peptides:
+        pep['mz1'] = str(pep['mz1'])
+        pep['avg'] = str(pep['avg'])
+    return peptides
+def make_peptide_dicts(seq_id, seq_start_ind, sequence, missed_cleavages):
+    # Generates the required attributes for each peptide. Applies the mass modifications, and respects the min and max peptide mass limits.
+    # The indices are 0-based, but unlike Python indices they are both inclusive. So (start=4, end=9) would represent a peptide of length 6, covering amino acid positions 4, 5, 6, 7, 8, and 9. The next peptide would have (start=10).
+    peps = []
+    try:
+        pep = {'seq_id':seq_id, 'start':seq_start_ind, 'end':seq_start_ind+len(sequence)-1, 'mc':missed_cleavages, 'mso':0, 'mz1':calculate_mz1(sequence), 'avg':calculate_average_weight(sequence)}
+    except KeyError: # Thrown when there's a non-standard character in the sequence
+        print('Warning: discarding peptide due to unknown character in "{}"'.format(sequence))
+        return None
+    if args.min_weight <= pep['mz1'] <= args.max_weight:
+        peps.append(pep)
+    for mod_pep in apply_mass_modifications(pep, sequence):
+        if args.min_weight <= mod_pep['mz1'] <= args.max_weight:
+            peps.append(mod_pep)
+    return peps
+def make_sequence_dict(seq_id, seq, num_peptides):
+    # Generates the required attributes for each sequence.
+    seq_dict = {'seq_id':seq_id, 'name':seq.name, 'seq':seq.seq, 'peptides':num_peptides}
+    return seq_dict
 
 
 # # #  Command line options
