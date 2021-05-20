@@ -22,7 +22,7 @@ class AnalysisController extends Controller
                                 ->where([
                                         ['parent', $parent],            //Find all peptides with this parent
                                         ['missed_cleavages', '<=', 9],  //Optional configuration to declutter search results
-                                        ['met_ox_count', '<=', 9]       //Optiona configuration to declutter search results
+                                        ['met_ox_count', '<=', 9]       //Optional configuration to declutter search results
                                     ])
                                 ->get()                  
                                 ->map(function($item) use(&$observed)

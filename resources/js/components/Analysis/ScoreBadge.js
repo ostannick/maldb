@@ -15,7 +15,7 @@ export default class ScoreBadge extends Component {
 
     if(this.props.significant)
     {
-      badge = <span className="badge rounded-pill bg-primary"><i className="fad fa-chart-bar"></i> &nbsp; {this.props.score}</span>;
+      badge = <span className="badge rounded-pill bg-success"><i className="fad fa-pepper-hot"></i> &nbsp; {this.props.score}</span>;
     }
     else
     {

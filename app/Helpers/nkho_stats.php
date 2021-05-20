@@ -50,7 +50,7 @@ if (!function_exists('calculate_maldb_score')) {
     
     function calculate_maldb_score($tolerance, $mass_range, $theoretical_peaks, $matches) {
         
-        $p = 1 - (1 - ($tolerance / $mass_range))**$theoretical_peaks;
+        $p = 1 - (1 - (2*$tolerance / $mass_range))**$theoretical_peaks;
 
         $cum_probability = (Combinatorics::combinations($theoretical_peaks, $matches)) * $p**($matches) * (1-$p)**($theoretical_peaks - $matches);
 
