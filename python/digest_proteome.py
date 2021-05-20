@@ -1,14 +1,15 @@
 """Script to digest a proteome into peptides that may be detected by mass spectrometry.
 
-Two JSON files are generated, a sequence file and a peptide file. In the peptide file, all mass values (fields "mz1" and "avg") are represented as strings, not floats, in order to maintain precision and prevent floating point error propagation during calculations.
+Two JSON files are generated, a sequence file and a peptide file. In the peptide file, all mass values (fields "mz1" and "avg") are strings as they are represented by Decimal objects, not floats, in order to maintain precision and prevent floating point error propagation during calculations.
 
 Fields in the sequence file:
-- seq_id: integer
+- seq_id: integer used as an internal ID
 - name: string of the sequence name from the proteome file
+- seq: string of the amino acid sequence
 - peptides: integer of the number of peptides generated from the sequence
 
 Fields in the peptide file:
-- seq_id: integer
+- seq_id: integer used as an internal ID
 - seq: string of the peptide sequence
 - mz1: string of the monoisotopic mass of the peptide
 - avg: string of the average molecular mass of the peptide
@@ -73,7 +74,8 @@ def digest_sequences(seqs, enzyme, missed_cleavages):
         if len(peptides) == 0:
             continue
         peptide_db.extend(peptides)
-        seq_db.append({'seq_id':seq_id, 'name':seq.name, 'peptides':len(peptides)})
+        seq_dict = make_sequence_dict(seq_id, seq, len(peptides))
+        seq_db.append(seq_dict)
     return peptide_db, seq_db
 
 def seq_to_peptide_dicts(seq_id, sequence, enz_digest_fxn, missed_cleavages):
@@ -117,13 +119,15 @@ def seq_to_peptide_dicts(seq_id, sequence, enz_digest_fxn, missed_cleavages):
         pep['mz1'] = str(pep['mz1'])
         pep['avg'] = str(pep['avg'])
     return peptides
-
 def make_peptide_dict(seq_id, sequence, missed_cleavages):
     try:
         pep = {'seq_id':seq_id, 'seq':sequence, 'mc':missed_cleavages, 'mso':0, 'mz1':calculate_mz1(sequence), 'avg':calculate_average_weight(sequence)}
     except KeyError: # Thrown when there's a non-standard character in the sequence
         return None
     return pep
+def make_sequence_dict(seq_id, seq, num_peptides):
+    seq_dict = {'seq_id':seq_id, 'name':seq.name, 'seq':seq.seq, 'peptides':num_peptides}
+    return seq_dict
 
 
 # # #  Molecular weight functions and attributes
