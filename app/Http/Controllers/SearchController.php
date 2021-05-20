@@ -108,7 +108,7 @@ class SearchController extends Controller
                             return $item->put("theos", $theos);
                         })
                         //Into each hit, grab the name of the parent instead of just the ID.
-                        ->each(function($item){
+                        ->each(function ($item) {
                             return $item->put("parent_name", \DB::table(Digest::where('table_name', $item[0]->source)->first()->parent_table_name)->find($item[0]->parent)->name);
                         })
                         //Calculate the score for each hit

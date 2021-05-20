@@ -77,7 +77,7 @@ class SearchForm extends Component {
 
                 <div className="mb-3">
                   <label htmlFor="tolerance" className="form-label"><i className="fal fa-arrows-alt-h"></i> Tolerance (Da)</label>
-                  <input type="text" className="form-control" id="tolerance" defaultValue="0.8" onChange={this.props.handleToleranceChange}/>
+                  <input type="text" className="form-control" id="tolerance" defaultValue="1.2" onChange={this.props.handleToleranceChange}/>
                 </div>
 
                 <div className="mb-3">
