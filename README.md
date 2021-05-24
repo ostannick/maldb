@@ -44,3 +44,7 @@ You should now be able to access malDB in a web browser via http://127.0.0.1:800
 - The timeout argument specifies how long a queue job should run for before automatically failing. Large proteomes/search space can take a long time on slow machines, so a timeout time of 0 is recommended so these jobs can run overnight.
 - Multiple queues can run concurrently by simply running multiple `php artisan queue:work --timeout=0` commands in separate terminal windows. [See Laravel documentation](https://laravel.com/docs/8.x/queues)
 - Tutorials on how to use malDB, and how to perform peptide mass fingerprinting are built into the application under the 'Learn' page.
+
+## Architecture
+
+![Architecture Overview](docs/overview.png)

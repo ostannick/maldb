@@ -79,6 +79,11 @@ class Proteome extends Component {
       .catch(function(e) {
         console.log(e.response.data.message);
       });
+
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+      tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new window.bootstrap.Tooltip(tooltipTriggerEl)
+      })
   }
 
   renderDigestTable(digestTable)
@@ -134,11 +139,11 @@ class Proteome extends Component {
                 <div className="mb-3">
                   <div className="btn-group" role="group">
                     
-                    <button type="button" className="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top" onClick={this.handleDigest}><i className="fas fa-play"></i></button>
+                    <button type="button" className="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Submit Digest Job to Queue" onClick={this.handleDigest}><i className="fas fa-angle-double-right"></i></button>
                     
-                    <a href={'/proteomes/' + this.props.data.id + '/edit'} className="btn btn-primary"><i className="fad fa-pen"></i></a>
+                    <a href={'/proteomes/' + this.props.data.id + '/edit'} className="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Proteome"><i className="fas fa-pen-nib"></i></a>
                     
-                    <button type="button" className="btn btn-primary" onClick={this.handleDeleteProteome}><i className="fas fa-minus-circle"></i></button>
+                    <button type="button" className="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Proteome" onClick={this.handleDeleteProteome}><i className="fas fa-times"></i></button>
                   </div>
                 </div>
 
