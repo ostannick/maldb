@@ -81,6 +81,8 @@ class ProcessDigest implements ShouldQueue
             $table->increments('id');
             $table->string('parent')->nullable();
             $table->string('sequence')->nullable();
+            $table->integer('start');
+            $table->integer('end');
             $table->decimal('mz1_average')->index('mz1_average');;
             $table->decimal('mz1_monoisotopic')->index('mz1_monoisotopic');;
             $table->integer('missed_cleavages')->index('missed_cleavages');
@@ -92,6 +94,9 @@ class ProcessDigest implements ShouldQueue
         //Clear aka truncate the table
         $already_exists = True; //Redundant assignment
         \DB::table($tableNameDigest)->truncate();
+        
+        //Delete the table
+        //Schema::dropIfExists($tableNameDigest);
       }
 
       //Create the entry in the digests table
@@ -162,17 +167,22 @@ class ProcessDigest implements ShouldQueue
       $parents  = $listener1->getJson();
       $peptides = $listener2->getJson();
 
+      $batch = [];
       for($i = 0; $i < count($parents); $i++)
       {
-        \DB::insert('insert into ' . $tableName . '(id, name, sequence) values (?, ?, ?)',
-        [
-          $parents[$i]['seq_id'],
-          $parents[$i]['name'],
-          'placeHolderSequence',
-        ]);
+        
+        $p = [
+          'id'        => $parents[$i]['seq_id'],
+          'name'      => $parents[$i]['name'],
+          'sequence'  => $parents[$i]['seq'],
+        ];
 
-        if($i % 500 == 0)
+        array_push($batch, $p);
+
+        if($i % 10000 == 0 || $i == count($parents) - 1)
         {
+          \DB::table($tableName)->insert($batch);
+
           $progress = $i/count($parents);
           $description = 'Processed ' . $i . ' of ' . count($parents) . ' parent sequences';
           update_status($process->id, $progress, $description);
@@ -180,21 +190,34 @@ class ProcessDigest implements ShouldQueue
       }
 
       //Iterate through and log the progress
+      //This can be sped up with batch insertions or 'LOAD DATA INFILE'
+      $batch = [];
       for($i = 0; $i < count($peptides); $i++)
       {
-        \DB::insert('insert into ' . $tableNameDigest . '(parent, sequence, mz1_monoisotopic, mz1_average, missed_cleavages, met_ox_count) values (?, ?, ?, ?, ?, ?)',
-        [
-          $peptides[$i]['seq_id'],
-          $peptides[$i]['seq'],
-          $peptides[$i]['mz1'],
-          $peptides[$i]['avg'],
-          $peptides[$i]['mc'],
-          $peptides[$i]['mso']
-        ]);
+        $p = [
+          'parent'            => $peptides[$i]['seq_id'],
+          'sequence'          => $peptides[$i]['seq'],
+          'start'             => $peptides[$i]['start'],
+          'end'               => $peptides[$i]['end'],
+          'mz1_monoisotopic'  => $peptides[$i]['mz1'],
+          'mz1_average'       => $peptides[$i]['avg'],
+          'missed_cleavages'  => $peptides[$i]['mc'],
+          'met_ox_count'      => $peptides[$i]['mso']
+        ];
 
-        //Insert a status update into the database for the user every 500 peptides. This will be long-polled to fill a progress bar.
-        if($i % 500 == 0)
+        array_push($batch, $p);
+
+        //This conditional inserts after the array is full of 10,000 entries OR if the loop has reached the end. If you fail to include the latter, 
+        //you will miss the last little chunk of peptides!
+        if($i % 5000 == 0 || $i == count($peptides) - 1)
         {
+          //Run the batch insert query
+          \DB::table($tableNameDigest)->insert($batch);
+          
+          //Clear the array
+          $batch = [];
+
+          //Create a progress update
           $progress = $i/count($peptides);
           $description = 'Processed ' . $i . ' of ' . count($peptides) . ' peptides';
           update_status($process->id, $progress, $description);

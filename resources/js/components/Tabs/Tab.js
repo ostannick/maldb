@@ -31,7 +31,7 @@ export default class Tab extends Component {
   render() {
     return(
       <li className={this.state.className} onClick={(index) => this.props.changeTab(this.props.tabIndex)}>
-        <a className="nav-link" href="#">{this.props.header}</a>
+        <a className="nav-link" href="#a">{this.props.header}</a>
       </li>
     )
   }

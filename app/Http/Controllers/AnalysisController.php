@@ -5,11 +5,76 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Ionizer;
+use App\Models\Digest;
 
 use Auth;
 
 class AnalysisController extends Controller
 {
+
+    public function get_seqview(Request $request)
+    {
+        //Put the request data into a collection
+        $data = collect($request->input('data'));
+
+        //Get a dummy peptide we can check properties of
+        $dummy = $data->first();
+
+        $parent = $dummy['parent'];     //Parent
+        $table = $dummy['source'];      //Digest table name
+        $parent_table = Digest::where('table_name', $table)->first()->parent_table_name;
+
+        $sequence = \DB::table($parent_table)->where('id', $parent)->first()->sequence;
+
+        //Get the peptides from the database
+        $peptides = \DB::table($table)->whereIn('id', $data->pluck('id'))->get()->filter();
+
+        //Initialize array of length sequence and fill with 'false' to indicate that amino acid was not observed.
+        $coordinates = array_fill(0, strlen($sequence), false);
+
+        //
+        $peptides->each(function($item) use (&$coordinates){
+            for($i = $item->start; $i <= $item->end; $i++)
+            {
+                $coordinates[$i] = true;
+            }
+        });
+
+        $boundaries = [];
+        $currentObs = $coordinates[0];
+        $lastCheckpoint = 0;
+
+        for($i = 0; $i < count($coordinates); $i++)
+        {
+            if($coordinates[$i] != $currentObs)
+            {
+                $arr = [
+                    'bound' => [$lastCheckpoint, $i],
+                    'obs'   => $currentObs
+                ];
+
+                array_push($boundaries, $arr);
+                $currentObs = !$currentObs;
+                $lastCheckpoint = $i;
+
+
+                
+            }
+        }
+
+        $seqview = [];
+        foreach($boundaries as $b)
+        {
+            $arr = [
+                'seq' => substr($sequence, $b['bound'][0], $b['bound'][1] - $b['bound'][0]),
+                'obs' => $b['obs']
+            ];
+            array_push($seqview, $arr);
+        }
+
+        return $seqview;
+    }
+
     public function get_table(Request $request)
     {
         $data = collect($request->input('data'));
@@ -24,7 +89,7 @@ class AnalysisController extends Controller
         $all_peptides = \DB::table($table)
                                 ->where([
                                         ['parent', $parent],            //Find all peptides with this parent
-                                        ['missed_cleavages', '<=', 0],  //Optional configuration to declutter search results
+                                        ['missed_cleavages', '<=', 1],  //Optional configuration to declutter search results
                                         ['met_ox_count', '<=', 9]       //Optional configuration to declutter search results
                                     ])
                                 ->get()                  

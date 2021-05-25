@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnalysisController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Collection;
@@ -75,6 +76,7 @@ Route::post('/digest/list', 'DigestController@list');         //Gets a list of a
 Route::post('/digest/poll', 'DigestController@poll');
 Route::post('/digest/sort', 'DigestController@sort');
 
+Route::post('/analysis/seqview', 'AnalysisController@get_seqview');
 Route::post('/analysis/table', 'AnalysisController@get_table');
 Route::post('/analysis/appendnn', 'AnalysisController@append_to_nntrain');
 
