@@ -49,8 +49,13 @@ DB_PASSWORD=myPassword
 10. Run `npm install` (installs javascript dependencies)
 11. Run `php artisan key:generate` (generates a key in .env file)
 12. Run `php artisan migrate` (creates the database tables)
-13. Run `php artisan serve` (starts a development server)
-14. In a separate console window, run `php artisan queue:work --timeout=0` to start the job queue. (starts the job queue)
+
+# Starting malDB
+
+If you are on a Windows machine, you can simply run `maldb.bat` from the project root. This will run a batch script that excecutes the necessary commands to launch the WAN server and start a job queue. Otherwise, you can run:
+
+1. `php artisan serve` (starts a development server)
+2. In a separate console window, run `php artisan queue:work --timeout=0` to start the job queue. (starts the job queue)
 
 You should now be able to access malDB in a web browser via http://127.0.0.1:8000/
 
