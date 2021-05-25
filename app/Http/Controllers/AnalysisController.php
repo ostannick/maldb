@@ -24,7 +24,7 @@ class AnalysisController extends Controller
         $all_peptides = \DB::table($table)
                                 ->where([
                                         ['parent', $parent],            //Find all peptides with this parent
-                                        ['missed_cleavages', '<=', 9],  //Optional configuration to declutter search results
+                                        ['missed_cleavages', '<=', 0],  //Optional configuration to declutter search results
                                         ['met_ox_count', '<=', 9]       //Optional configuration to declutter search results
                                     ])
                                 ->get()                  

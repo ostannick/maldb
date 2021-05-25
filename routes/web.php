@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Collection;
@@ -65,14 +66,19 @@ Route::resource('/digest', DigestController::class);
 
 Route::resource('/search', SearchController::class);
 
+Route::resource('/modifications', ModificationController::class);
+
 Route::post('/proteomes/digest', 'DigestController@digest');  //Digests a proteome
 Route::post('/proteomes/delete', 'ProteomeController@delete');
+
 Route::post('/digest/list', 'DigestController@list');         //Gets a list of a proteome's digest tables
 Route::post('/digest/poll', 'DigestController@poll');
 Route::post('/digest/sort', 'DigestController@sort');
 
 Route::post('/analysis/table', 'AnalysisController@get_table');
 Route::post('/analysis/appendnn', 'AnalysisController@append_to_nntrain');
+
+Route::post('/modifications/list', 'ModificationController@list');
 
 Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']);

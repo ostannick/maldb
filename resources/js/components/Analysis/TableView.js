@@ -8,6 +8,7 @@ export default class TableView extends Component {
     super(props);
 
     this.state = {
+      stringent: false,
       results: [],
     }
 
