@@ -4,6 +4,8 @@ import axios from 'axios';
 
 import DigestTableEntry from './DigestTableEntry';
 
+import GenericButton from '../GenericButton';
+
 class Proteome extends Component {
   constructor(props)
   {
@@ -19,6 +21,8 @@ class Proteome extends Component {
     this.handleMissedCleavages = this.handleMissedCleavages.bind(this);
     this.handleDigest = this.handleDigest.bind(this);
     this.handleDeleteProteome = this.handleDeleteProteome.bind(this);
+  
+    this.testCallback = this.testCallback.bind(this);
   }
 
   handleEnzyme(event)
@@ -31,7 +35,16 @@ class Proteome extends Component {
     this.setState({missedCleavages: event.target.value});
   }
 
-  handleDigest(event)
+  testCallback(resetButton)
+  {
+    console.log('waiting two seconds...')
+    setTimeout(function(){
+      console.log('done');
+      resetButton();
+    }, 2000);
+  }
+
+  handleDigest(callback, event)
   {
     const sendData = {
       proteome_id: this.props.data.id,
@@ -43,13 +56,14 @@ class Proteome extends Component {
       .then(res => {
         const response = res.data;
         console.log(response);
+        callback();
       })
       .catch(function(e) {
         console.log(e.response.data.message);
       });
   }
 
-  handleDeleteProteome()
+  handleDeleteProteome(callback)
   {
     const sendData = {
       proteome_id: this.props.data.id,
@@ -59,6 +73,8 @@ class Proteome extends Component {
       .then(res => {
         const response = res.data;
         console.log(response);
+        callback();
+        this.props.handleRefresh();
       })
       .catch(function (e) {
         console.log(e.response.data.message);
@@ -138,12 +154,32 @@ class Proteome extends Component {
 
                 <div className="mb-3">
                   <div className="btn-group" role="group">
+
+                    <GenericButton
+                      type='btn btn-primary'
+                      tooltip='Begin Digestion'
+                      icon='fas fa-angle-double-right'
+                      disabled={false}
+                      clickCallback={this.handleDigest}
+                    />
                     
-                    <button type="button" className="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Submit Digest Job to Queue" onClick={this.handleDigest}><i className="fas fa-angle-double-right"></i></button>
-                    
-                    <a href={'/proteomes/' + this.props.data.id + '/edit'} className="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Proteome"><i className="fas fa-pen-nib"></i></a>
-                    
-                    <button type="button" className="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Proteome" onClick={this.handleDeleteProteome}><i className="fas fa-times"></i></button>
+                    <a 
+                      href={'/proteomes/' + this.props.data.id + '/edit'} 
+                      className="btn btn-primary" 
+                      data-bs-toggle="tooltip" 
+                      data-bs-placement="top" 
+                      title="Edit Proteome">
+                        <i className="fas fa-pen-nib"></i>
+                    </a>
+
+                    <GenericButton
+                      type='btn btn-primary'
+                      tooltip='Delete Proteome'
+                      icon='fas fa-times'
+                      disabled={false}
+                      clickCallback={this.handleDeleteProteome}
+                    />
+
                   </div>
                 </div>
 

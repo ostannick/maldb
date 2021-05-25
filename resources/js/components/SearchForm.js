@@ -85,7 +85,7 @@ class SearchForm extends Component {
                   <textarea 
                     className="form-control" 
                     id="dataset" 
-                    rows="3" 
+                    rows="16" 
                     onChange={this.props.handleMassListChange}
                     defaultValue="1170.260461
                     1228.382739

@@ -23,21 +23,28 @@ class ProteomeManager extends Component {
     this.handleNewFile = this.handleNewFile.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
 
+    this.fetchProteomes = this.fetchProteomes.bind(this);
+
   }
 
-  componentDidMount()
+  fetchProteomes()
   {
     //Load the user's proteomes via AJAX call
     //Make the AJAX call
     axios.get('/proteomes/list')
       .then(res => {
         const response = res.data;
-        this.setState({proteomes: response});
+        this.setState({ proteomes: response });
         console.log(response);
       })
-      .catch(function(e) {
+      .catch(function (e) {
         console.log(e.response.data.message);
       });
+  }
+
+  componentDidMount()
+  {
+    this.fetchProteomes();
   }
 
   renderProteome(data)
@@ -46,6 +53,7 @@ class ProteomeManager extends Component {
       <Proteome
         data={data}
         key={data.id}
+        handleRefresh={this.fetchProteomes}
       />
     )
   }
@@ -89,7 +97,7 @@ class ProteomeManager extends Component {
         const response = res.data;
         console.log(response);
 
-        location.reload();
+        this.fetchProteomes();
 
       })
       .catch(function(e) {

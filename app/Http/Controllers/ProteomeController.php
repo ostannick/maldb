@@ -72,6 +72,7 @@ class ProteomeController extends Controller
         $proteome->path = $filePath;
         $proteome->organism = $request->input('organism');
         $proteome->user_id = Auth::user()->id;
+        $proteome->table = Auth::user()->id . '_' . $request->input('name');
 
         $proteome->save();
       }
@@ -145,28 +146,28 @@ class ProteomeController extends Controller
         $this->delete($request);
     }
 
-  public function delete(Request $request)
-  {
-    //Get the proteome model
-    $proteome = Proteome::findOrFail($request->input('proteome_id'));
+    public function delete(Request $request)
+    {
+      //Get the proteome model
+      $proteome = Proteome::findOrFail($request->input('proteome_id'));
 
-    if ($proteome && $proteome->user_id == Auth::user()->id) {
-      //Delete the fasta
-      Storage::delete($proteome->path);
+      if ($proteome && $proteome->user_id == Auth::user()->id) {
+        //Delete the fasta
+        Storage::delete($proteome->path);
 
-      //Delete the digests and digest tables.
-      $digests = $proteome->digests();
-      foreach ($digests as $d) {
-        $d->delete_everything();
+        //Delete the digests and digest tables.
+        $digests = $proteome->digests();
+        foreach ($digests as $d) {
+          $d->delete_everything();
+        }
+
+        //Delete the table
+        Schema::dropIfExists($proteome->table);
+
+        //Delete the database entry
+        $proteome->delete();
+
+        return 'Proteome successfully deleted.';
       }
-
-      //Delete the database entry
-      $proteome->delete();
-
-      //Delete the table
-      Schema::dropIfExists($proteome->table);
-
-      return 'Proteome successfully deleted.';
     }
-  }
 }
