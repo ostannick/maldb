@@ -1,12 +1,12 @@
 ## malDB
 
-![Architecture Overview](docs/overview.png)
+![Architecture Overview](docs/logo.png)
 
 ## About malDB
 
-malDB is an open-source peptide mass fingerprinting web application that allows the user to create their own peptide database tables to search against. Since malDB is built as a web application, you can install it as either:
+malDB is an open-source peptide mass fingerprinting web application that allows the user to create their own peptide database tables to search against. Since malDB is built as a web application, you can use it as either:
 
-- A web server running locally on your computer (access via 127.0.0.1:8000)
+- A web server that you access locally on your computer (via 127.0.0.1:8000)
 - A web server running on a networked machine (access via <IP_ADDRESS>:8000)
 
 malDB provides the following features:
@@ -19,7 +19,7 @@ malDB provides the following features:
 
 ## Installing malDB on Windows / Linux
 
-Installing malDB involves deploying a Laravel application on a machine that can serve as a webserver:
+Installing malDB involves deploying a Laravel application on a machine that can serve as a webserver. You can run malDB on your own computer but it is recommended that you use a networked machine with a high performance CPU and at least 16GB of RAM.
 
 1. [Download PHP](https://www.php.net/downloads.php) and add the root folder to your PATH so that the php binary is accessible.
 2. [Download Composer](https://getcomposer.org/).
@@ -61,5 +61,10 @@ You should now be able to access malDB in a web browser via http://127.0.0.1:800
 - Multiple queues can run concurrently by simply running multiple `php artisan queue:work --timeout=0` commands in separate terminal windows. [See Laravel documentation](https://laravel.com/docs/8.x/queues)
 - Tutorials on how to use malDB, and how to perform peptide mass fingerprinting are built into the application under the 'Learn' page.
 
-## Getting Started
+## Architecture
 
+![Architecture Overview](docs/overview.png)
+
+## Digesting a Proteome
+
+## Running a Search
