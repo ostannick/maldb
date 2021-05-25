@@ -10,6 +10,7 @@ Fields in the sequence file:
 
 Fields in the peptide file:
 - seq_id: integer used as an internal ID
+- seq: string of the amino acid sequence
 - start: integer of the peptide's first position in the sequence; 0-based and inclusive
 - end: integer of the peptide's last position in the sequence; 0-based and inclusive
 - mz1: string of the monoisotopic mass of the peptide
@@ -188,10 +189,10 @@ def seq_to_peptide_dicts(seq_id, sequence, enz_digest_fxn, missed_cleavages):
     return peptides
 def make_peptide_dicts(seq_id, seq_start_ind, sequence, missed_cleavages):
     # Generates the required attributes for each peptide. Applies the mass modifications, and respects the min and max peptide mass limits.
-    # The indices are 0-based, but unlike Python indices they are both inclusive. So (start=4, end=9) would represent a peptide of length 6, covering amino acid positions 4, 5, 6, 7, 8, and 9. The next peptide would have (start=10).
+    # The sequence indices are 0-based, but unlike Python indices they are both inclusive. So (start=4, end=9) would represent a peptide of length 6, covering amino acid positions 4, 5, 6, 7, 8, and 9. The next peptide would have (start=10).
     peps = []
     try:
-        pep = {'seq_id':seq_id, 'start':seq_start_ind, 'end':seq_start_ind+len(sequence)-1, 'mc':missed_cleavages, 'mso':0, 'mz1':calculate_mz1(sequence), 'avg':calculate_average_weight(sequence)}
+        pep = {'seq_id':seq_id, 'seq':sequence, 'start':seq_start_ind, 'end':seq_start_ind+len(sequence)-1, 'mc':missed_cleavages, 'mso':0, 'mz1':calculate_mz1(sequence), 'avg':calculate_average_weight(sequence)}
     except KeyError: # Thrown when there's a non-standard character in the sequence
         print('Warning: discarding peptide due to unknown character in "{}"'.format(sequence))
         return None
@@ -246,7 +247,6 @@ def get_and_validate_arguments(parser):
 if __name__ == '__main__':
     parser = setup_parser()
     args = get_and_validate_arguments(parser)
-
     seqs = parse_fasta_file(args.fasta_file)
     peptide_db, seq_db = digest_sequences(seqs, args.enzyme[0], args.cleavages)
     with open(args.peptides_out, 'w') as f:
