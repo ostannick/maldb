@@ -45,6 +45,6 @@ You should now be able to access malDB in a web browser via http://127.0.0.1:800
 - Multiple queues can run concurrently by simply running multiple `php artisan queue:work --timeout=0` commands in separate terminal windows. [See Laravel documentation](https://laravel.com/docs/8.x/queues)
 - Tutorials on how to use malDB, and how to perform peptide mass fingerprinting are built into the application under the 'Learn' page.
 
-## Architecture
+## Architecture Overview
 
 ![Architecture Overview](docs/overview.png)
