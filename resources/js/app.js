@@ -1,7 +1,7 @@
 require('./bootstrap');
 
 require('./components/Job');
-require('./components/Toast');
+require('./components/Toasts/ToastContainer');
 require('./components/Proteomes/ProteomeManager');
 require('./components/Modifications/ModificationManager');
 

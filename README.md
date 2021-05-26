@@ -21,6 +21,7 @@ malDB provides the following features:
 
 Installing malDB involves deploying a Laravel application on a machine that can serve as a webserver. You can run malDB on your own computer but it is recommended that you use a networked machine with a high performance CPU and at least 16GB of RAM.
 
+0. [Download Python (with data science libraries)](https://www.anaconda.com/) if you have not already, and ensure the python binary is in your PATH.
 1. [Download PHP](https://www.php.net/downloads.php) and add the root folder to your PATH so that the php binary is accessible.
 2. [Download Composer](https://getcomposer.org/) and install it. Make sure it is added to your PATH. Restart any terminals after installing Composer.
 3. [Download node.js](https://nodejs.org/en/) and install it.
@@ -50,7 +51,7 @@ DB_PASSWORD=myPassword
 11. Run `npm install` (installs javascript dependencies)
 12. Run `php artisan key:generate` (generates a key in .env file)
 13. Run `php artisan migrate` (creates the database tables)
-14. Run `php artisan storage:link`
+14. Run `php artisan storage:link` (generates symlink to storage directory)
 
 # Starting malDB
 
