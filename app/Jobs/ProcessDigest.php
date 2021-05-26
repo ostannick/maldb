@@ -134,7 +134,7 @@ class ProcessDigest implements ShouldQueue
       $file_digest  = 'storage/app/' . $this->user_id . '/proteomes/' . $tableNameDigest . '.json';
 
       $command = implode(' ', [
-        'py',
+        'python',
         'python/digest_proteome.py',
         $file_fasta,
         $file_digest,
