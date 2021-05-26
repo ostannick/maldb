@@ -22,6 +22,7 @@ class ProcessDigest implements ShouldQueue
 
     protected $req;
     protected $user_id;
+    public $timeout = 99999999;
 
     /**
      * Create a new job instance.
@@ -45,6 +46,7 @@ class ProcessDigest implements ShouldQueue
       //Create a new process
       $process = new Process();
       $process->user_id = $this->user_id;
+      
 
       //Get the proteome of interest.
       $proteome = Proteome::find($this->req['proteome_id']);
@@ -58,8 +60,10 @@ class ProcessDigest implements ShouldQueue
       //
       $process->description = "Digesting " . $proteome->name . " with " . $enzyme;
       $process->save();
+      update_status($process->id, 0.01, 'Process initialized...');
 
       //No need to remake the parent table for subsequent digests.
+      update_status($process->id, 0.03, 'Creating parent table.');
       if(!Schema::hasTable($tableName))
       {
         //create a proteome table
@@ -74,6 +78,7 @@ class ProcessDigest implements ShouldQueue
       }
 
       $already_exists = False;
+      update_status($process->id, 0.05, 'Creating digest table.');
       if(!Schema::hasTable($tableNameDigest))
       {
         //create a base peptide digest table
@@ -122,6 +127,7 @@ class ProcessDigest implements ShouldQueue
         $digest->save();
       }
 
+      update_status($process->id, 0.1, 'Digesting the proteome. This may take a while.');
       //Run the digest script (PYTHON):
       $file_fasta = 'storage/app/' . $proteome->path;
       $file_parents = 'storage/app/' . $this->user_id . '/proteomes/' . $tableName . '.json';
@@ -143,6 +149,7 @@ class ProcessDigest implements ShouldQueue
       $stream1 = fopen($file_parents, 'r');
       $stream2 = fopen($file_digest,  'r');
 
+      update_status($process->id, 0.16, 'Loading proteomes into memory.');
       $listener1 = new \JsonStreamingParser\Listener\InMemoryListener();
       try {
         $parser = new \JsonStreamingParser\Parser($stream1, $listener1);

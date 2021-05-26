@@ -29,10 +29,11 @@ class AnalysisController extends Controller
         //Get the peptides from the database
         $peptides = \DB::table($table)->whereIn('id', $data->pluck('id'))->get()->filter();
 
-        //Initialize array of length sequence and fill with 'false' to indicate that amino acid was not observed.
+        //We start by initializating an array of length $sequence.length, and filling it full of 'false'.
         $coordinates = array_fill(0, strlen($sequence), false);
 
-        //
+        //We loop through each peptide, and use its start and end values to loop through the above array, changing the value to true while the loop runs.
+        //This represents observation or coverage.
         $peptides->each(function($item) use (&$coordinates){
             for($i = $item->start; $i <= $item->end; $i++)
             {
@@ -40,6 +41,10 @@ class AnalysisController extends Controller
             }
         });
 
+        //We make a new array to hold boundary information (a compressed form of the above boolean array)
+        //We set our 'current observability' of a particular amino acid to that of the first entry in the coordinate array.
+        //We will loop through the coordinate array and each time the value changes from true->false or false->true, we know we have hit a boundary.
+        //We will record this boundary information in an associative array to use later in a substring.
         $boundaries = [];
         $currentObs = $coordinates[0];
         $lastCheckpoint = 0;
@@ -56,12 +61,10 @@ class AnalysisController extends Controller
                 array_push($boundaries, $arr);
                 $currentObs = !$currentObs;
                 $lastCheckpoint = $i;
-
-
-                
             }
         }
 
+        //We make a new array for the final seqmap and push the substring'ed sequences to it.
         $seqview = [];
         foreach($boundaries as $b)
         {
@@ -72,6 +75,7 @@ class AnalysisController extends Controller
             array_push($seqview, $arr);
         }
 
+        //Return the response.
         return $seqview;
     }
 

@@ -14,7 +14,7 @@ export default class MapSeq extends Component {
     let color;
     if(this.props.obs)
     {
-      color = 'bg-info'
+      color = 'bg-warning'
     }
     else
     {

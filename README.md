@@ -22,18 +22,19 @@ malDB provides the following features:
 Installing malDB involves deploying a Laravel application on a machine that can serve as a webserver. You can run malDB on your own computer but it is recommended that you use a networked machine with a high performance CPU and at least 16GB of RAM.
 
 1. [Download PHP](https://www.php.net/downloads.php) and add the root folder to your PATH so that the php binary is accessible.
-2. [Download Composer](https://getcomposer.org/).
-3. [Download MySQL](https://dev.mysql.com/downloads/installer/) and install MySQL server and MySQL workbench.
-4. In the PHP folder, open php.ini and uncomment the following lines by removing the semicolon:
+2. [Download Composer](https://getcomposer.org/) and install it. Make sure it is added to your PATH. Restart any terminals after installing Composer.
+3. [Download node.js](https://nodejs.org/en/) and install it.
+4. [Download MySQL](https://dev.mysql.com/downloads/installer/) and install MySQL server and MySQL workbench.
+5. In the PHP folder, open php.ini and uncomment the following lines by removing the semicolon:
 
 `;extension=pdo_mysql` => `extension=pdo_mysql` \
 `;extension=fileinfo`  => `extension=fileinfo`  
 
 Note that if you don't have a `php.ini` file, you should rename the supplied `php.ini.recommended` or `php.ini.development` or `php.ini.production` to `php.ini`.
 
-5. Open the MySQL workbench, and add a schema to your MySQL database called 'maldb'.
-6. Clone this repository.
-7. Open the .env file in the repository root, and set the appropriate environment variables to connect to the MySQL database:
+6. Open the MySQL workbench, and add a schema to your MySQL database called 'maldb'.
+7. Clone this repository.
+8. In the repository root, rename `.env.example` to `.env`. Now, open it up and set the appropriate environment variables to connect to the MySQL database (note that this file may be hidden in your filesystem, you may need to show hidden files to see it): 
 
 ```
 DB_CONNECTION=mysql 
@@ -44,11 +45,11 @@ DB_USERNAME=myAdminUserName
 DB_PASSWORD=myPassword
 ```
 
-8. In a terminal, migrate to the root of the repository folder.
-9. Run `composer install --ignore-platform-reqs` (installs PHP dependencies)
-10. Run `npm install` (installs javascript dependencies)
-11. Run `php artisan key:generate` (generates a key in .env file)
-12. Run `php artisan migrate` (creates the database tables)
+9. In a terminal, migrate to the root of the repository folder.
+10. Run `composer install --ignore-platform-reqs` (installs PHP dependencies)
+11. Run `npm install` (installs javascript dependencies)
+12. Run `php artisan key:generate` (generates a key in .env file)
+13. Run `php artisan migrate` (creates the database tables)
 
 # Starting malDB
 
