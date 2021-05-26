@@ -9,7 +9,7 @@
 
         <div class="col">
           <div class="card h-100">
-            <img src="..." class="card-img-top" alt="...">
+          <img src="https://picsum.photos/500/100" class="card-img-top">
             <div class="card-body">
               <h5 class="card-title">Perform Search</h5>
               <p class="card-text">Search your digest tables using mass lists obtained from your MALDI instrument.</p>
@@ -22,7 +22,7 @@
 
         <div class="col">
           <div class="card h-100">
-            <img src="..." class="card-img-top" alt="...">
+            <img src="https://picsum.photos/500/100" class="card-img-top">
             <div class="card-body">
               <h5 class="card-title">Digest Proteomes</h5>
               <p class="card-text">Upload a collection of any proteins in .FASTA format, and begin generating digestion tables.</p>
@@ -35,7 +35,7 @@
 
         <div class="col">
           <div class="card h-100">
-            <img src="..." class="card-img-top" alt="...">
+          <img src="https://picsum.photos/500/100" class="card-img-top">
             <div class="card-body">
               <h5 class="card-title">Manage Modifications</h5>
               <p class="card-text">View, delete, and define new mass modifications.</p>
@@ -48,7 +48,7 @@
 
         <div class="col">
           <div class="card h-100">
-            <img src="..." class="card-img-top" alt="...">
+          <img src="https://picsum.photos/500/100" class="card-img-top">
             <div class="card-body">
               <h5 class="card-title">Neural Network Interface</h5>
               <p class="card-text">Inspect and curate your training data to improve neural network prediction capability.</p>
@@ -61,7 +61,7 @@
 
         <div class="col">
           <div class="card h-100">
-            <img src="..." class="card-img-top" alt="...">
+          <img src="https://picsum.photos/500/100" class="card-img-top">
             <div class="card-body">
               <h5 class="card-title">Job Queue</h5>
               <p class="card-text">View the Job Queue</p>
@@ -74,7 +74,7 @@
 
         <div class="col">
           <div class="card h-100">
-            <img src="..." class="card-img-top" alt="...">
+          <img src="https://picsum.photos/500/100" class="card-img-top">
             <div class="card-body">
               <h5 class="card-title">Learn</h5>
               <p class="card-text">Read and watch tutorials on how to perform peptide mass fingerprinting and use malDB.</p>
@@ -87,7 +87,7 @@
 
         <div class="col">
           <div class="card h-100">
-            <img src="..." class="card-img-top" alt="...">
+          <img src="https://picsum.photos/500/100" class="card-img-top">
             <div class="card-body">
               <h5 class="card-title">Application Settings</h5>
               <p class="card-text">Edit the server's application settings.</p>

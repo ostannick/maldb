@@ -50,6 +50,7 @@ DB_PASSWORD=myPassword
 11. Run `npm install` (installs javascript dependencies)
 12. Run `php artisan key:generate` (generates a key in .env file)
 13. Run `php artisan migrate` (creates the database tables)
+14. Run `php artisan storage:link`
 
 # Starting malDB
 
