@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom'
 
 import Toast from './Toast';
 
+const ToastContext = React.createContext();
+
 export default class ToastContainer extends Component {
 
   constructor(props) {
@@ -11,8 +13,6 @@ export default class ToastContainer extends Component {
     this.state = {
       toastList: [],
     }
-
-    this.pushToast = this.pushToast.bind(this);
   }
 
   render() {
@@ -23,9 +23,9 @@ export default class ToastContainer extends Component {
         {this.state.toastList.map(toast => (
 
           <Toast 
-            key={1}
+            key={new Date().now}
             title={toast.title}
-            time={toast.time}
+            time={new Date().now}
             content={toast.content}
           />
 
@@ -35,7 +35,7 @@ export default class ToastContainer extends Component {
     )
   }
 
-  pushToast(title, time, content)
+  pushToast = (title, time, content) =>
   {
 
     var newToast = {
@@ -51,7 +51,7 @@ export default class ToastContainer extends Component {
 
   componentDidMount()
   {
-    setInterval(() => this.pushToast('test1', 'test2', 'test3'), 2500);
+    setInterval(() => this.pushToast('test1', 'test2', 'test3'), 12000);
   }
 
 }
