@@ -11,10 +11,21 @@ import ToastContainer from "./components/Toasts/ToastContainer";
 import FingerprintView from "./components/Analysis/FingerprintView";
 
 export default class App extends Component {
+
+    constructor(props)
+    {
+        super(props);
+
+        this.state = {
+
+            //Application toasts
+            toastList: [],
+
+        };
+    }
+
+
     render() {
-      // Use a Provider to pass the current theme to the tree below.
-      // Any component can read it, no matter how deep it is.
-      // In this example, we're passing "dark" as the current value.
       return (
         <div>
 
@@ -29,6 +40,8 @@ export default class App extends Component {
                     <nav className="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
 
                         <div className="position-sticky pt-3 pb-3">
+
+                            <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-2 text-muted">Controls</h6>
 
                             <ul className="list-group">
 
@@ -70,9 +83,14 @@ export default class App extends Component {
                             </ul>
 
 
-                            <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">Nick Ostan</h6>
+                            <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-2 text-muted">Nick Ostan</h6>
 
                             <ul className="list-group">
+
+                                <a className="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    Quit Application
+                                    <span className="badge bg-light text-dark rounded-pill"><i className="fad fa-fw fa-times"></i></span>
+                                </a>
 
                                 <a className="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                     Log Out
