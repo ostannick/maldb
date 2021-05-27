@@ -27,6 +27,10 @@ Route::get('/', function () {
     return view('home');
 });
 
+Route::get('/spa', function() {
+    return view('spa');
+});
+
 Route::get('/queue', function () {
 
     $jobs = \DB::table('jobs')->get();

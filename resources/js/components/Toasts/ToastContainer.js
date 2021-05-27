@@ -17,8 +17,10 @@ export default class ToastContainer extends Component {
 
   render() {
     return(
-      
-      <div id="toast-container" className="toast-container position-absolute top-0 end-0 p-3" style={{'zIndex': 999}}>
+
+      <div id="toast-container" aria-live="polite" aria-atomic="true" className="position-relative" style={{'zIndex': 999}}>
+
+        <div className="toast-container position-absolute top-0 end-0 p-3">
 
         {this.state.toastList.map(toast => (
 
@@ -31,7 +33,10 @@ export default class ToastContainer extends Component {
 
         ))}
 
+        </div>
+      
       </div>
+      
     )
   }
 
@@ -51,7 +56,7 @@ export default class ToastContainer extends Component {
 
   componentDidMount()
   {
-    setInterval(() => this.pushToast('test1', 'test2', 'test3'), 12000);
+    setInterval(() => this.pushToast('test1', 'test2', 'test3'), 2500);
   }
 
 }

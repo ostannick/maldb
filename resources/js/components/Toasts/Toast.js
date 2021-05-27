@@ -36,7 +36,7 @@ export default class Toast extends Component {
     var defaultOptions = {
       animation: true,
       autohide: true,
-      delay: 10000
+      delay: 1000
     }
 
     

@@ -29,7 +29,7 @@ export default class FingerprintView extends Component {
         stroke: {
           curve: 'straight',
           width: 1,
-          colors: ['#1bcf93']
+          colors: ['#7600b5']
 
         },
         
@@ -38,7 +38,7 @@ export default class FingerprintView extends Component {
           align: 'left'
         },
         subtitle: {
-          text: props.data.parent_name,
+          //text: props.data.parent_name,
           align: 'left'
         },
         labels: ['A'],
@@ -67,7 +67,7 @@ export default class FingerprintView extends Component {
   {
     return(
       <div id="chart">
-        <ReactApexChart options={this.state.options} series={this.state.series} type="area" height={350} />
+        <ReactApexChart options={this.state.options} series={this.state.series} type="area" height={500} />
       </div>  
     )
   }
@@ -75,6 +75,7 @@ export default class FingerprintView extends Component {
   componentDidMount()
   {
 
+    /*
     const sendData = {
       data: this.props.data,
     };
@@ -88,6 +89,8 @@ export default class FingerprintView extends Component {
       .catch(function(e) {
         console.log(e.response.data.message);
       });
+
+      */
   
   }
 

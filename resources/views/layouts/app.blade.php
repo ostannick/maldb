@@ -22,18 +22,9 @@
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 
-<body style="background-color: #0b1d36">
-
-  <div id="toast-container" aria-live="polite" aria-atomic="true" class="position-relative">
-    <!-- Position it: -->
-    <!-- - `.toast-container` for spacing between toasts -->
-    <!-- - `.position-absolute`, `top-0` & `end-0` to position the toasts in the upper right corner -->
-    <!-- - `.p-3` to prevent the toasts from sticking to the edge of the container  -->
-    
-  </div>
+<body>
 
   <div id="app">
-
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container">
