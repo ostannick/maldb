@@ -20,7 +20,7 @@ export default class FingerprintView extends Component {
           type: 'area',
           height: 350,
           zoom: {
-            enabled: false
+            enabled: true
           }
         },
         dataLabels: {
@@ -29,12 +29,11 @@ export default class FingerprintView extends Component {
         stroke: {
           curve: 'straight',
           width: 1,
-          colors: ['#7600b5']
+          colors: ['#1ee696']
 
         },
         
         title: {
-          text: 'Fingerprint Prediction',
           align: 'left'
         },
         subtitle: {

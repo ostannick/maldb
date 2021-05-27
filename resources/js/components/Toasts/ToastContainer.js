@@ -56,7 +56,7 @@ export default class ToastContainer extends Component {
 
   componentDidMount()
   {
-    setInterval(() => this.pushToast('test1', 'test2', 'test3'), 2500);
+    //setInterval(() => this.pushToast('test1', 'test2', 'test3'), 2500);
   }
 
 }

@@ -55,7 +55,7 @@ export default class GenericButton extends Component {
         type="button"
         className={this.props.type}
         data-bs-toggle="tooltip"
-        data-bs-placement="top"
+        data-bs-placement="bottom"
         title={this.props.tooltip}
         onClick={() => this.handleClick(this.resetButton)}
         disabled={this.state.disabled}

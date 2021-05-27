@@ -17,6 +17,8 @@ export default class ModificationPicker extends Component {
     return (
       <div>
 
+      <label htmlFor="" className="form-label"><i className="fal fa-weight-hanging"></i> Modifications</label>
+
       <div className="mb-3">
         <div className="form-check form-switch">
           <input className="form-check-input" type="checkbox" id="mod-fixed-cys-carbamidomethyl" checked disabled />
