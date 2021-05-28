@@ -73,11 +73,13 @@ class Proteome extends Component {
       .then(res => {
         const response = res.data;
         console.log(response);
-        callback();
         this.props.handleRefresh();
+        callback();
       })
       .catch(function (e) {
         console.log(e.response.data.message);
+        this.props.handleRefresh();
+        callback();
       });
   }
 
@@ -117,9 +119,9 @@ class Proteome extends Component {
     return (
 
       <div class="col">
-        <div class="card h-100">
+        <div class="card h-100 shadow">
           <div class="card-body">
-            <h5 class="card-title border-bottom pb-2">{this.props.data.name}, {this.props.data.organism}</h5>
+            <h5 class="card-title border-bottom pb-2 text-primary">{this.props.data.name}, {this.props.data.organism}</h5>
         
             <div className="mb-3">
               <label htmlFor="enzyme" className="form-label">Enzyme:</label>

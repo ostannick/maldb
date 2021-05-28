@@ -12,10 +12,11 @@ export default class SideNav extends Component {
     super(props);
   }
 
-  renderSideNavItem(item)
+  renderSideNavItem(item, idx)
   {
     return(
       <SideNavItem
+        key={item.index}
         index={item.index}
         title={item.title}
         icon={item.icon}
@@ -30,9 +31,9 @@ export default class SideNav extends Component {
 
         <FadeIn>
 
-          {this.props.items.map((item) => (
+          {this.props.items.map((item, idx) => (
 
-            this.renderSideNavItem(item)
+            this.renderSideNavItem(item, idx)
 
           ))}
 

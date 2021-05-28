@@ -81,7 +81,7 @@ export default class SearchFrame extends Component {
           <div className="row">
             
 
-            <div className="col-md-4">
+            <div className="col-md-4 s">
               <div className="mb-3">
                 <label htmlFor="tolerance" className="form-label"><i className="fal fa-arrows-alt-h"></i> Tolerance (Da)</label>
                 <input type="text" className="form-control" id="tolerance" defaultValue="1.2" onChange={this.props.handleToleranceChange} />
