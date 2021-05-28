@@ -41,6 +41,12 @@ class AnalysisController extends Controller
             }
         });
 
+        //Calculate sequence coverage
+        $coverage = round(
+            collect($coordinates)->filter(function ($item){return $item == true;})->count() / collect($coordinates)->count() * 100
+        );
+                    
+
         //We make a new array to hold boundary information (a compressed form of the above boolean array)
         //We set our 'current observability' of a particular amino acid to that of the first entry in the coordinate array.
         //We will loop through the coordinate array and each time the value changes from true->false or false->true, we know we have hit a boundary.
@@ -76,7 +82,10 @@ class AnalysisController extends Controller
         }
 
         //Return the response.
-        return $seqview;
+        return [
+            'seqview' => $seqview,
+            'coverage'=> $coverage,
+        ];
     }
 
     public function get_table(Request $request)

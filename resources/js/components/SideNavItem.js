@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom'
 import axios from 'axios';
 
-import FadeIn from 'react-fade-in';
-
 export default class SideNavItem extends Component {
 
   constructor(props) {

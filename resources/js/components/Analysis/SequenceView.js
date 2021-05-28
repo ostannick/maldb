@@ -11,7 +11,10 @@ export default class SequenceView extends Component {
     super(props);
 
     this.state = {
-      sequenceMap: [],
+      data: {
+        seqview: [],
+        coverage: 0,
+      }
     }
 
   }
@@ -28,10 +31,14 @@ export default class SequenceView extends Component {
         <div>
 
           {/*SEQUENCE VIEW*/}
+          <div className="progress mt-3 mb-3" style={{'height': '20px'}}>
+            <div className="progress-bar" role="progressbar" style={{'width': this.state.data.coverage + '%'}} aria-valuenow={this.state.data.coverage} aria-valuemin="0" aria-valuemax="100">{this.state.data.coverage}% Coverage</div>
+          </div>
+
           <div className="col-lg-12 mb-3">
             <div className="font-monospace text-break fs-4 mt-3 mb-3 text-muted">
 
-              {this.state.sequenceMap.map((mapSeq, index) => (
+              {this.state.data.seqview.map((mapSeq, index) => (
 
                 <MapSeq
                   key={index}
@@ -67,8 +74,7 @@ export default class SequenceView extends Component {
     axios.post(`/analysis/seqview`, sendData)
       .then(res => {
         const response = res.data;
-        console.log(response);
-        this.setState({ sequenceMap: response, isLoading: false});
+        this.setState({ data: response, isLoading: false});
       })
       .catch(function (e) {
         console.log(e.response.data.message);

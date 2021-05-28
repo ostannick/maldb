@@ -43,10 +43,6 @@ export default class ResultsFrame extends Component {
           </h3>
 
           {/*Sequence View */}
-          <div className="progress mt-3 mb-3" style={{'height': '20px'}}>
-            <div className="progress-bar" role="progressbar" style={{'width': '25%'}} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25% Coverage</div>
-          </div>
-
           <SequenceView data={this.props.results.results[this.state.resultIndex]}/>
 
 
