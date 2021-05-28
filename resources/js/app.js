@@ -30,7 +30,19 @@ export default class App extends Component {
             //Application toasts
             toastList: [],
 
+            //Application's current result set
+            results: {}
+
         };
+    }
+
+    updateResults = (results) =>
+    {
+      //Update the results
+      this.setState({results: results}, () => console.log(this.state.results));
+
+      //Change the frame
+      
     }
 
 
@@ -45,7 +57,7 @@ export default class App extends Component {
             />
 
             <ToastContext.Provider value={this.testFunction}>
-              <ApplicationContainer />
+              <ApplicationContainer updateResults={(results) => this.updateResults(results)}/>
             </ToastContext.Provider>
             
         </div>

@@ -52,18 +52,18 @@ export default class SearchFrame extends Component {
     //Make the AJAX call
     axios.post(`/search`, sendData)
       .then(res => {
-        const response = res.data;
-        console.log(response);
-        this.setState({results: response});
-        this.setState({status: response.code});
 
-        callback();
+        const response = res.data;
+
+        this.props.updateResults(response);
+
+        if(callback) callback();
 
       })
       .catch(function(e) {
-        console.log(e.response.data.message);
+        console.log(e);
 
-        callback();
+        if (callback) callback();
       });
   }
 
@@ -117,7 +117,7 @@ export default class SearchFrame extends Component {
 
             <div className="col-md-4">
               <TablePicker
-                updateTables={this.updateTables}
+                updateTables={(selectedTables) => this.updateTables(selectedTables)}
               />
             </div>
 
@@ -134,10 +134,7 @@ export default class SearchFrame extends Component {
     );
   }
 
-
-
-
-  updateTables(selectedTables, event)
+  updateTables = (selectedTables, event) =>
   {
     this.setState({selectedTables: selectedTables});
   }

@@ -28,7 +28,7 @@ export default class ApplicationContainer extends Component {
       ],
       containerState: 0,
       containerContent: [
-        <SearchFrame />,
+        <SearchFrame updateResults={(results) => this.updateResults(results)}/>,
         <ResultsFrame />,
         <ProteomesFrame />,
         4,
@@ -44,6 +44,13 @@ export default class ApplicationContainer extends Component {
   {
     console.log('Changing container state... ' + index)
     this.setState({containerState: index});
+  }
+
+  updateResults = (results) =>
+  {
+    this.props.updateResults(results);
+    
+    this.changeContainerState(1);
   }
 
   render() {
