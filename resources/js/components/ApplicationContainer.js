@@ -27,14 +27,7 @@ export default class ApplicationContainer extends Component {
         { title: 'Perceptron', icon: 'fa-code-branch fa-rotate-90', index: 5 },
       ],
       containerState: 0,
-      containerContent: [
-        <SearchFrame updateResults={(results) => this.updateResults(results)}/>,
-        <ResultsFrame />,
-        <ProteomesFrame />,
-        4,
-        5,
-        6
-      ]
+      
 
 
     }
@@ -54,6 +47,19 @@ export default class ApplicationContainer extends Component {
   }
 
   render() {
+    
+    var containerContent = [
+      <SearchFrame updateResults={(results) => this.updateResults(results)} />,
+      <ResultsFrame results={this.props.results} />,
+      <ProteomesFrame />,
+      4,
+      5,
+      6
+    ]
+
+    var content = containerContent[this.state.containerState];
+
+
     return (
       <div className="container-fluid">
         <div className="row">
@@ -94,7 +100,7 @@ export default class ApplicationContainer extends Component {
 
           <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
-            {this.state.containerContent[this.state.containerState]}
+            {content}
 
           </main>
         </div>

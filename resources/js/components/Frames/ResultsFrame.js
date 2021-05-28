@@ -5,6 +5,8 @@ import axios from 'axios';
 import FadeIn from 'react-fade-in';
 import Toolbar from './Toolbar';
 import FingerprintView from '../Analysis/FingerprintView';
+import SequenceView from "../Analysis/SequenceView";
+import TableView from "../Analysis/TableView";
 
 export default class ResultsFrame extends Component {
 
@@ -13,17 +15,15 @@ export default class ResultsFrame extends Component {
 
     this.state = {
       toolbarButtons: [
-        { type: 'btn btn-primary btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-up', disabled: false, clickCallback: false },
-        { type: 'btn btn-light btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-down', disabled: false, clickCallback: false },
-        { type: 'btn btn-light btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-down', disabled: false, clickCallback: false },
-        { type: 'btn btn-light btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-down', disabled: false, clickCallback: false },
-        { type: 'btn btn-light btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-down', disabled: false, clickCallback: false },
+        { type: 'btn btn-primary btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-up', disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 0 }, callback()) },
+        { type: 'btn btn-light btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-down', disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 1 }, callback()) },
+        { type: 'btn btn-light btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-down', disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 2 }, callback()) },
+        { type: 'btn btn-light btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-down', disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 3 }, callback()) },
+        { type: 'btn btn-light btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-down', disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 4 }, callback()) },
       ],
 
-      results: {
-        code: 'init',
-        message: '0x00000',
-      },
+      resultIndex: 0,
+
     }
   }
 
@@ -39,19 +39,15 @@ export default class ResultsFrame extends Component {
 
           {/*Protein Name */}
           <h3 className="text-primary">
-            >tr|Q6LBN7|Q6LBN7_BOVIN Lactoferrin (Fragment) OS=Bos taurus OX=9913 PE=2 SV=1
+            {this.props.results.results[this.state.resultIndex].parent_name}
           </h3>
 
           {/*Sequence View */}
           <div className="progress mt-3 mb-3" style={{'height': '20px'}}>
-            <div class="progress-bar" role="progressbar" style={{'width': '25%'}} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25% Coverage</div>
+            <div className="progress-bar" role="progressbar" style={{'width': '25%'}} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25% Coverage</div>
           </div>
 
-          
-          <div className="font-monospace text-break fs-4 mt-3 mb-3 text-muted">
-          CTISQPEWFKCRRWQWRMKKLGAPSITCVRRAFALECIRAIAEKKADAVTLDGGMVFEACRDPYKLRPVAAEIYGTKESPQTHYYAVAVVKKGSNFQLDQLQGRKSCHTGLGRSAGWIIPMGILRPYLSWTESLEPLQGAVAKFFSASCVPCIDRQAYPNLCQLCKGEGENQCACSSREPYFGYSGAFKCLQDGAGDVAFVKETTVFENLPEKADRDQYELLCLNNSRAPVDAFKECHLAQVPSHAVVARSVDGKEDLIWKLLSKAQEKFGKNKSRSFQLFGSPPGQRDLLFKDSALGFLRIPSKVDSALYLGSRYLTTLKNLRETAEEVKARYTRVVWCAVGPEEQKKCQQWSQQSGQNVTCATASTTDDCIVLVLKGEADALNLDGGYIYTAGKCGLVPVLAENRKSSKHSSLDCVLRPTEGYLAVAVVKKANEGLTWNSLKDKKSCHTAVDRTAGWNIPMGLIVNQTGSCAFDEFFSQSCAPGADPKSRLCALCAGDDQGLDKCVPNSKEKYYGYTGAFRCLAEDVGDVAFVKNDTVWENTNGESTADWAKNLNREDFRLLCLDGTRKPVTEAQSCHLAVAPNHAVVSRSDRAAHVKQVLLHQQALFGKNGKNCPDKFCLFKSETKNLLFNDNTECLAKLGGRPTYEEYLGTEYVTAIANLKKCSTSPLLEACAFLTR
-          </div>
-          
+          <SequenceView data={this.props.results.results[this.state.resultIndex]}/>
 
 
           <h3 className="pb-2 border-bottom">Spectra</h3>
@@ -59,7 +55,7 @@ export default class ResultsFrame extends Component {
 
 
           <h3 className="pb-2 border-bottom">Observability Table</h3>
-          {/*Table */}
+          <TableView data={this.props.results.results[this.state.resultIndex]} />
 
         </FadeIn>
       </div>

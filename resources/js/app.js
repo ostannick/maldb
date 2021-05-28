@@ -57,7 +57,9 @@ export default class App extends Component {
             />
 
             <ToastContext.Provider value={this.testFunction}>
-              <ApplicationContainer updateResults={(results) => this.updateResults(results)}/>
+              <ApplicationContainer 
+                updateResults={(results) => this.updateResults(results)} 
+                results={this.state.results}/>
             </ToastContext.Provider>
             
         </div>

@@ -14,12 +14,18 @@ export default class MapSeq extends Component {
     let color;
     if(this.props.obs)
     {
-      color = 'bg-warning'
+      color = 'bg-primary text-light'
     }
     else
     {
       color = ''
     }
+
+
+
+    
+
+
     return(
       <span className={color}>{this.props.seq}</span>
     );
