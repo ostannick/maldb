@@ -17,12 +17,54 @@ export default class SearchFrame extends Component {
 
     this.state = {
       toolbarButtons: [
-        { type: 'btn btn-light btn-lg col-6', tooltip: 'Search', icon: 'fas fa-running', disabled: false, clickCallback: false },
+        { type: 'btn btn-light btn-lg col-6', tooltip: 'Search', icon: 'fas fa-running', disabled: false, clickCallback: (callback) => this.runSearch(callback)},
 
-      ]
+      ],
+
+      //Search Settings
+      missedCleavages: 1,
+      tolerance: 1.2,
+      matchLimit: 5,
+      selectedTables: [],
+
+      massMods: [
+        {name: 'carbamidomethyl_cys', type: 'fixed', enabled: true, mass: 57.0214, resi: 'C'},
+      ],
+
+      //Data
+      massList: "1170.260461 1375.483557 1653.520751 1752.469679 1765.517257 1849.43973 2105.47983 2128.467221 2178.484802 2211.44009 2222.209515 2389.285925 2424.412107 2551.361535 2668.518994 2855.366387",     
+      
     }
+  }
 
-    var buttonGroup = <ButtonGroup />
+  runSearch = (callback) =>
+  {
+
+    const sendData = {
+      missedCleavages: this.state.missedCleavages,
+      tolerance: this.state.tolerance,
+      massList: this.state.massList,
+      massMods: this.state.massMods,
+      selectedTables: this.state.selectedTables,
+      matchLimit: this.state.matchLimit,
+    };
+
+    //Make the AJAX call
+    axios.post(`/search`, sendData)
+      .then(res => {
+        const response = res.data;
+        console.log(response);
+        this.setState({results: response});
+        this.setState({status: response.code});
+
+        callback();
+
+      })
+      .catch(function(e) {
+        console.log(e.response.data.message);
+
+        callback();
+      });
   }
 
   render() {
@@ -37,11 +79,7 @@ export default class SearchFrame extends Component {
           />
 
           <div className="row">
-            <div className="col-md-4">
-              <TablePicker
-                updateTables={this.props.updateTables}
-              />
-            </div>
+            
 
             <div className="col-md-4">
               <div className="mb-3">
@@ -78,6 +116,12 @@ export default class SearchFrame extends Component {
             </div>
 
             <div className="col-md-4">
+              <TablePicker
+                updateTables={this.updateTables}
+              />
+            </div>
+
+            <div className="col-md-4">
               <ModificationPicker />
             </div>
 
@@ -88,5 +132,13 @@ export default class SearchFrame extends Component {
 
       </div>
     );
+  }
+
+
+
+
+  updateTables(selectedTables, event)
+  {
+    this.setState({selectedTables: selectedTables});
   }
 }

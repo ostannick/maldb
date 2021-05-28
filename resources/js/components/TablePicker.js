@@ -21,8 +21,6 @@ class TablePicker extends Component {
     this.toggleTable = this.toggleTable.bind(this);
   }
 
-
-
   handleEnzyme(event)
   {
     this.setState({enzyme: event.target.value}, this.loadTables);

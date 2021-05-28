@@ -29,7 +29,7 @@ export default class FingerprintView extends Component {
         stroke: {
           curve: 'straight',
           width: 1,
-          colors: ['#1ee696']
+          colors: ['#1f87ff']
 
         },
         

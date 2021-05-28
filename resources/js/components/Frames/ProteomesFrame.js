@@ -11,6 +11,8 @@ import ButtonGroup from './ButtonGroup';
 import FadeIn from "react-fade-in";
 import Proteome from '../Proteomes/Proteome';
 
+import Modal from 'react-bootstrap-v5';
+
 export default class ProteomesFrame extends Component {
 
   constructor(props) {
@@ -19,11 +21,16 @@ export default class ProteomesFrame extends Component {
     this.state = {
       //Toolbar button
       toolbarButtons: [
+        { type: 'btn btn-light btn-lg', tooltip: 'Add New Proteome', icon: 'fas fa-plus', disabled: false, clickCallback: false },
         { type: 'btn btn-light btn-lg', tooltip: 'Refresh', icon: 'fad fa-sync-alt', disabled: false, clickCallback: false },
+        
       ],
 
       //Proteomes
       proteomes: [],
+
+      //Modal
+      modal: null,
 
     }
   }
@@ -58,6 +65,7 @@ export default class ProteomesFrame extends Component {
 
   render() {
     return (
+
       <div>
 
         <FadeIn>
@@ -67,21 +75,22 @@ export default class ProteomesFrame extends Component {
             buttons={this.state.toolbarButtons}
           />
 
-          <div>
+          <div className="row row-cols-1 row-cols-md-3 g-4">
+          
 
-            {this.state.proteomes.map(proteome => (
+                {this.state.proteomes.map(proteome => (
 
-              this.renderProteome(proteome)
+                  this.renderProteome(proteome)
 
-            ))}
+                ))}
 
+            
           </div>
 
-          
         </FadeIn>
-        
 
       </div>
+     
     );
   }
 }

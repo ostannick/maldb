@@ -25,6 +25,7 @@ export default class GenericButton extends Component {
     this.setState({icon: 'fas fa-spin fa-cog'});
     this.setState({tooltip: 'Working...' });
     this.setState({disabled: true});
+    this.setState({content: ''});
 
     if(this.props.clickCallback != false)
     {
@@ -47,6 +48,7 @@ export default class GenericButton extends Component {
     this.setState({ icon: this.props.icon});
     this.setState({ tooltip: this.props.tooltip});
     this.setState({ disabled: this.props.disabled});
+    this.setState({ content: this.props.content});
   }
 
   render() {
@@ -61,6 +63,7 @@ export default class GenericButton extends Component {
         disabled={this.state.disabled}
         >  
           <i className={this.state.icon}></i>
+          {this.state.content}
       </button>
     );
   }

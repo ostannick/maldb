@@ -17,6 +17,8 @@ import ApplicationContainer from './components/ApplicationContainer';
 
 import FadeIn from 'react-fade-in';
 
+const ToastContext = React.createContext();
+
 export default class App extends Component {
 
     constructor(props)
@@ -38,12 +40,29 @@ export default class App extends Component {
 
             <ApplicationHeader />
 
-            <ToastContainer />
+            <ToastContainer 
+              toastList={this.state.toastList}
+            />
 
-            <ApplicationContainer />
+            <ToastContext.Provider value={this.testFunction}>
+              <ApplicationContainer />
+            </ToastContext.Provider>
             
         </div>
       );
+    }
+
+    testFunction = () =>
+    {
+      var newToast = {
+        title: 'title',
+        time: 'time',
+        content: 'content',
+      }
+  
+      this.setState({
+        toastList: [...this.state.toastList, newToast]
+      })
     }
   }
 
