@@ -65,8 +65,6 @@ export default class SequenceView extends Component {
   fetchFromServer = () =>
   {
 
-    this.setState({isLoading: true})
-
     const sendData = {
       data: this.props.data,
     };
@@ -74,7 +72,7 @@ export default class SequenceView extends Component {
     axios.post(`/analysis/seqview`, sendData)
       .then(res => {
         const response = res.data;
-        this.setState({ data: response, isLoading: false});
+        this.setState({data: response});
       })
       .catch(function (e) {
         console.log(e.response.data.message);
