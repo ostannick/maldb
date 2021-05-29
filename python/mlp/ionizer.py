@@ -5,13 +5,31 @@ class Ionizer:
         self.seq = seq
         self.s = pa(self.seq)
         self.label = label
-        self.featureVector = []
+        self.feature_vector = self.calculate_feature_vector()
 
     def fv_length(self):
         return len(self.seq)
     
     def fv_mw(self):
         return self.s.molecular_weight()
+
+    def fv_aromaticity(self):
+        return self.s.aromaticity()
+
+    def fv_ii(self):
+        return self.s.instability_index();
+
+    def fv_pI(self):
+        return self.s.isoelectric_point()
+
+    def fv_helicity(self):
+        return self.s.secondary_structure_fraction()[0]
+
+    def fv_charge(self):
+        return self.s.charge_at_pH(7)
+    
+    def fv_gravy(self):
+        return self.s.gravy()
     
     def fv_aa_freq(self, aa):
         return self.s.get_amino_acids_percent()[aa]
@@ -21,8 +39,12 @@ class Ionizer:
         return [
             self.fv_length(),
             self.fv_mw(),
-
-
+            self.fv_aromaticity(),
+            self.fv_ii(),
+            self.fv_pI(),
+            self.fv_helicity(),
+            self.fv_charge(),
+            self.fv_gravy(),
 
             self.fv_aa_freq('A'),
             self.fv_aa_freq('C'),
@@ -48,5 +70,5 @@ class Ionizer:
 
 
 
-print(Ionizer('ACYWRRTYF', 1).calculate_feature_vector())
+print(Ionizer('ACYWRRTYF', 1).feature_vector)
     
