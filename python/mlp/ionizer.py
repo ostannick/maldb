@@ -71,7 +71,7 @@ class Ionizer:
 
         fv += aaindex.get_aaindex_vector(self.seq)
 
-        return fv
+        return np.asarray(fv)
 
 def get_ionizer_training_data(path):
 
@@ -87,4 +87,4 @@ def get_ionizer_training_data(path):
     return np.array(train_data), np.array(train_labels)
 
 
-print(Ionizer('ACYYWFRKK', 1).calculate_feature_vector())
+print(Ionizer('ACYYWFRKKACDEFGHIKLMNPQRSTVWY', 1).calculate_feature_vector())

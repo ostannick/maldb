@@ -1,5 +1,6 @@
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 import json
+import math
 
 f = open('coefficients.json')
 all_features = json.load(f)
@@ -24,7 +25,7 @@ def calc_feature(seq, aa_dict, feat_dict, type="sum"):
 
         for k in aa_dict:
             feature += aa_dict[k] * feat_dict[k]
-        
+            
         return feature
 
     elif(type == "avg"):

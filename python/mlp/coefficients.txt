@@ -964,26 +964,6 @@ Entire chain composition of amino acids in extracellular proteins of mesophiles 
 A:8.82 R:3.71 N:6.77 D:6.38 C:0.90 Q:3.89 E:4.05 G:9.11 H:1.77 I:5.05 L:6.54 K:5.45 M:1.62 F:3.51 P:4.28 S:7.64 T:7.12 W:1.96 Y:4.85 V:6.600000
 Entire chain compositino of amino acids in nuclear proteins (percent) (Fukuchi-Nishikawa, 2001)
 A:6.65 R:5.17 N:4.40 D:5.50 C:1.79 Q:4.52 E:6.89 G:5.72 H:2.13 I:5.47 L:10.15 K:7.59 M:2.24 F:4.34 P:4.56 S:6.52 T:5.08 W:1.24 Y:3.01 V:7.000000
-Screening coefficients gamma, local (Avbelj, 2000)
-A:0.163 R:0.22 N:0.124 D:0.212 C:0.316 Q:0.274 E:0.212 G:0.08 H:0.315 I:0.474 L:0.315 K:0.255 M:0.356 F:0.41 P:NaN S:0.29 T:0.412 W:0.325 Y:0.354 V:0.515000
-Screening coefficients gamma, non-local (Avbelj, 2000)
-A:0.236 R:0.233 N:0.189 D:0.168 C:0.259 Q:0.314 E:0.306 G:-0.17 H:0.256 I:0.391 L:0.293 K:0.231 M:0.367 F:0.328 P:NaN S:0.202 T:0.308 W:0.197 Y:0.223 V:0.436000
-Slopes tripeptide, FDPB VFF neutral (Avbelj, 2000)
-A:-0.49 R:-0.429 N:-0.387 D:-0.375 C:-0.352 Q:-0.422 E:-0.382 G:-0.647 H:-0.357 I:-0.268 L:-0.45 K:-0.409 M:-0.375 F:-0.309 P:NaN S:-0.426 T:-0.24 W:-0.325 Y:-0.288 V:-0.220000
-Slopes tripeptides, LD VFF neutral (Avbelj, 2000)
-A:-0.871 R:-0.727 N:-0.741 D:-0.737 C:-0.666 Q:-0.728 E:-0.773 G:-0.822 H:-0.685 I:-0.617 L:-0.798 K:-0.715 M:-0.717 F:-0.649 P:NaN S:-0.679 T:-0.629 W:-0.669 Y:-0.655 V:-0.599000
-Slopes tripeptide, FDPB VFF noside (Avbelj, 2000)
-A:-0.393 R:-0.317 N:-0.268 D:-0.247 C:-0.222 Q:-0.291 E:-0.26 G:-0.57 H:-0.244 I:-0.144 L:-0.281 K:-0.294 M:-0.274 F:-0.189 P:NaN S:-0.28 T:-0.152 W:-0.206 Y:-0.155 V:-0.080000
-Slopes tripeptide FDPB VFF all (Avbelj, 2000)
-A:-0.378 R:-0.369 N:-0.245 D:-0.113 C:-0.206 Q:-0.29 E:-0.165 G:-0.56 H:-0.295 I:-0.134 L:-0.266 K:-0.335 M:-0.26 F:-0.187 P:NaN S:-0.251 T:-0.093 W:-0.188 Y:-0.147 V:-0.084000
-Slopes tripeptide FDPB PARSE neutral (Avbelj, 2000)
-A:-0.729 R:-0.535 N:-0.597 D:-0.545 C:-0.408 Q:-0.492 E:-0.532 G:-0.86 H:-0.519 I:-0.361 L:-0.462 K:-0.508 M:-0.518 F:-0.454 P:NaN S:-0.278 T:-0.367 W:-0.455 Y:-0.439 V:-0.323000
-Slopes dekapeptide, FDPB VFF neutral (Avbelj, 2000)
-A:-0.623 R:-0.567 N:-0.619 D:-0.626 C:-0.571 Q:-0.559 E:-0.572 G:-0.679 H:-0.508 I:-0.199 L:-0.527 K:-0.581 M:-0.571 F:-0.461 P:NaN S:-0.458 T:-0.233 W:-0.327 Y:-0.451 V:-0.263000
-Slopes proteins, FDPB VFF neutral (Avbelj, 2000)
-A:-0.376 R:-0.28 N:-0.403 D:-0.405 C:-0.441 Q:-0.362 E:-0.362 G:-0.392 H:-0.345 I:-0.194 L:-0.317 K:-0.412 M:-0.312 F:-0.237 P:NaN S:-0.374 T:-0.243 W:-0.111 Y:-0.171 V:-0.355000
-Side-chain conformation by gaussian evolutionary method (Yang et al., 2002)
-A:NaN R:0.62 N:0.76 D:0.66 C:0.83 Q:0.59 E:0.73 G:NaN H:0.92 I:0.88 L:0.89 K:0.77 M:0.77 F:0.92 P:0.94 S:0.58 T:0.73 W:0.86 Y:0.93 V:0.880000
 Amphiphilicity index (Mitaku et al., 2002)
 A:0.00 R:2.45 N:0.00 D:0.00 C:0.00 Q:1.25 E:1.27 G:0.00 H:1.45 I:0.00 L:0.00 K:3.67 M:0.00 F:0.00 P:0.00 S:0.00 T:0.00 W:6.93 Y:5.06 V:0.000000
 Volumes including the crystallographic waters using the ProtOr (Tsai et al., 1999)
@@ -1058,16 +1038,10 @@ Hydrophobicity-related index (Kidera et al., 1985)
 A:-0.27 R:1.87 N:0.81 D:0.81 C:-1.05 Q:1.10 E:1.17 G:-0.16 H:0.28 I:-0.77 L:-1.10 K:1.70 M:-0.73 F:-1.43 P:-0.75 S:0.42 T:0.63 W:-1.57 Y:-0.56 V:-0.400000
 Apparent partition energies calculated from Wertz-Scheraga index (Guy, 1985)
 A:0.05 R:0.12 N:0.29 D:0.41 C:-0.84 Q:0.46 E:0.38 G:0.31 H:-0.41 I:-0.69 L:-0.62 K:0.57 M:-0.38 F:-0.45 P:0.46 S:0.12 T:0.38 W:-0.98 Y:-0.25 V:-0.460000
-1985) Apparent partition energies calculated from Robson-Osguthorpe index (Guy,
-A:0.54 R:-0.16 N:0.38 D:0.65 C:-1.13 Q:0.05 E:0.38 G:NaN H:-0.59 I:-2.15 L:-1.08 K:0.48 M:-0.97 F:-1.51 P:-0.22 S:0.65 T:0.27 W:-1.61 Y:-1.13 V:-0.750000
 Apparent partition energies calculated from Janin index (Guy, 1985)
 A:-0.31 R:1.30 N:0.49 D:0.58 C:-0.87 Q:0.70 E:0.68 G:-0.33 H:0.13 I:-0.66 L:-0.53 K:1.79 M:-0.38 F:-0.45 P:0.34 S:0.10 T:0.21 W:-0.27 Y:0.40 V:-0.620000
 Apparent partition energies calculated from Chothia index (Guy, 1985)
 A:-0.27 R:2.00 N:0.61 D:0.50 C:-0.23 Q:1.00 E:0.33 G:-0.22 H:0.37 I:-0.80 L:-0.44 K:1.17 M:-0.31 F:-0.55 P:0.36 S:0.17 T:0.18 W:0.05 Y:0.48 V:-0.650000
-Hydropathies of amino acid side chains, neutral form (Roseman, 1988)
-A:0.39 R:NaN N:-1.91 D:-0.71 C:0.25 Q:-1.30 E:-0.18 G:0.00 H:-0.60 I:1.82 L:1.82 K:0.32 M:0.96 F:2.27 P:NaN S:-1.24 T:-1.00 W:2.13 Y:1.47 V:1.300000
-Hydropathies of amino acid side chains, pi-values in pH 7.0 (Roseman, 1988)
-A:0.39 R:-3.95 N:-1.91 D:-3.81 C:0.25 Q:-1.30 E:-2.91 G:0.00 H:-0.64 I:1.82 L:1.82 K:-2.77 M:0.96 F:2.27 P:NaN S:-1.24 T:-1.00 W:2.13 Y:1.47 V:1.300000
 Weights from the IFH scale (Jacobs-White, 1989)
 A:0.18 R:-5.40 N:-1.30 D:-2.36 C:0.27 Q:-1.22 E:-2.10 G:0.09 H:-1.48 I:0.37 L:0.41 K:-2.53 M:0.44 F:0.50 P:-0.20 S:-0.40 T:-0.34 W:-0.01 Y:-0.08 V:0.320000
 Hydrophobicity index, 3.0 pH (Cowan-Whittaker, 1990)
