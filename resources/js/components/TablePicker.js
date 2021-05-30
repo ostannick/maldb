@@ -29,6 +29,7 @@ class TablePicker extends Component {
   handleMissedCleavages(event)
   {
     this.setState({mc: event.target.value}, this.loadTables);
+    this.props.updateMissedCleavages(event);
   }
 
   toggleTable(id)

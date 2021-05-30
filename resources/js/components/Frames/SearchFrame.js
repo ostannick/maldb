@@ -17,7 +17,7 @@ export default class SearchFrame extends Component {
 
     this.state = {
       toolbarButtons: [
-        { type: 'btn btn-light btn-lg col-6', tooltip: 'Search', icon: 'fas fa-running', disabled: false, clickCallback: (callback) => this.runSearch(callback)},
+        { type: 'btn btn-warning btn-lg col-6', tooltip: 'Search', icon: 'fas fa-running', disabled: false, clickCallback: (callback) => this.runSearch(callback)},
 
       ],
 
@@ -84,7 +84,7 @@ export default class SearchFrame extends Component {
             <div className="col-md-4 s">
               <div className="mb-3">
                 <label htmlFor="tolerance" className="form-label"><i className="fal fa-arrows-alt-h"></i> Tolerance (Da)</label>
-                <input type="text" className="form-control" id="tolerance" defaultValue="1.2" onChange={this.props.handleToleranceChange} />
+                <input type="text" className="form-control" id="tolerance" defaultValue="1.2" onChange={this.updateTolerance} />
               </div>
 
               <div className="mb-3">
@@ -93,7 +93,7 @@ export default class SearchFrame extends Component {
                   className="form-control"
                   id="dataset"
                   rows="16"
-                  onChange={this.props.handleMassListChange}
+                  onChange={this.updateMassList}
                   defaultValue="1170.260461
                     1228.382739
                     1375.483557
@@ -118,6 +118,7 @@ export default class SearchFrame extends Component {
             <div className="col-md-4">
               <TablePicker
                 updateTables={(selectedTables) => this.updateTables(selectedTables)}
+                updateMissedCleavages={() => this.updateMissedCleavages}
               />
             </div>
 
@@ -137,5 +138,20 @@ export default class SearchFrame extends Component {
   updateTables = (selectedTables, event) =>
   {
     this.setState({selectedTables: selectedTables});
+  }
+
+  updateMassList = (e) =>
+  {
+    this.setState({massList: e.target.value})
+  }
+
+  updateTolerance = (e) =>
+  {
+    this.setState({tolerance: e.target.value})
+  }
+
+  updateMissedCleavages = (e) =>
+  {
+    this.setState({missedCleavages: e.target.value})
   }
 }
