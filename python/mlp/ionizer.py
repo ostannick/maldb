@@ -1,3 +1,4 @@
+import aaindex 
 import pandas as pd
 import numpy as np
 from Bio.SeqUtils.ProtParam import ProteinAnalysis as pa
@@ -38,15 +39,13 @@ class Ionizer:
 
     def calculate_feature_vector(self):
 
-        return [
+        fv = [
             self.fv_length(),
             self.fv_mw(),
             self.fv_aromaticity(),
             self.fv_ii(),
             self.fv_pI(),
-            self.fv_helicity(),
             self.fv_charge(),
-            self.fv_gravy(),
 
             self.fv_aa_freq('A'),
             self.fv_aa_freq('C'),
@@ -70,6 +69,10 @@ class Ionizer:
             self.fv_aa_freq('Y'),
         ]
 
+        fv += aaindex.get_aaindex_vector(self.seq)
+
+        return fv
+
 def get_ionizer_training_data(path):
 
     df = pd.read_csv(path)
@@ -82,3 +85,6 @@ def get_ionizer_training_data(path):
         train_labels.append(int(row['ionized']))
 
     return np.array(train_data), np.array(train_labels)
+
+
+print(Ionizer('ACYYWFRKK', 1).calculate_feature_vector())
