@@ -1,3 +1,5 @@
+import pandas as pd
+import numpy as np
 from Bio.SeqUtils.ProtParam import ProteinAnalysis as pa
 
 class Ionizer:
@@ -68,7 +70,15 @@ class Ionizer:
             self.fv_aa_freq('Y'),
         ]
 
+def get_ionizer_training_data(path):
 
+    df = pd.read_csv(path)
 
-print(Ionizer('ACYWRRTYF', 1).feature_vector)
-    
+    train_data = []
+    train_labels = []
+
+    for index, row in df.iterrows():  
+        train_data.append(Ionizer(row['sequence'], row['ionized']).calculate_feature_vector())
+        train_labels.append(int(row['ionized']))
+
+    return np.array(train_data), np.array(train_labels)
