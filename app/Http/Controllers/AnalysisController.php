@@ -68,6 +68,17 @@ class AnalysisController extends Controller
                 $currentObs = !$currentObs;
                 $lastCheckpoint = $i;
             }
+            //We need to include the case where it reaches the end boundary (force an array_push even if observability doesn't change)
+            //Without this, our sequence view will not have the final peptides displayed.
+            else if($i == count($coordinates) - 1)
+            {
+                $arr = [
+                    'bound' => [$lastCheckpoint, $i],
+                    'obs'   => $currentObs
+                ];
+
+                array_push($boundaries, $arr);
+            }
         }
 
         //We make a new array for the final seqmap and push the substring'ed sequences to it.

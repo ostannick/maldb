@@ -14,27 +14,33 @@ export default class ResultsFrame extends Component {
     super(props);
 
     this.state = {
-      toolbarButtons: [
-        { type: 'btn btn-primary btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-up', disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 0 }, callback()) },
-        { type: 'btn btn-light btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-down', disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 1 }, callback()) },
-        { type: 'btn btn-light btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-down', disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 2 }, callback()) },
-        { type: 'btn btn-light btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-down', disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 3 }, callback()) },
-        { type: 'btn btn-light btn-lg', tooltip: 'Search', icon: 'fad fa-thumbs-down', disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 4 }, callback()) },
-      ],
-
+      
       resultIndex: 0,
+
+      sequenceViewData: {},
+      tableViewData: {},
+
 
     }
   }
 
   render() {
+
+    var toolbarButtons = [
+      { type: 'btn btn-primary btn-lg', tooltip: 'Top Match', txt: this.props.results.results['0'].score, disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 0 }, callback()) },
+      { type: 'btn btn-light btn-lg', tooltip: 'Match 2', txt: this.props.results.results['1'].score, disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 1 }, callback()) },
+      { type: 'btn btn-light btn-lg', tooltip: 'Match 3', txt: this.props.results.results['2'].score, disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 2 }, callback()) },
+      { type: 'btn btn-light btn-lg', tooltip: 'Match 4', txt: this.props.results.results['3'].score, disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 3 }, callback()) },
+      { type: 'btn btn-light btn-lg', tooltip: 'Match 5', txt: this.props.results.results['4'].score, disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 4 }, callback()) },
+    ];
+
     return (
       <div>
         <FadeIn>
 
           <Toolbar 
             title="Results"
-            buttons={this.state.toolbarButtons}
+            buttons={toolbarButtons}
           />
 
           {/*Protein Name */}
@@ -57,4 +63,5 @@ export default class ResultsFrame extends Component {
       </div>
     );
   }
+
 }

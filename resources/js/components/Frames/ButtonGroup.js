@@ -18,7 +18,9 @@ export default class Toolbar extends Component {
         tooltip={button.tooltip}
         icon={button.icon}
         disabled={button.disabled}
+        txt={button.txt}
         clickCallback={button.clickCallback}
+        
       />
     )
   }

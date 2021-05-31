@@ -9,7 +9,7 @@ export default class TableView extends Component {
 
     this.state = {
       stringent: false,
-      results: [],
+      data: [],
     }
 
   }
@@ -54,7 +54,7 @@ export default class TableView extends Component {
         </thead>
         <tbody>
 
-        {this.state.results.map((row, index) => (
+        {this.state.data.map((row, index) => (
 
           this.renderRow(row, index)
 
@@ -67,9 +67,23 @@ export default class TableView extends Component {
     );
   }
 
+  
+
   componentDidMount()
   {
 
+    this.fetchFromServer();
+  
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.data !== prevProps.data) {
+      this.fetchFromServer();
+    }
+  }
+
+  fetchFromServer = () => 
+  {
     const sendData = {
       data: this.props.data,
     };
@@ -78,12 +92,11 @@ export default class TableView extends Component {
       .then(res => {
         const response = res.data;
         console.log(response);
-        this.setState({results: response});
+        this.setState({ data: response });
       })
-      .catch(function(e) {
+      .catch(function (e) {
         console.log(e.response.data.message);
       });
-  
   }
 
 }

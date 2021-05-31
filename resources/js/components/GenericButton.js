@@ -12,7 +12,7 @@ export default class GenericButton extends Component {
       type: this.props.type,
       tooltip: this.props.tooltip,
       icon: this.props.icon,
-      disabled: this.props.disabled
+      disabled: this.props.disabled,
     }
 
     this.handleClick = this.handleClick.bind(this);
@@ -63,7 +63,7 @@ export default class GenericButton extends Component {
         disabled={this.state.disabled}
         >  
           <i className={this.state.icon}></i>
-          {this.state.content}
+          {this.props.txt}
       </button>
     );
   }

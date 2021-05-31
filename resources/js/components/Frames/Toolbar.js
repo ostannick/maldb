@@ -22,7 +22,7 @@ export default class Toolbar extends Component {
           <ButtonGroup 
             buttons={this.props.buttons}
           />
-
+          
         </div>
 
 
