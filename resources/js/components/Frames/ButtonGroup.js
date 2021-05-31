@@ -27,7 +27,7 @@ export default class Toolbar extends Component {
 
   render() {
     return (
-      <div className="btn-group" role="group">
+      <div className="btn-group mx-2" role="group">
         
         {this.props.buttons.map(button => (
 

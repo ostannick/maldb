@@ -17,7 +17,7 @@ export default class SearchFrame extends Component {
 
     this.state = {
       toolbarButtons: [
-        { type: 'btn btn-warning btn-lg col-6', tooltip: 'Search', icon: 'fas fa-running', disabled: false, clickCallback: (callback) => this.runSearch(callback)},
+        [{ type: 'btn btn-warning btn-lg col-6', tooltip: 'Search', icon: 'fas fa-running', disabled: false, clickCallback: (callback) => this.runSearch(callback)}],
 
       ],
 

@@ -24,8 +24,14 @@ export default class ProteomesFrame extends Component {
     this.state = {
       //Toolbar button
       toolbarButtons: [
-        { type: 'btn btn-light btn-lg', tooltip: 'Add New Proteome', icon: 'fas fa-plus', disabled: false, clickCallback: (callback) => this.setState({modal: true}, callback) },
-        { type: 'btn btn-light btn-lg', tooltip: 'Refresh', icon: 'fad fa-sync-alt', disabled: false, clickCallback: (callback) => this.fetchProteomes(callback) },
+        //First Button Group
+        [
+          { type: 'btn btn-light btn-lg', tooltip: 'Add New Proteome', icon: 'fas fa-plus', disabled: false, clickCallback: (callback) => this.setState({modal: true}, callback) },
+          { type: 'btn btn-light btn-lg', tooltip: 'Refresh', icon: 'fad fa-sync-alt', disabled: false, clickCallback: (callback) => this.fetchProteomes(callback) }
+        ],
+
+        //Second Button Group...
+
       ],
 
       //Proteomes

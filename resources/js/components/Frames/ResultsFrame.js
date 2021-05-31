@@ -18,21 +18,37 @@ export default class ResultsFrame extends Component {
       resultIndex: 0,
 
       sequenceViewData: {},
+      fingerprintViewData: {},
       tableViewData: {},
 
+      perceptron: 'ready'
 
     }
   }
 
   render() {
 
+    var perceptronButton;
+
+    if      ( this.state.perceptron == 'ready' )      perceptronButton = { type: 'btn btn-primary btn-lg', tooltip: 'Feed to Perceptron!', icon: 'fas fa-mind-share', disabled: false, clickCallback: (callback) => this.appendTrainingData(callback) }
+    else if ( this.state.perceptron == 'processing')  perceptronButton = { type: 'btn btn-primary btn-lg', icon: 'fas fa-cog fa-spin', disabled: true, clickCallback: false }
+    else if ( this.state.perceptron == 'failed' )     perceptronButton = { type: 'btn btn-primary btn-lg', icon: 'fas fa-mind-share', disabled: true, clickCallback: false }
+    else if ( this.state.perceptron == 'success' )    perceptronButton = { type: 'btn btn-primary btn-lg', icon: 'fas fa-check', disabled: true, clickCallback: false }
+
     var toolbarButtons = [
-      { type: 'btn btn-primary btn-lg', tooltip: 'Top Match', txt: this.props.results.results['0'].score, disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 0 }, callback()) },
+      
+      //First ButtonGroup
+      [
+        perceptronButton,
+      ],
+      
+      //Second ButtonGroup
+     [{ type: 'btn btn-primary btn-lg', tooltip: 'Top Match', txt: this.props.results.results['0'].score, disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 0 }, callback()) },
       { type: 'btn btn-light btn-lg', tooltip: 'Match 2', txt: this.props.results.results['1'].score, disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 1 }, callback()) },
       { type: 'btn btn-light btn-lg', tooltip: 'Match 3', txt: this.props.results.results['2'].score, disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 2 }, callback()) },
       { type: 'btn btn-light btn-lg', tooltip: 'Match 4', txt: this.props.results.results['3'].score, disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 3 }, callback()) },
-      { type: 'btn btn-light btn-lg', tooltip: 'Match 5', txt: this.props.results.results['4'].score, disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 4 }, callback()) },
-    ];
+      { type: 'btn btn-light btn-lg', tooltip: 'Match 5', txt: this.props.results.results['4'].score, disabled: false, clickCallback: (callback) => this.setState({ resultIndex: 4 }, callback()) }],
+  ];
 
     return (
       <div>
@@ -62,6 +78,27 @@ export default class ResultsFrame extends Component {
         </FadeIn>
       </div>
     );
+  }
+
+  appendTrainingData(callback) {
+
+    this.setState({ perceptron: 'processing' });
+
+    const sendData = {
+      data: this.props.results.results[this.state.resultIndex],
+    };
+
+    axios.post(`/analysis/appendnn`, sendData)
+      .then(res => {
+        const response = res.data;
+        console.log(response);
+        this.setState({ perceptron: response });
+        if(callback) callback();
+      })
+      .catch(function (e) {
+        console.log(e.response.data.message);
+        if(callback) callback();
+      });
   }
 
 }
