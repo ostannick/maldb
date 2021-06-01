@@ -126,6 +126,7 @@ class SearchController extends Controller
             'message'       => 'A toast to the people',
             'tables'        => $tables,
             'mods'          => $mass_mods,
+            'massList'      => $mass_list,
             'results'       => $results,
         ];
 
