@@ -88,6 +88,3 @@ def get_ionizer_training_data(path):
         train_labels.append(int(row['ionized']))
 
     return np.array(train_data), train_seqs, np.array(train_labels)
-
-
-#print(Ionizer('ACYYWFRKKACDEFGHIKLMNPQRSTVWY', 1).calculate_feature_vector())
