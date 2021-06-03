@@ -1,4 +1,4 @@
-import aaindex 
+import aaindex
 import pandas as pd
 import numpy as np
 from Bio.SeqUtils.ProtParam import ProteinAnalysis as pa
@@ -12,7 +12,7 @@ class Ionizer:
 
     def fv_length(self):
         return len(self.seq)
-    
+
     def fv_mw(self):
         return self.s.molecular_weight()
 
@@ -30,10 +30,10 @@ class Ionizer:
 
     def fv_charge(self):
         return self.s.charge_at_pH(7)
-    
+
     def fv_gravy(self):
         return self.s.gravy()
-    
+
     def fv_aa_freq(self, aa):
         return self.s.get_amino_acids_percent()[aa]
 
@@ -78,13 +78,13 @@ def get_ionizer_training_data(path):
     df = pd.read_csv(path)
 
     train_data = []
+    train_seqs = []
     train_labels = []
 
-    for index, row in df.iterrows():  
-        train_data.append(Ionizer(row['sequence'], row['ionized']).calculate_feature_vector())
+    for index, row in df.iterrows():
+        peptide = Ionizer(row['sequence'], row['ionized'])
+        train_data.append(peptide.calculate_feature_vector())
+        train_seqs.append(peptide.seq)
         train_labels.append(int(row['ionized']))
 
-    return np.array(train_data), np.array(train_labels)
-
-
-print(Ionizer('ACYYWFRKKACDEFGHIKLMNPQRSTVWY', 1).calculate_feature_vector())
+    return np.array(train_data), train_seqs, np.array(train_labels)
