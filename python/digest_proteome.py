@@ -225,6 +225,7 @@ def add_arguments(parser):
     parser.add_argument("-c", "--cleavages", type=int, default=1, help="Specify the number of missed cleavage sites allowed (default: %(default)s)")
     parser.add_argument("-n", "--min_weight", type=float, default=500.0, help="Discard peptides below this molecular weight threshold (default: %(default)s)")
     parser.add_argument("-x", "--max_weight", type=float, default=5000.0, help="Discard peptides above this molecular weight threshold (default: %(default)s)")
+    parser.add_argument("-j", "--json_lines", type=int, default=5000, help="Format the peptides database file to have this many peptide JSON entries per line (default: %(default)s)")
     parser.add_argument("-o", "--no_met_ox", action='store_true', help="Use this flag to prevent the generation of additional peptides from the variable oxidation of methionine (default: %(default)s)")
 def get_and_validate_arguments(parser):
     args = parser.parse_args()
@@ -240,6 +241,8 @@ def get_and_validate_arguments(parser):
         parser.error('-x/--max_weight must be an integer greater than 0')
     if args.min_weight >= args.max_weight:
         parser.error('-n/--min_weight must be lower than -x/--max_weight')
+    if args.json_lines <= 0:
+        parser.error('-j/--json_lines must be a strictly positive integer')
     return args
 
 
@@ -249,7 +252,14 @@ if __name__ == '__main__':
     args = get_and_validate_arguments(parser)
     seqs = parse_fasta_file(args.fasta_file)
     peptide_db, seq_db = digest_sequences(seqs, args.enzyme[0], args.cleavages)
+    # #  Write the peptide database to file in chunks
+    linesize = args.json_lines
     with open(args.peptides_out, 'w') as f:
-        f.write(json.dumps(peptide_db))
+        f.write('[' + json.dumps(peptide_db[:linesize]))
+    with open(args.peptides_out, 'a') as f:
+        for ind in range(linesize, len(peptide_db), linesize):
+            f.write(',\n' + json.dumps(peptide_db[ind : ind+linesize]))
+        f.write(']')
+    # #  Write the sequence database to file
     with open(args.sequences_out, 'w') as f:
         f.write(json.dumps(seq_db))
