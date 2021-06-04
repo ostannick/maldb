@@ -17,7 +17,7 @@ def get_aaindex_vector(seq):
 
     return vector
 
-def calc_feature(seq, aa_dict, feat_dict, type="avg"):
+def calc_feature(seq, aa_dict, feat_dict, type="sum"):
 
     feature = 0
 
