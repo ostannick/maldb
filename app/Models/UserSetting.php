@@ -10,12 +10,14 @@ class UserSetting extends Model
     use HasFactory;
 
     protected $fillable = [
-
+        'name',
         'user_id',
         'setting_id',
-        'val_decimal',
-        'val_string',
-        'val_integer'
+        'type',
+        'value',
+        'min',
+        'max',
+        'step',
     ];
 
     public function setting()
@@ -27,8 +29,6 @@ class UserSetting extends Model
     {
         $parent_setting = $this->setting();
 
-        $this->val_decimal = $parent_setting->default_decimal;
-        $this->val_string  = $parent_setting->default_string;
-        $this->val_integer = $parent_setting->default_integer;
+        $this->value = $parent_setting->df_value;
     }
 }

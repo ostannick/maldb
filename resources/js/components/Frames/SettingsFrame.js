@@ -29,6 +29,11 @@ export default class SearchFrame extends Component {
     }
   }
 
+  factoryReset = (callback) =>
+  {
+    
+  }
+
   fetchSettings = (callback) =>
   {
     //Make the AJAX call
@@ -60,11 +65,12 @@ export default class SearchFrame extends Component {
           buttons={this.state.toolbarButtons}
         />
 
-        <table className="table">
+        <table className="table align-middle">
           <thead>
             <tr>
               <th scope="col">Name</th>
-              <th scope="col">Value</th>
+              <th scope="col">Current</th>
+              <th scope="col">Input</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
@@ -74,9 +80,7 @@ export default class SearchFrame extends Component {
 
                 <Setting 
                   key={idx}
-                  id={setting.id}
-                  name={"Test"}
-                  value={setting.val_integer}
+                  data={setting}
                 />
 
               ))}

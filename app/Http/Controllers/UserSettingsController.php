@@ -71,7 +71,7 @@ class UserSettingsController extends Controller
      */
     public function update(Request $request, UserSetting $userSetting)
     {
-        //
+        return 'You reached it.';
     }
 
     /**

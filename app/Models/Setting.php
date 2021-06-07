@@ -12,9 +12,11 @@ class Setting extends Model
     protected $fillable = [
         'name',
         'description',
-        'df_string',
-        'df_integer',
-        'df_decimal'
+        'type',
+        'df_value',
+        'min',
+        'max',
+        'step',
     ];
 
     

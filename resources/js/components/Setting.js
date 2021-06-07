@@ -11,35 +11,62 @@ export default class Setting extends Component {
     super(props);
 
     this.state = {
-      type: null,
       value: null
+    }
+  }
+
+  handleValueChange = (event) =>
+  {
+    this.setState({value: event.target.value})
+  }
+
+  updateRemoteValue = (callback) =>
+  {
+    //Make the AJAX call
+    axios.put('/usersettings/' + this.props.id)
+      .then(res => {
+        const response = res.data;
+        console.log(response);
+        this.setState({settings: response})
+        if(callback) callback();
+
+      })
+      .catch(function(e) {
+        console.log(e.response.data);
+        if (callback) callback();
+      });
+  }
+
+  componentDidMount()
+  {
+    if(this.props.data.type == 'int')
+    {
+      this.setState({value: parseInt(this.props.data.value)})
+    }
+    else if(this.props.data.type == 'float')
+    {
+      this.setState({value: parseFloat(this.props.data.value)})
+    }
+    else if(this.props.data.type == 'string')
+    {
+      this.setState({value: this.props.data.value})
+    }
+    else if(this.props.data.type === 'bool')
+    {
+      this.setState({value: (this.props.data.value === "true")})
     }
   }
 
   render() {
 
-    let val;
-
-    if(this.props.val_integer != null)
-    {
-      val = this.props.val_integer
-    }
-    else if (this.props.val_decimal != null)
-    {
-      val = this.props.val_decimal
-    }
-    else
-    {
-      val = this.props.val_string
-    }
-
     return (
         <tr>
-          <td>{this.props.name}</td>
+          <td className="text-end">{this.props.data.name}</td>
           <td>
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Value" defaultValue={val}/>
-            </div>
+            <input className="form-control" type="text" placeholder={this.state.value} disabled readOnly />
+          </td>
+          <td>
+            <input type="range" className="form-range" min={this.props.data.min} max={this.props.data.max} step={this.props.data.step} defaultValue={this.state.value} onChange={this.handleValueChange} onInput={() => console.log('test')}/>
           </td>
           <td>
 
@@ -54,7 +81,7 @@ export default class Setting extends Component {
             <GenericButton
               type='btn btn-light'
               tooltip='Reset to Default'
-              icon='fas fa-sync-alt'
+              icon='fal fa-sync-alt'
               disabled={false}
               clickCallback={false}
             />

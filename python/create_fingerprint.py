@@ -13,7 +13,6 @@ parser.add_argument('--resolution', type=float, default=0.3)
 parser.add_argument('--stdev', type=float, default=0.5)
 args = parser.parse_args()
 
-
 x_series = np.arange(args.detector_min, args.detector_max, args.resolution)
 y_series = np.random.uniform(0, 1, x_series.shape)
 
@@ -23,6 +22,11 @@ intensities = np.random.uniform(40, 100, len(masses))
 for x in range(0, len(masses)):
     y_series += Gaussian(x_series, intensities[x], masses[x], args.stdev)
 
+paired_data = [];
 
+for x in range(len(x_series)):
+    paired_data.append([round(x_series[x],2), round(y_series[x])])
+
+print(paired_data)
 
 
