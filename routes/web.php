@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AnalysisController;
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Collection;
@@ -31,6 +31,13 @@ Route::get('/spa', function() {
     return view('spa');
 });
 
+Route::get('/settings', function() {
+
+  $settings = [1,2,3,4,5,6];
+
+  return $settings;
+});
+
 Route::get('/queue', function () {
 
     $jobs = \DB::table('jobs')->get();
@@ -42,10 +49,12 @@ Route::get('/queue', function () {
     
     $failed_jobs = \DB::table('failed_jobs')->orderBy('failed_at', 'desc')->limit(10)->get();
 
-    return view('queue')->with([
+    $data = [
       'jobs' => $jobs,
       'failed_jobs' => $failed_jobs,
-    ]);
+    ];
+
+    return $data;
 });
 
 Route::get('/learn', function () {
@@ -73,6 +82,8 @@ Route::resource('/search', SearchController::class);
 
 Route::resource('/modifications', ModificationController::class);
 
+Route::resource('/usersettings', UserSettingsController::class);
+
 Route::post('/proteomes/digest', 'DigestController@digest');  //Digests a proteome
 Route::post('/proteomes/delete', 'ProteomeController@delete');
 
@@ -85,6 +96,8 @@ Route::post('/analysis/table', 'AnalysisController@get_table');
 Route::post('/analysis/appendnn', 'AnalysisController@append_to_nntrain');
 
 Route::post('/modifications/list', 'ModificationController@list');
+
+
 
 Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']);

@@ -9,6 +9,9 @@ import FadeIn from 'react-fade-in';
 import SearchFrame from './Frames/SearchFrame';
 import ResultsFrame from './Frames/ResultsFrame';
 import ProteomesFrame from './Frames/ProteomesFrame';
+//import ModificationsFrame from './Frames/ModificationsFrame';
+import QueueFrame from './Frames/QueueFrame';
+import SettingsFrame from './Frames/SettingsFrame';
 
 export default class ApplicationContainer extends Component {
 
@@ -25,6 +28,7 @@ export default class ApplicationContainer extends Component {
         { title: 'Modifications', icon: 'fa-weight-hanging', index: 3 },
         { title: 'Job Queue', icon: 'fa-line-columns', index: 4 },
         { title: 'Perceptron', icon: 'fa-code-branch fa-rotate-90', index: 5 },
+        { title: 'Settings', icon: 'fa-cog', index: 6 },
       ],
       containerState: 0,
       
@@ -52,9 +56,10 @@ export default class ApplicationContainer extends Component {
       <SearchFrame updateResults={(results) => this.updateResults(results)} />,
       <ResultsFrame results={this.props.results} />,
       <ProteomesFrame />,
-      4,
-      5,
-      6
+      'Modifications Manager...',
+      <QueueFrame />,
+      'Perceptron Diagram',
+      <SettingsFrame />
     ]
 
     var content = containerContent[this.state.containerState];

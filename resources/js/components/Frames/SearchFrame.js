@@ -2,12 +2,11 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom'
 import axios from 'axios';
 
-import Toolbar from './Toolbar';
+import Toolbar from '../Toolbar';
 
 import TablePicker from '../TablePicker';
 import ModificationPicker from '../ModificationPicker';
 
-import ButtonGroup from './ButtonGroup';
 import FadeIn from "react-fade-in";
 
 export default class SearchFrame extends Component {

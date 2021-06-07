@@ -2,19 +2,14 @@ import React, { Component, useEffect, useState} from "react";
 import ReactDOM from 'react-dom'
 import axios from 'axios';
 
-import Toolbar from './Toolbar';
+import Toolbar from '../Toolbar';
 
-import TablePicker from '../TablePicker';
-import ModificationPicker from '../ModificationPicker';
-
-import ButtonGroup from './ButtonGroup';
 import FadeIn from "react-fade-in";
 import Proteome from '../Proteomes/Proteome';
 import LongButton from '../LongButton';
 
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 
 export default class ProteomesFrame extends Component {
 
@@ -88,7 +83,7 @@ export default class ProteomesFrame extends Component {
           />
 
           <div className="row row-cols-1 row-cols-md-3 g-4">
-          
+            
 
                 {this.state.proteomes.map(proteome => (
 
