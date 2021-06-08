@@ -118,10 +118,10 @@ class Proteome extends Component {
   {
     return (
 
-      <div class="col">
-        <div class="card h-100 shadow">
-          <div class="card-body">
-            <h5 class="card-title border-bottom pb-2 text-primary">{this.props.data.name}, {this.props.data.organism}</h5>
+      <div className="col">
+        <div className="card h-100 shadow">
+          <div className="card-body">
+            <h5 className="card-title border-bottom pb-2 text-primary">{this.props.data.name}, {this.props.data.organism}</h5>
         
             <div className="mb-3">
               <label htmlFor="enzyme" className="form-label">Enzyme:</label>

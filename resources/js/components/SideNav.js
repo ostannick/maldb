@@ -27,7 +27,7 @@ export default class SideNav extends Component {
 
   render() {
     return (
-      <ul className="list-group">
+      <ul className="list-group mb-3">
 
         <FadeIn>
 

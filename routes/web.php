@@ -26,7 +26,7 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/spa', function() {
+Route::get('/maldb', function() {
     return view('spa');
 });
 

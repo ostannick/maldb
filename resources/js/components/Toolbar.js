@@ -19,9 +19,10 @@ export default class Toolbar extends Component {
 
         <div className="btn-toolbar mb-2 mb-md-0">
 
-          {this.props.buttons.map(buttonGroup => (
+          {this.props.buttons.map((buttonGroup, idx) => (
 
             <ButtonGroup
+              key={idx}
               buttons={buttonGroup}
             />
 

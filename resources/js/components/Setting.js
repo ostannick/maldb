@@ -20,7 +20,7 @@ export default class Setting extends Component {
     this.setState({value: event.target.value})
   }
 
-  updateRemoteValue = (callback) =>
+  updateRemoteValue = () =>
   {
     var sendData = {
       id: this.props.data.id,
@@ -31,12 +31,9 @@ export default class Setting extends Component {
       .then(res => {
         const response = res.data;
         console.log(response);
-        if(callback) callback();
-
       })
       .catch(function(e) {
-        console.log(e.response.data);
-        if (callback) callback();
+        console.log(e.response);
       });
   }
 
@@ -69,7 +66,7 @@ export default class Setting extends Component {
             <input className="form-control" type="text" placeholder={this.state.value} disabled readOnly />
           </td>
           <td>
-            <input type="range" className="form-range" min={this.props.data.min} max={this.props.data.max} step={this.props.data.step} defaultValue={this.state.value} onChange={this.handleValueChange} onMouseUp={this.updateRemoteValue}/>
+            <input type="range" className="form-range" min={this.props.data.min} max={this.props.data.max} step={this.props.data.step} value={this.state.value} onChange={this.handleValueChange} onMouseUp={this.updateRemoteValue}/>
           </td>
           <td>
 

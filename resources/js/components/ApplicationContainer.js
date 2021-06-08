@@ -12,6 +12,10 @@ import ProteomesFrame from './Frames/ProteomesFrame';
 //import ModificationsFrame from './Frames/ModificationsFrame';
 import QueueFrame from './Frames/QueueFrame';
 import SettingsFrame from './Frames/SettingsFrame';
+import ReadmeFrame from './Frames/ReadmeFrame';
+import ProtocolFrame from "./Frames/ProtocolFrame";
+import PerceptronFrame from "./Frames/PerceptronFrame";
+import ModificationsFrame from "./Frames/ModificationsFrame";
 
 export default class ApplicationContainer extends Component {
 
@@ -21,7 +25,7 @@ export default class ApplicationContainer extends Component {
     this.state = {
 
       //Side Navigation Items
-      sideNavItems: [
+      controlItems: [
         { title: 'Search', icon: 'fa-search', index: 0},
         { title: 'Results', icon: 'fa-chart-bar', index: 1 },
         { title: 'Proteomes', icon: 'fa-bacterium', index: 2 },
@@ -30,6 +34,13 @@ export default class ApplicationContainer extends Component {
         { title: 'Perceptron', icon: 'fa-code-branch fa-rotate-90', index: 5 },
         { title: 'Settings', icon: 'fa-cog', index: 6 },
       ],
+
+      learnItems:[
+        { title: 'Using malDB', icon: 'fa-info-circle', index: 7 },
+        { title: 'Performing PMF', icon: 'fa-vial', index: 8 },
+      ],
+
+
       containerState: 0,
       
 
@@ -53,13 +64,18 @@ export default class ApplicationContainer extends Component {
   render() {
     
     var containerContent = [
+      //PANEL 1
       <SearchFrame updateResults={(results) => this.updateResults(results)} />,
       <ResultsFrame results={this.props.results} />,
       <ProteomesFrame />,
-      'Modifications Manager...',
+      <ModificationsFrame />,
       <QueueFrame />,
-      'Perceptron Diagram',
-      <SettingsFrame />
+      <PerceptronFrame />,
+      <SettingsFrame />,
+
+      //PANEL 2
+      <ReadmeFrame />,
+      <ProtocolFrame />,
     ]
 
     var content = containerContent[this.state.containerState];
@@ -72,11 +88,19 @@ export default class ApplicationContainer extends Component {
 
             <div className="position-sticky pt-3 pb-3">
 
-              <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-2 text-muted">Controls</h6>
+              <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-2 text-primary">Controls</h6>
 
               {/*Items in the sidenav need to be able to change the container state*/}
               <SideNav 
-                items={this.state.sideNavItems}
+                items={this.state.controlItems}
+                handleClick={(index) => this.changeContainerState(index)}
+              />
+
+              <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-2 text-muted">Learn</h6>
+
+              {/*Items in the sidenav need to be able to change the container state*/}
+              <SideNav
+                items={this.state.learnItems}
                 handleClick={(index) => this.changeContainerState(index)}
               />
 
