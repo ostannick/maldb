@@ -132,6 +132,7 @@ class ProcessDigest implements ShouldQueue
       $file_fasta = 'storage/app/' . $proteome->path;
       $file_parents = 'storage/app/' . $this->user_id . '/proteomes/' . $tableName . '.json';
       $file_digest  = 'storage/app/' . $this->user_id . '/proteomes/' . $tableNameDigest . '.json';
+      $file_metadata = 'storage/app/' . $this->user_id . '/proteomes/' . $tableNameDigest . '_metadata.json';
 
       $command = implode(' ', [
         'python',
@@ -139,16 +140,20 @@ class ProcessDigest implements ShouldQueue
         $file_fasta,
         $file_digest,
         $file_parents,
+        $file_metadata,
         $enzyme
       ]);
 
       //Queues execute commands from the root directory C:/maldb/
       shell_exec($command);
 
+      $metadata = json_decode(file_get_contents($file_metadata));
+
       //UX Status update
       update_status($process->id, 0.16, 'Loading proteomes into memory.');
 
       //PARENTS/////////////////////////////////////////
+      $parent_count = 0;
       $resource_parents = fopen($file_parents, 'r');
       while (($line = fgets($resource_parents)) !== false) {
 
@@ -169,16 +174,20 @@ class ProcessDigest implements ShouldQueue
           ];
 
           array_push($batch, $p);
+          $parent_count++;
 
           //Make a DB query every 1000 sequences
           if($i % 1000 == 0 || $i == count($parents) - 1)
           {
             \DB::table($tableName)->insert($batch);
+            $f = $parent_count / $metadata->num_sequences;
+            update_status($process->id, $f, 'Processed ' . $parent_count . ' of ' . $metadata->num_sequences . ' parent sequences.');
           }
         }
       }
 
       //PEPTIDES/////////////////////////////////////////
+      $peptide_count = 0;
       $resource_peptides = fopen($file_digest, 'r');
       while (($line = fgets($resource_peptides)) !== false) {
 
@@ -202,11 +211,14 @@ class ProcessDigest implements ShouldQueue
           ];
 
           array_push($batch, $p);
+          $peptide_count++;
           
         }
 
         //Run the batch insert query
         \DB::table($tableNameDigest)->insert($batch);
+        $f = $peptide_count / $metadata->num_peptides;
+        update_status($process->id, $f, 'Processed ' . $peptide_count . ' of ' . $metadata->num_peptides . ' peptides.');
 
       }
       
