@@ -21,6 +21,7 @@ Fields in the sequence file:
 Fields in the summary file:
 - num_peptides: integer of the number of peptides in the peptide database file
 - num_sequences: integer of the number of sequences in the sequence file
+- enzyme: string of the digestion enzyme chosen by the user
 - proteome_file: string of the file path to the FASTA proteome file
 - database_created: string of the time and date the database files were created
 - database_version: string of the version number of this script used to create the database files
@@ -216,11 +217,11 @@ def make_sequence_dict(seq_id, seq, num_peptides):
     # Generates the required attributes for each sequence.
     seq_dict = {'seq_id':seq_id, 'name':seq.name, 'seq':seq.seq, 'peptides':num_peptides}
     return seq_dict
-def make_summary_dict(peptide_db, seq_db, proteome_file):
+def make_summary_dict(peptide_db, seq_db, args):
     # Generates the summary attributes for the proteome digestion.
     now = datetime.now()
     datetime_str = now.strftime('%H:%M:%S - %B %d, %Y')
-    summary_db = {'num_peptides':len(peptide_db), 'num_sequences':len(seq_db), 'proteome_file':proteome_file, 'database_created':datetime_str, 'database_version':database_format_version}
+    summary_db = {'num_peptides':len(peptide_db), 'num_sequences':len(seq_db), 'enzyme':args.enzyme[0], 'proteome_file':args.fasta_file, 'database_created':datetime_str, 'database_version':database_format_version}
     return summary_db
 
 
@@ -269,7 +270,7 @@ if __name__ == '__main__':
     args = get_and_validate_arguments(parser)
     seqs = parse_fasta_file(args.fasta_file)
     peptide_db, seq_db = digest_sequences(seqs, args.enzyme[0], args.cleavages)
-    summary_db = make_summary_dict(peptide_db, seq_db, args.fasta_file)
+    summary_db = make_summary_dict(peptide_db, seq_db, args)
     # #  Write the peptide database to file in chunks
     linesize = args.json_lines
     with open(args.peptides_out, 'w') as f:
