@@ -53,7 +53,7 @@ class CreateSettingsTable extends Migration
             'description' => 'The factor by which uploaded spectra are compressed before viewing in the browser.',
             'type' => 'int',
             'df_value' => 10,
-            'min' => 0,
+            'min' => 1,
             'max' => 10,
             'step' => 1 
         ])->save();
