@@ -1,12 +1,6 @@
 """Script to digest a proteome into peptides that may be detected by mass spectrometry.
 
-Two JSON files are generated, a sequence file and a peptide file. In the peptide file, all mass values (fields "mz1" and "avg") are strings as they are represented by Decimal objects, not floats, in order to maintain precision and prevent floating point error propagation during calculations. The peptide indices are 0-based, but unlike standard Python indices both the start and end are inclusive (meaning start=4, end=9 represents a peptide of length 6 that maps to positions 4, 5, 6, 7, 8, 9 in the protein; the next peptide would have start=10).
-
-Fields in the sequence file:
-- seq_id: integer used as an internal ID
-- name: string of the sequence name from the proteome file
-- seq: string of the amino acid sequence
-- peptides: integer of the number of peptides generated from the sequence
+Two JSON files are generated, a sequence file and a peptide file. In the peptide file, all mass values (fields "mz1" and "avg") are strings as they are represented here by Decimal objects, not floats, in order to maintain precision and prevent floating point error propagation during calculations. The peptide indices are 0-based, but unlike standard Python indices both the start and end are inclusive (meaning start=4, end=9 represents a peptide of length 6 that maps to positions 4, 5, 6, 7, 8, 9 in the protein; the next peptide would have start=10). The peptide file contains one JSON list of 5000 peptide dicts per line, where that value is modifiable by a command line option.
 
 Fields in the peptide file:
 - seq_id: integer used as an internal ID
@@ -17,9 +11,25 @@ Fields in the peptide file:
 - avg: string of the average molecular mass of the peptide
 - mc: integer of the number of missed cleavage sites required to generate this peptide
 - mso: integer of the number of oxidized methionines in this peptide
+
+Fields in the sequence file:
+- seq_id: integer used as an internal ID
+- name: string of the sequence name from the proteome file
+- seq: string of the amino acid sequence
+- peptides: integer of the number of peptides generated from the sequence
+
+Fields in the summary file:
+- num_peptides: integer of the number of peptides in the peptide database file
+- num_sequences: integer of the number of sequences in the sequence file
+- proteome_file: string of the file path to the FASTA proteome file
+- database_created: string of the time and date the database files were created
+- database_version: string of the version number of this script used to create the database files
 """
 import argparse, os, json
 from decimal import Decimal
+from datetime import datetime
+
+database_format_version = '0.5.0'
 
 
 # # #  Enzymatic digestions
@@ -206,6 +216,12 @@ def make_sequence_dict(seq_id, seq, num_peptides):
     # Generates the required attributes for each sequence.
     seq_dict = {'seq_id':seq_id, 'name':seq.name, 'seq':seq.seq, 'peptides':num_peptides}
     return seq_dict
+def make_summary_dict(peptide_db, seq_db, proteome_file):
+    # Generates the summary attributes for the proteome digestion.
+    now = datetime.now()
+    datetime_str = now.strftime('%H:%M:%S - %B %d, %Y')
+    summary_db = {'num_peptides':len(peptide_db), 'num_sequences':len(seq_db), 'proteome_file':proteome_file, 'database_created':datetime_str, 'database_version':database_format_version}
+    return summary_db
 
 
 # # #  Command line options
@@ -220,6 +236,7 @@ def add_arguments(parser):
     parser.add_argument("fasta_file", metavar="FASTA_FILE", help="The proteome sequences in FASTA format")
     parser.add_argument("peptides_out", metavar="PEPTIDES_OUT", help="The location to save the peptides database")
     parser.add_argument("sequences_out", metavar="SEQUENCES_OUT", help="The location to save the sequences database")
+    parser.add_argument("summary_out", metavar="SUMMARY_OUT", help="The location to save the summary database")
     parser.add_argument("enzyme", metavar="ENZYME", choices=sorted(digest_fxns.keys()), nargs=1, help="The enzyme to digest the sequences. Must be one of: %(choices)s")
     # #  Optional arguments
     parser.add_argument("-c", "--cleavages", type=int, default=1, help="Specify the number of missed cleavage sites allowed (default: %(default)s)")
@@ -252,14 +269,14 @@ if __name__ == '__main__':
     args = get_and_validate_arguments(parser)
     seqs = parse_fasta_file(args.fasta_file)
     peptide_db, seq_db = digest_sequences(seqs, args.enzyme[0], args.cleavages)
+    summary_db = make_summary_dict(peptide_db, seq_db, args.fasta_file)
     # #  Write the peptide database to file in chunks
     linesize = args.json_lines
     with open(args.peptides_out, 'w') as f:
-        f.write('[' + json.dumps(peptide_db[:linesize]))
-    with open(args.peptides_out, 'a') as f:
-        for ind in range(linesize, len(peptide_db), linesize):
-            f.write(',\n' + json.dumps(peptide_db[ind : ind+linesize]))
-        f.write(']')
+        f.write('\n'.join(json.dumps(peptide_db[ind : ind+linesize]) for ind in range(0, len(peptide_db), linesize)))
     # #  Write the sequence database to file
     with open(args.sequences_out, 'w') as f:
         f.write(json.dumps(seq_db))
+    # #  Write the summary database to file
+    with open(args.summary_out, 'w') as f:
+        f.write(json.dumps(summary_db))
