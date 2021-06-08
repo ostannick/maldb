@@ -180,4 +180,41 @@ class AnalysisController extends Controller
 
         return 'success';
     }
+
+    public function get_fingerprints(Request $request)
+    {
+        //Get the experimental fingerprint
+        $command = implode(' ', [
+            'python',
+            '../python/create_fingerprint.py',
+            '800,900,1000,1100,1300,1500,1700,2000,2300,2600,2900'
+          ]);
+        
+        $fingerprint_experimental = json_decode(shell_exec($command));
+        
+        //Get the experimental fingerprint
+        $command = implode(' ', [
+            'python',
+            '../python/create_fingerprint.py',
+            '850,950,1150,1350,1750,2050,2650,2950'
+          ]);
+
+        
+        $fingerprint_predicted = json_decode(shell_exec($command));
+        
+        $series = [
+
+            [
+                'name' => 'Experiment',
+                'data' => $fingerprint_experimental
+            ],
+            
+            [
+                'name' => 'Prediction',
+                'data' => $fingerprint_predicted
+            ]
+        ];
+        
+        return $series;
+    }
 }
