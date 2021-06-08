@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Collection;
@@ -49,12 +48,32 @@ Route::get('/queue', function () {
     
     $failed_jobs = \DB::table('failed_jobs')->orderBy('failed_at', 'desc')->limit(10)->get();
 
+    foreach($failed_jobs as $j)
+    {
+      $j->payload = json_decode($j->payload);
+      $j->exception = preg_split("/\\r\\n|\\r|\\n/", $j->exception);
+    }
+
     $data = [
       'jobs' => $jobs,
       'failed_jobs' => $failed_jobs,
     ];
 
     return $data;
+});
+Route::post('/jobs/delete', function(Request $request){
+
+  DB::table('jobs')->where('id', $request->input('id'))->delete();
+
+  return 'Job canceled.';
+
+});
+Route::post('/jobs/failed/delete', function(Request $request){
+
+  DB::table('failed_jobs')->truncate();
+
+  return 'Failed jobs table cleared';
+
 });
 
 Route::get('/learn', function () {
@@ -83,6 +102,7 @@ Route::resource('/search', SearchController::class);
 Route::resource('/modifications', ModificationController::class);
 
 Route::resource('/usersettings', UserSettingsController::class);
+Route::post('/usersettings/reset', 'UserSettingsController@factory_reset');
 
 Route::post('/proteomes/digest', 'DigestController@digest');  //Digests a proteome
 Route::post('/proteomes/delete', 'ProteomeController@delete');

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Setting;
 
 class UserSetting extends Model
 {
@@ -27,8 +28,7 @@ class UserSetting extends Model
 
     public function reset_to_default()
     {
-        $parent_setting = $this->setting();
-
-        $this->value = $parent_setting->df_value;
+        $this->value = $this->setting->df_value;
+        $this->save();
     }
 }

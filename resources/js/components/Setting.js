@@ -22,12 +22,15 @@ export default class Setting extends Component {
 
   updateRemoteValue = (callback) =>
   {
+    var sendData = {
+      id: this.props.data.id,
+      value: this.state.value,
+    }
     //Make the AJAX call
-    axios.put('/usersettings/' + this.props.id)
+    axios.put('/usersettings/' + this.props.id, sendData)
       .then(res => {
         const response = res.data;
         console.log(response);
-        this.setState({settings: response})
         if(callback) callback();
 
       })
@@ -66,7 +69,7 @@ export default class Setting extends Component {
             <input className="form-control" type="text" placeholder={this.state.value} disabled readOnly />
           </td>
           <td>
-            <input type="range" className="form-range" min={this.props.data.min} max={this.props.data.max} step={this.props.data.step} defaultValue={this.state.value} onChange={this.handleValueChange} onInput={() => console.log('test')}/>
+            <input type="range" className="form-range" min={this.props.data.min} max={this.props.data.max} step={this.props.data.step} defaultValue={this.state.value} onChange={this.handleValueChange} onMouseUp={this.updateRemoteValue}/>
           </td>
           <td>
 

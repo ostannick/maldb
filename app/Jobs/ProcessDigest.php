@@ -145,91 +145,72 @@ class ProcessDigest implements ShouldQueue
       //Queues execute commands from the root directory C:/maldb/
       shell_exec($command);
 
-      //Load the json files into memory (array of associative arrays)
-      $stream1 = fopen($file_parents, 'r');
-      $stream2 = fopen($file_digest,  'r');
-
+      //UX Status update
       update_status($process->id, 0.16, 'Loading proteomes into memory.');
-      $listener1 = new \JsonStreamingParser\Listener\InMemoryListener();
-      try {
-        $parser = new \JsonStreamingParser\Parser($stream1, $listener1);
-        $parser->parse();
-        fclose($stream1);
-      } catch (Exception $e) {
-        fclose($stream1);
-        throw $e;
-      }
 
-      $listener2 = new \JsonStreamingParser\Listener\InMemoryListener();
-      try {
-        $parser2 = new \JsonStreamingParser\Parser($stream2, $listener2);
-        $parser2->parse();
-        fclose($stream2);
-      } catch (Exception $e) {
-        fclose($stream2);
-        throw $e;
-      }
+      //PARENTS/////////////////////////////////////////
+      $resource_parents = fopen($file_parents, 'r');
+      while (($line = fgets($resource_parents)) !== false) {
 
-      //Load them into variables
-      $parents  = $listener1->getJson();
-      $peptides = $listener2->getJson();
+        //Parse the line into PHP objects
+        $parents = json_decode($line, true);
 
-      $batch = [];
-      for($i = 0; $i < count($parents); $i++)
-      {
-        
-        $p = [
-          'id'        => $parents[$i]['seq_id'],
-          'name'      => $parents[$i]['name'],
-          'sequence'  => $parents[$i]['seq'],
-        ];
+        //Create an empty batch
+        $batch = [];
 
-        array_push($batch, $p);
-
-        if($i % 10000 == 0 || $i == count($parents) - 1)
+        //Loop through the parents in this line
+        for($i = 0; $i < count($parents); $i++)
         {
-          \DB::table($tableName)->insert($batch);
-
-          $progress = $i/count($parents);
-          $description = 'Processed ' . $i . ' of ' . count($parents) . ' parent sequences';
-          update_status($process->id, $progress, $description);
-        }
-      }
-
-      //Iterate through and log the progress
-      //This can be sped up with batch insertions or 'LOAD DATA INFILE'
-      $batch = [];
-      for($i = 0; $i < count($peptides); $i++)
-      {
-        $p = [
-          'parent'            => $peptides[$i]['seq_id'],
-          'sequence'          => $peptides[$i]['seq'],
-          'start'             => $peptides[$i]['start'],
-          'end'               => $peptides[$i]['end'],
-          'mz1_monoisotopic'  => $peptides[$i]['mz1'],
-          'mz1_average'       => $peptides[$i]['avg'],
-          'missed_cleavages'  => $peptides[$i]['mc'],
-          'met_ox_count'      => $peptides[$i]['mso']
-        ];
-
-        array_push($batch, $p);
-
-        //This conditional inserts after the array is full of 10,000 entries OR if the loop has reached the end. If you fail to include the latter, 
-        //you will miss the last little chunk of peptides!
-        if($i % 5000 == 0 || $i == count($peptides) - 1)
-        {
-          //Run the batch insert query
-          \DB::table($tableNameDigest)->insert($batch);
           
-          //Clear the array
-          $batch = [];
+          $p = [
+            'id'        => $parents[$i]['seq_id'],
+            'name'      => $parents[$i]['name'],
+            'sequence'  => $parents[$i]['seq'],
+          ];
 
-          //Create a progress update
-          $progress = $i/count($peptides);
-          $description = 'Processed ' . $i . ' of ' . count($peptides) . ' peptides';
-          update_status($process->id, $progress, $description);
+          array_push($batch, $p);
+
+          //Make a DB query every 1000 sequences
+          if($i % 1000 == 0 || $i == count($parents) - 1)
+          {
+            \DB::table($tableName)->insert($batch);
+          }
         }
       }
+
+      //PEPTIDES/////////////////////////////////////////
+      $resource_peptides = fopen($file_digest, 'r');
+      while (($line = fgets($resource_peptides)) !== false) {
+
+        //Load the line into memory (5000 peptides)
+        $peptides = json_decode($line, true);
+
+        //Create an empty batch
+        $batch = [];
+
+        for($i = 0; $i < count($peptides); $i++)
+        {
+          $p = [
+            'parent'            => $peptides[$i]['seq_id'],
+            'sequence'          => $peptides[$i]['seq'],
+            'start'             => $peptides[$i]['start'],
+            'end'               => $peptides[$i]['end'],
+            'mz1_monoisotopic'  => $peptides[$i]['mz1'],
+            'mz1_average'       => $peptides[$i]['avg'],
+            'missed_cleavages'  => $peptides[$i]['mc'],
+            'met_ox_count'      => $peptides[$i]['mso']
+          ];
+
+          array_push($batch, $p);
+          
+        }
+
+        //Run the batch insert query
+        \DB::table($tableNameDigest)->insert($batch);
+
+      }
+      
+      
 
       //Set the process to complete.
       complete_process($process->id);

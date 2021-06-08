@@ -71,7 +71,20 @@ class UserSettingsController extends Controller
      */
     public function update(Request $request, UserSetting $userSetting)
     {
-        return 'You reached it.';
+        $user_setting = UserSetting::find($request->input('id'));
+        $user_setting->value = $request->input('value');
+        $user_setting->save();
+        return 'Setting updated.';
+    }
+
+    public function factory_reset(Request $request)
+    {
+        $user_settings = UserSetting::where('user_id', Auth::user()->id)->get();
+        foreach($user_settings as $s)
+        {
+            $s->reset_to_default();
+        }
+        return 'Settings reverted to factory defaults.';
     }
 
     /**

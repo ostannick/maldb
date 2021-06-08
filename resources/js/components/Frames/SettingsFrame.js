@@ -18,7 +18,7 @@ export default class SearchFrame extends Component {
 
       [
         //First Group
-        [{ type: 'btn btn-danger btn-lg col-6', tooltip: 'Factory Reset All', icon: 'fad fa-industry-alt', disabled: false, clickCallback: (callback) => this.runSearch(callback)}],
+        [{ type: 'btn btn-danger btn-lg col-6', tooltip: 'Factory Reset All', icon: 'fad fa-industry-alt', disabled: false, clickCallback: (callback) => this.factoryReset(callback)}],
         //Second group...
         [],
       ],
@@ -31,7 +31,18 @@ export default class SearchFrame extends Component {
 
   factoryReset = (callback) =>
   {
-    
+    axios.post('/usersettings/reset', {})
+      .then(res => {
+        const response = res.data;
+        console.log(response);
+        this.fetchSettings();
+        if(callback) callback();
+
+      })
+      .catch(function(e) {
+        console.log(e.response.data);
+        if (callback) callback();
+      });
   }
 
   fetchSettings = (callback) =>
