@@ -24,9 +24,17 @@ WHERE
 ##--> LOOP THRU ALL VARMODS AND CALCULATE A SUMMATIVE SHIFT
 
 
+SELECT parent, sequence, mz1_shifted from test_table WHERE mz1_shifted < 3200
+;
 
 #INDEX THE MASSES SO SEARCHING IS FASTER
-CREATE INDEX `shifted_masses` 
-ON `test_table`
-(mz1_shifted)
+#CREATE INDEX `shifted_masses` 
+#ON `test_table`
+#(mz1_shifted)
+#;
+
+SELECT parent, sequence, mz1_shifted 
+FROM test_table 
+WHERE mz1_shifted
+BETWEEN 1000 - 1 AND 1000 + 1
 ;
