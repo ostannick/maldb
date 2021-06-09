@@ -53,6 +53,8 @@ DB_PASSWORD=myPassword
 13. Run `php artisan migrate` (creates the database tables)
 14. Run `php artisan storage:link` (generates symlink to storage directory)
 
+15. In your MySQL `my.ini` file, set `max_allowed_packet=128M`. Otherwise, jobs digesting large proteomes will crash.
+
 # Starting malDB
 
 If you are on a Windows machine, you can simply run `maldb.bat` from the project root. This will run a batch script that excecutes the necessary commands to launch the WAN server and start a job queue. Otherwise, you can run:

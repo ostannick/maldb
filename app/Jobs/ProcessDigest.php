@@ -141,8 +141,16 @@ class ProcessDigest implements ShouldQueue
         $file_digest,
         $file_parents,
         $file_metadata,
-        $enzyme
+        $enzyme,
+        '-j 50000'
       ]);
+
+      //Emulate inserts
+      //This is requires for large batch insertions. 
+      //Large batch insertions will also fail with an error message in the .log file saying 'MySQL has gone away..." if the max_allowed_packet is too small (Set to 128M)
+      //max_allowed_packet=128M
+    
+      \DB::connection()->getPdo()->setAttribute(\PDO::ATTR_EMULATE_PREPARES, true);
 
       //Queues execute commands from the root directory C:/maldb/
       shell_exec($command);
@@ -222,12 +230,13 @@ class ProcessDigest implements ShouldQueue
 
       }
       
-      
-
       //Set the process to complete.
       complete_process($process->id);
       $digest->status = 'ready';
       $digest->size = \DB::table($tableNameDigest)->select(\DB::raw('count(*) as peptides'))->first()->peptides;
       $digest->save();
+
+      //Reset.
+      \DB::connection()->getPdo()->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
     }
 }

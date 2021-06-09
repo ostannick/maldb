@@ -202,18 +202,20 @@ class AnalysisController extends Controller
         
         $fingerprint_predicted = json_decode(shell_exec($command));
         
+        
         $series = [
 
             [
                 'name' => 'Experiment',
                 'data' => $fingerprint_experimental
             ],
-            
+
             [
                 'name' => 'Prediction',
                 'data' => $fingerprint_predicted
             ]
         ];
+
         
         return $series;
     }
