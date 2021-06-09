@@ -10,6 +10,7 @@ import LongButton from '../LongButton';
 
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 export default class ProteomesFrame extends Component {
 
@@ -98,9 +99,11 @@ export default class ProteomesFrame extends Component {
 
         <NewProteomeModal 
           show={this.state.modal}
+          uploadProgress={this.state.uploadProgress}
           handleClose={() => this.setState({modal: false})}
           handleUpload={(name, organism, file) => this.handleUpload(name, organism, file)}
         />
+        
 
       </div>
      
@@ -119,10 +122,13 @@ export default class ProteomesFrame extends Component {
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data'
-      }
+      },
+      onUploadProgress: function(progressEvent) {
+        var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        this.setState({uploadProgress: percentCompleted})
+        console.log(progressEvent.loaded + ' of ' + progressEvent.total)
+      }.bind(this)
     }
-
-    console.log(name + organism);
 
     //Make the AJAX call
     axios.post('/proteomes', formData, config)
@@ -168,7 +174,7 @@ function NewProteomeModal(props) {
             <input type="file" className="form-control" aria-label="Upload" onChange={(e) => setFile(e.target.files[0])} />
           </div>
 
-          <div className="d-grid">
+          <div className="d-grid mb-3">
             <LongButton 
               type='btn btn-primary'
               tooltip='Upload'
@@ -177,6 +183,9 @@ function NewProteomeModal(props) {
               clickCallback={() => props.handleUpload(name, organism, file)}
             />
           </div>
+
+          <ProgressBar animated now={props.uploadProgress} />
+          <h6 className="text-center">{props.uploadProgress + '%'}</h6>
 
         </Modal.Body>
         <Modal.Footer>
