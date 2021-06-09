@@ -10,10 +10,11 @@ export default class Toolbar extends Component {
     super(props);
   }
 
-  renderButton(button)
+  renderButton(button, idx)
   {
     return(
       <GenericButton
+        key={idx}
         type={button.type}
         tooltip={button.tooltip}
         icon={button.icon}
@@ -29,9 +30,9 @@ export default class Toolbar extends Component {
     return (
       <div className="btn-group mx-2" role="group">
         
-        {this.props.buttons.map(button => (
+        {this.props.buttons.map((button, idx) => (
 
-          this.renderButton(button)
+          this.renderButton(button, idx)
 
         ))}
 

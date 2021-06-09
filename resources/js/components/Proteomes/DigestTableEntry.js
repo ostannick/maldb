@@ -68,6 +68,11 @@ class DigestTableEntry extends Component {
       });
   }
 
+  componentWillUnmount()
+  {
+    clearInterval(this.state.interval);
+  }
+
   render()
   {
     switch(this.state.status)

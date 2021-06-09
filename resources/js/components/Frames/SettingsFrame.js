@@ -43,6 +43,8 @@ export default class SearchFrame extends Component {
         console.log(e.response.data);
         if (callback) callback();
       });
+
+    this.forceUpdate()
   }
 
   fetchSettings = (callback) =>

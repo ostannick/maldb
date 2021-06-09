@@ -21,8 +21,6 @@ class Proteome extends Component {
     this.handleMissedCleavages = this.handleMissedCleavages.bind(this);
     this.handleDigest = this.handleDigest.bind(this);
     this.handleDeleteProteome = this.handleDeleteProteome.bind(this);
-  
-    this.testCallback = this.testCallback.bind(this);
   }
 
   handleEnzyme(event)
@@ -33,15 +31,6 @@ class Proteome extends Component {
   handleMissedCleavages(event)
   {
     this.setState({missedCleavages: event.target.value});
-  }
-
-  testCallback(resetButton)
-  {
-    console.log('waiting two seconds...')
-    setTimeout(function(){
-      console.log('done');
-      resetButton();
-    }, 2000);
   }
 
   handleDigest(callback, event)
@@ -102,6 +91,11 @@ class Proteome extends Component {
       tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new window.bootstrap.Tooltip(tooltipTriggerEl)
       })
+  }
+
+  componentWillUnmount()
+  {
+
   }
 
   renderDigestTable(digestTable)
