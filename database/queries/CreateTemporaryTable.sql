@@ -1,4 +1,4 @@
-DROP TABLE `test_table`
+DROP TEMPORARY TABLE IF EXISTS `test_table`
 ;
 
 #Incorporate the fixed mod shift when making the temp table
@@ -46,7 +46,7 @@ FROM `1_cow_trypsin_dig`
 HAVING
 missed_cleavages <= 1
 AND
-mz1_shifted BETWEEN 1000 - 1 AND 1000 + 1
+(mz1_shifted BETWEEN 1000 - 1 AND 1000 + 1
 OR
 mz1_shifted BETWEEN 1100 - 1 AND 1000 + 1
 OR
@@ -74,5 +74,27 @@ mz1_shifted BETWEEN 2200 - 1 AND 2200 + 1
 OR
 mz1_shifted BETWEEN 2300 - 1 AND 2300 + 1
 OR
-mz1_shifted BETWEEN 2400 - 1 AND 2400 + 1
+mz1_shifted BETWEEN 2400 - 1 AND 2400 + 1)
+GROUP BY
+`p
+
 ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
