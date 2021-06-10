@@ -241,9 +241,9 @@ def add_arguments(parser):
     parser.add_argument("enzyme", metavar="ENZYME", choices=sorted(digest_fxns.keys()), nargs=1, help="The enzyme to digest the sequences. Must be one of: %(choices)s")
     # #  Optional arguments
     parser.add_argument("-c", "--cleavages", type=int, default=1, help="Specify the number of missed cleavage sites allowed (default: %(default)s)")
-    parser.add_argument("-n", "--min_weight", type=float, default=500.0, help="Discard peptides below this molecular weight threshold (default: %(default)s)")
-    parser.add_argument("-x", "--max_weight", type=float, default=5000.0, help="Discard peptides above this molecular weight threshold (default: %(default)s)")
-    parser.add_argument("-j", "--json_lines", type=int, default=5000, help="Format the peptides database file to have this many peptide JSON entries per line (default: %(default)s)")
+    parser.add_argument("-n", "--min_weight", type=float, default=650.0, help="Discard peptides below this molecular weight threshold (default: %(default)s)")
+    parser.add_argument("-x", "--max_weight", type=float, default=3800.0, help="Discard peptides above this molecular weight threshold (default: %(default)s)")
+    parser.add_argument("-j", "--json_lines", type=int, default=50000, help="Format the peptides database file to have this many peptide JSON entries per line (default: %(default)s)")
     parser.add_argument("-o", "--no_met_ox", action='store_true', help="Use this flag to prevent the generation of additional peptides from the variable oxidation of methionine (default: %(default)s)")
 def get_and_validate_arguments(parser):
     args = parser.parse_args()
