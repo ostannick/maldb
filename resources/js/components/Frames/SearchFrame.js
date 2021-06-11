@@ -4,6 +4,8 @@ import axios from 'axios';
 
 import Toolbar from '../Toolbar';
 
+
+import SpectralDisplay from '../Analysis/SpectralDisplay';
 import TablePicker from '../TablePicker';
 import ModificationPicker from '../ModificationPicker';
 
@@ -16,6 +18,11 @@ export default class SearchFrame extends Component {
 
     this.state = {
       toolbarButtons: [
+
+        [{ type: 'btn btn-light btn-lg col-6', tooltip: 'Generative Search', icon: 'fas fa-search-plus', disabled: false, clickCallback: (callback) => this.runSearch(callback) }],
+
+        [{ type: 'btn btn-light btn-lg col-6', tooltip: 'Indexed Search', icon: 'fas fa-search-location', disabled: false, clickCallback: (callback) => this.runSearch(callback) }],
+
         [{ type: 'btn btn-warning btn-lg col-6', tooltip: 'Search', icon: 'fas fa-running', disabled: false, clickCallback: (callback) => this.runSearch(callback)}],
 
       ],
@@ -41,7 +48,6 @@ export default class SearchFrame extends Component {
 
     const sendData = {
       missedCleavages: this.state.missedCleavages,
-      tolerance: this.state.tolerance,
       massList: this.state.massList,
       massMods: this.state.massMods,
       selectedTables: this.state.selectedTables,
@@ -79,21 +85,14 @@ export default class SearchFrame extends Component {
 
           <div className="row">
             
-
-            <div className="col-md-4 s">
-              <div className="mb-3">
-                <label htmlFor="tolerance" className="form-label"><i className="fal fa-arrows-alt-h"></i> Tolerance (Da)</label>
-                <input type="text" className="form-control" id="tolerance" defaultValue="1.2" onChange={this.updateTolerance} />
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="dataset" className="form-label"><i className="fal fa-stream"></i> Mass List</label>
-                <textarea
-                  className="form-control"
-                  id="dataset"
-                  rows="16"
-                  onChange={this.updateMassList}
-                  defaultValue="1170.260461
+            <div className="col-md-3">
+              <label htmlFor="dataset" className="form-label"><i className="fal fa-stream"></i> Mass List or Spectra</label>
+              <textarea
+                className="form-control"
+                id="dataset"
+                rows="10"
+                onChange={this.updateMassList}
+                defaultValue="1170.260461
                     1228.382739
                     1375.483557
                     1653.520751
@@ -110,8 +109,13 @@ export default class SearchFrame extends Component {
                     2551.361535
                     2668.518994
                     2855.366387">
-                </textarea>
-              </div>
+              </textarea>
+            </div>
+
+            <div className="col-md-9">
+              <SpectralDisplay 
+                data={this.state.massList}
+              />
             </div>
 
             <div className="col-md-4">
@@ -142,11 +146,6 @@ export default class SearchFrame extends Component {
   updateMassList = (e) =>
   {
     this.setState({massList: e.target.value})
-  }
-
-  updateTolerance = (e) =>
-  {
-    this.setState({tolerance: e.target.value})
   }
 
   updateMissedCleavages = (e) =>

@@ -115,6 +115,7 @@ Route::post('/analysis/seqview', 'AnalysisController@get_seqview');
 Route::post('/analysis/table', 'AnalysisController@get_table');
 Route::post('/analysis/appendnn', 'AnalysisController@append_to_nntrain');
 Route::post('/analysis/fingerprint', 'AnalysisController@get_fingerprints');
+Route::post('/analysis/drawspectra', 'AnalysisController@draw_spectra');
 
 Route::post('/modifications/list', 'ModificationController@list');
 

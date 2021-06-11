@@ -41,7 +41,7 @@ class SearchController extends Controller
         //Search logic goes here... dispatch a search job.
 
         $missed_cleavages   = $request->input('missedCleavages');
-        $tolerance          = $request->input('tolerance');
+        $tolerance          = 1.2; //Set this to the user's account settings later
         $mass_list          = $request->input('massList');
         $mass_mods          = $request->input('massMods');
         $selected_tables    = $request->input('selectedTables');

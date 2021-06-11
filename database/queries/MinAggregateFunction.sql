@@ -3,7 +3,7 @@ SELECT
     parent, 
     sequence, 
     mz1_monoisotopic,
-    MIN(1101 - mz1_monoisotopic) AS err 
+    MIN(ABS(1101 - mz1_monoisotopic)) AS err 
 FROM 
 	1_plant_trypsin_dig 
 WHERE 

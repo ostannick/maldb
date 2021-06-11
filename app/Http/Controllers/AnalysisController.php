@@ -181,6 +181,73 @@ class AnalysisController extends Controller
         return 'success';
     }
 
+    public function draw_spectra(Request $request)
+    {
+
+        $mode = 'list';
+        if(strlen($request->input('data')) > 1000)
+        {
+            $mode = 'spectra';
+        }
+
+        if($mode == 'list')
+        {
+            
+            $masses = preg_split('/\s+/', $request->input('data'));
+            $masses = implode(',', $masses);
+
+            //Get the experimental fingerprint
+            $command = implode(' ', [
+                'python',
+                '../python/create_fingerprint.py',
+                $masses
+            ]);
+
+            $fingerprint = json_decode(shell_exec($command));
+
+            $series = [
+                [
+                    'name' => 'Mass List',
+                    'data' => $fingerprint
+                ]
+            ];
+
+            return $series;
+            
+        }
+        elseif ($mode == 'spectra')
+        {
+            $spectra = preg_split('/\s+/', $request->input('data'));
+            $spectra = json_encode($spectra);
+
+            $temp = tmpfile(); //Creates a temporary file to store the JSON string in
+
+            fwrite($temp, $spectra);
+            $path = stream_get_meta_data($temp)['uri']; 
+
+            //Create a spectra
+            $command = implode(' ', [
+                'python',
+                '../python/spectral_parser.py',
+                $path,
+                '--compression 10' //Change this to user setting later
+            ]);
+
+            $spectra = json_decode(shell_exec($command));
+
+            $series = [
+                [
+                    'name' => 'Spectra',
+                    'data' => $spectra
+                ]
+            ];
+
+            fclose($temp); // this removes the file
+
+            return $series;
+        }
+    }
+
     public function get_fingerprints(Request $request)
     {
         //Get the experimental fingerprint
