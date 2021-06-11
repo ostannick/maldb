@@ -17,6 +17,11 @@ class ProcessController extends Controller
         //
     }
 
+    public function status(Request $request)
+    {
+        return Process::where('id', $request->input('id'))->first()->status();
+    }
+
     /**
      * Show the form for creating a new resource.
      *

@@ -4,10 +4,13 @@ import axios from 'axios';
 
 import Toolbar from '../Toolbar';
 
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 import SpectralDisplay from '../Analysis/SpectralDisplay';
 import TablePicker from '../TablePicker';
 import ModificationPicker from '../ModificationPicker';
+
+import SearchJobListener from '../SearchJobListener';
 
 import FadeIn from "react-fade-in";
 
@@ -40,7 +43,16 @@ export default class SearchFrame extends Component {
       //Data
       massList: "1170.260461 1375.483557 1653.520751 1752.469679 1765.517257 1849.43973 2105.47983 2128.467221 2178.484802 2211.44009 2222.209515 2389.285925 2424.412107 2551.361535 2668.518994 2855.366387",     
       
+      //Job Listener Visiblity
+      searchJobListenerVisibility: false,
+
+      //Metadata
+      metadata: {
+        process_id: null
+      }
     }
+
+    this.jobListener = React.createRef();
   }
 
   runSearch = (callback) =>
@@ -60,13 +72,20 @@ export default class SearchFrame extends Component {
 
         const response = res.data;
 
-        this.props.updateResults(response);
+        this.setState({
+          searchJobListenerVisibility: true,
+          metadata: response,
+        });
+
+        console.log(response);
+
+        this.jobListener.current.startPolling();
 
         if(callback) callback();
 
       })
       .catch(function(e) {
-        console.log(e);
+        console.log(e.response.data.message);
 
         if (callback) callback();
       });
@@ -84,7 +103,13 @@ export default class SearchFrame extends Component {
           />
 
           <div className="row">
-            
+
+            <SearchJobListener 
+              processId={this.state.metadata.process_id}
+              visibility={this.state.searchJobListenerVisibility}
+              ref={this.jobListener}
+            />
+
             <div className="col-md-3">
               <label htmlFor="dataset" className="form-label"><i className="fal fa-stream"></i> Mass List or Spectra</label>
               <textarea

@@ -5,6 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Search;
 use App\Models\Digest;
 use Illuminate\Http\Request;
+use App\Jobs\ProcessSearch;
+use Auth;
+
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use App\Models\Process;
 
 use Illuminate\Support\Collection;
 
@@ -38,11 +45,8 @@ class SearchController extends Controller
      */
     public function store(Request $request)
     {
-        //Search logic goes here... dispatch a search job.
-
-        $missed_cleavages   = $request->input('missedCleavages');
-        $tolerance          = 1.2; //Set this to the user's account settings later
         $mass_list          = $request->input('massList');
+        $missed_cleavages   = $request->input('missedCleavages');
         $mass_mods          = $request->input('massMods');
         $selected_tables    = $request->input('selectedTables');
         $match_limit        = $request->input('matchLimit');
@@ -53,6 +57,67 @@ class SearchController extends Controller
 
         //Construct the mass list array
         $masses = mass_list_to_array($mass_list);
+
+        //Extract the parameters into variables
+        $missed_cleavages   = $request->input('missedCleavages');
+        $tolerance          = 1.2; //Set this to the user's account settings later
+        $mass_list          = $request->input('massList');
+        $enzyme             = $request->input('enzyme');
+        $mass_mods          = $request->input('massMods');
+        $selected_tables    = $request->input('selectedTables');
+
+        //Create a job name
+        $job_name = Auth::user()->id . '_search_' . Str::random(16);
+
+        //Create a new process
+        $process = new Process();
+        $process->user_id = Auth::user()->id;
+        $process->description = 'Running a generative search...';
+        $process->save();
+
+        //Create a metadata object so this job can be re-run
+        $metadata = [
+            'user_id'       =>  Auth::user()->id,
+            'user_name'     =>  User::find(Auth::user()->id)->username,
+            'job_name'      =>  $job_name,
+            'process_id'    =>  $process->id,
+            'type'          =>  'generative',
+            'data'          =>  [
+                'spectra'       => 0,
+                'mass_list'     => $masses,
+            ],
+            'enzyme'        =>  $enzyme,
+            'tables'        =>  $selected_tables,
+            'modifications' =>  [
+                'fixed'         => ['Cys_CAM'],
+                'var'           => ['MSO'],
+            ],
+        ];
+
+        $path = Auth::user()->id . '\searches\\' . $job_name . '.meta';
+
+        Storage::put($path, json_encode($metadata));
+
+        //Dispatch the job to the default queue with the path to the metadata file.
+        ProcessSearch::dispatch($path);
+
+        update_status($process->id, 0.01, 'Waiting for job to start.');
+
+        return $metadata;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         //Construct the fixed mass modifications string
         $fixed_mods_string = fixed_mods_string($mass_mods);

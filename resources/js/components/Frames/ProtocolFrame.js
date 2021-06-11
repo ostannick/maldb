@@ -130,7 +130,7 @@ export default class ProtocolFrame extends Component {
             Dehydrate the gel using 50% ACN solution (2min) followed by 100% ACN solution (30sec). Dry by placing in the thermal mixer with the caps open to evaporate any small amounts of remaining acetonitrile. Mixing is not required during this step, but if you choose to do so, mix at a low RPM such that your gel bits do not fly out of your tube.
           </li>
 
-          <div class="alert alert-warning" role="alert">
+          <div className="alert alert-warning" role="alert">
             Full dehydration is achieved when gel pieces look opaque, chalky, and white. Gel pieces with a milky white appearance are not fully dehydrated and will not absorb water as effectively.
           </div>
 
@@ -169,7 +169,7 @@ export default class ProtocolFrame extends Component {
             Dry in vaccum centrifuge to volume of ~10uL. This process may take a while depending on how many fractions you have pooled, but do not use the heating function on the centrifuge. Lyophilize at room temp!
           </li>
 
-          <div class="alert alert-primary" role="alert">
+          <div className="alert alert-primary" role="alert">
             (OPTIONAL) Desalt using a C18 ZipTip (improves quality of spectra but is expensive).
           </div>
 

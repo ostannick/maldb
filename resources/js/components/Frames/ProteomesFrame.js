@@ -185,7 +185,6 @@ function NewProteomeModal(props) {
           </div>
 
           <ProgressBar animated now={props.uploadProgress} />
-          <h6 className="text-center">{props.uploadProgress + '%'}</h6>
 
         </Modal.Body>
         <Modal.Footer>

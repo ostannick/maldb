@@ -119,6 +119,8 @@ Route::post('/analysis/drawspectra', 'AnalysisController@draw_spectra');
 
 Route::post('/modifications/list', 'ModificationController@list');
 
+Route::post('/process/status', 'ProcessController@status');
+
 
 
 Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
