@@ -17,6 +17,8 @@ expanded(id, parent, sequence, mz1_monoisotopic, missed_cleavages, MSO) AS
         0 AS MSO
   FROM 
 		`1_k12_trypsin_dig` 
+  WHERE
+		mz1_monoisotopic < 3600 AND mz1_monoisotopic > 500
   UNION ALL
   SELECT 
 		id,
@@ -33,35 +35,49 @@ expanded(id, parent, sequence, mz1_monoisotopic, missed_cleavages, MSO) AS
 SELECT * FROM expanded
 ;
 
-DROP TABLE IF EXISTS `unfiltered`
-;
+###########################################################################################################################
 
-CREATE TEMPORARY TABLE `unfiltered`
-SELECT id, parent, sequence, mz1_monoisotopic, MSO, MIN(1600 - mz1_monoisotopic) AS err FROM `name_of_table`  WHERE mz1_monoisotopic BETWEEN 1600 - 1 AND 1600 + 1 GROUP BY parent
-UNION ALL
-SELECT id, parent, sequence, mz1_monoisotopic, MSO, MIN(1700 - mz1_monoisotopic) AS err FROM `name_of_table`  WHERE mz1_monoisotopic BETWEEN 1700 - 1 AND 1700 + 1 GROUP BY parent
-UNION ALL
-SELECT id, parent, sequence, mz1_monoisotopic, MSO, MIN(1800 - mz1_monoisotopic) AS err FROM `name_of_table`  WHERE mz1_monoisotopic BETWEEN 1800 - 1 AND 1800 + 1 GROUP BY parent
-UNION ALL
-SELECT id, parent, sequence, mz1_monoisotopic, MSO, MIN(1900 - mz1_monoisotopic) AS err FROM `name_of_table`  WHERE mz1_monoisotopic BETWEEN 1900 - 1 AND 1900 + 1 GROUP BY parent
-UNION ALL
-SELECT id, parent, sequence, mz1_monoisotopic, MSO, MIN(2000 - mz1_monoisotopic) AS err FROM `name_of_table`  WHERE mz1_monoisotopic BETWEEN 2600 - 1 AND 2000 + 1 GROUP BY parent
-UNION ALL
-SELECT id, parent, sequence, mz1_monoisotopic, MSO, MIN(2100 - mz1_monoisotopic) AS err FROM `name_of_table`  WHERE mz1_monoisotopic BETWEEN 2100 - 1 AND 2100 + 1 GROUP BY parent
-UNION ALL
-SELECT id, parent, sequence, mz1_monoisotopic, MSO, MIN(2200 - mz1_monoisotopic) AS err FROM `name_of_table`  WHERE mz1_monoisotopic BETWEEN 2200 - 1 AND 2200 + 1 GROUP BY parent
-UNION ALL
-SELECT id, parent, sequence, mz1_monoisotopic, MSO, MIN(2300 - mz1_monoisotopic) AS err FROM `name_of_table`  WHERE mz1_monoisotopic BETWEEN 2300 - 1 AND 2300 + 1 GROUP BY parent
-UNION ALL
-SELECT id, parent, sequence, mz1_monoisotopic, MSO, MIN(2400 - mz1_monoisotopic) AS err FROM `name_of_table`  WHERE mz1_monoisotopic BETWEEN 2400 - 1 AND 2400 + 1 GROUP BY parent
-UNION ALL
-SELECT id, parent, sequence, mz1_monoisotopic, MSO, MIN(2500 - mz1_monoisotopic) AS err FROM `name_of_table`  WHERE mz1_monoisotopic BETWEEN 2500 - 1 AND 2500 + 1 GROUP BY parent
-UNION ALL
-SELECT id, parent, sequence, mz1_monoisotopic, MSO, MIN(2600 - mz1_monoisotopic) AS err FROM `name_of_table`  WHERE mz1_monoisotopic BETWEEN 2600 - 1 AND 2600 + 1 GROUP BY parent
-UNION ALL
-SELECT id, parent, sequence, mz1_monoisotopic, MSO, MIN(1150 - mz1_monoisotopic) AS err FROM `name_of_table`  WHERE mz1_monoisotopic BETWEEN 1150 - 1 AND 1150 + 1 GROUP BY parent
-UNION ALL
-SELECT id, parent, sequence, mz1_monoisotopic, MSO, MIN(1250 - mz1_monoisotopic) AS err FROM `name_of_table`  WHERE mz1_monoisotopic BETWEEN 1250 - 1 AND 1250 + 1 GROUP BY parent
-;
+DROP TABLE IF EXISTS tmp_search;
+CREATE TABLE tmp_search (
+  mz1_monoisotopic DECIMAL(10,2)
+);
+INSERT INTO tmp_search VALUES (1170.260461);
+INSERT INTO tmp_search VALUES (1228.382739);
+INSERT INTO tmp_search VALUES (1375.483557);
+INSERT INTO tmp_search VALUES (1653.520751);
+INSERT INTO tmp_search VALUES (1752.469679);
+INSERT INTO tmp_search VALUES (1765.517257);
+INSERT INTO tmp_search VALUES (1849.43973);
+INSERT INTO tmp_search VALUES (2105.47983);
+INSERT INTO tmp_search VALUES (2128.467221);
+INSERT INTO tmp_search VALUES (2178.484802);
+INSERT INTO tmp_search VALUES (2211.44009);
+INSERT INTO tmp_search VALUES (2222.209515);
+INSERT INTO tmp_search VALUES (2389.285925);
+INSERT INTO tmp_search VALUES (2424.412107);
+INSERT INTO tmp_search VALUES (2551.361535);
+INSERT INTO tmp_search VALUES (2668.518994);
+INSERT INTO tmp_search VALUES (22855.366387);
 
-SELECT parent, COUNT(parent) FROM `unfiltered` GROUP BY parent
+############################################################################################################################
+
+SELECT id, parent, sequence, mz1_monoisotopic, err FROM (
+  SELECT 
+    d.id,
+    d.parent,
+    d.sequence,
+    d.mz1_monoisotopic,
+    ABS(d.mz1_monoisotopic - s.mz1_monoisotopic) err,
+    ROW_NUMBER() over (
+      PARTITION BY s.mz1_monoisotopic, d.parent
+      ORDER BY ABS(d.mz1_monoisotopic - s.mz1_monoisotopic), id
+    ) rn
+  FROM
+    `name_of_table` d
+    INNER JOIN tmp_search s ON
+      d.mz1_monoisotopic BETWEEN s.mz1_monoisotopic - 1 AND s.mz1_monoisotopic + 1
+) result WHERE rn = 1;
+
+DROP TABLE IF EXISTS tmp_search;
+
+##########################################################################################################################

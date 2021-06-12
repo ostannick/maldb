@@ -87,6 +87,7 @@ class SearchController extends Controller
                 'mass_list'     => $masses,
             ],
             'enzyme'        =>  $enzyme,
+            'mc'            =>  $missed_cleavages,
             'tables'        =>  $selected_tables,
             'modifications' =>  [
                 'fixed'             => [

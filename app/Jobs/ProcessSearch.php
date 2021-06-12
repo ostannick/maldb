@@ -8,12 +8,15 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 use App\Models\Process;
 use App\Models\Status;
+use App\Models\UserSetting;
+use App\Models\Digest;
 
 class ProcessSearch implements ShouldQueue
 {
@@ -43,40 +46,54 @@ class ProcessSearch implements ShouldQueue
         $tables = get_tables($settings->tables);
 
         //Construct the mass list array
-        $masses = [1100, 1200, 1300, 1400, 1500, 1600, 1700];
+        $masses = [1170.260461, 1228.382739, 1375.483557, 1653.520751, 1752.469679, 1765.517257, 1849.43973, 2105.47983, 2128.467221, 2178.484802, 2211.44009, 2222.209515, 2389.285925, 2424.412107, 2551.361535, 2668.518994, 2855.366387];
         //mass_list_to_array($mass_list);
 
+        //Get missed cleavages
+        $missed_cleavages = $settings->mc;
+
         //Construct the fixed mass modifications string
-        $fixed_mods_string = fixed_mods_string($settings->modifications->fixed);
+        $fixed_mods_string = fixed_mods_string(get_mods($settings->modifications->fixed));
+
+        //Get the tolerance setting
+        //$tolerance = UserSetting::where('user_id', $settings->user_id)->where('name', 'mass_tolerance')->first()->value; //This will return a string, you need to cast it.
+        $tolerance = 1.2;
+
+        //Create the set of expanded tables
+        $temp_tables = [];
+        foreach($tables as $t)
+        {
+            //Name the tables
+            $temp_table_name = 'TEMP_' . $t . time();
+            
+            //Store the table
+            array_push($temp_tables, $temp_table_name);
+
+            //Run the expansion query
+            \DB::select(expand_table_query($temp_table_name, $t, $fixed_mods_string));
+        }
 
         //Create a new collection to continually append to
         $merged = new Collection();
 
-        foreach($masses as $mass)
+        foreach($temp_tables as $t)
         {
-            //Create the query strings for each table
-            $queries = [];
-            foreach($tables as $t)
-            {
-                array_push($queries, base_query_string($t, $missed_cleavages, $mass, $tolerance, $fixed_mods_string));
-            }
-            $query = query_unioner($queries);
+            $matches = \DB::select(base_query($t, $tolerance));
 
-            //Execute the query
-            $matches = \DB::select($query);
-
-            //Merge with collection
             $merged = $merged->merge(collect($matches));
         }
+
+        Log::debug('Logging the merged results...');
+        Log::debug($merged);
         
         //Group peptides by the table they're from, then the parent they belong to.
         //Somehow sort the nested array, and then limit it to top 5
         
         $results = $merged
                         //Group them so that the results from separate tables are not merged, altering statistical scores
-                        ->groupBy(['source', 'parent'])
+                        ->groupBy(['parent'])
                         //Flatten the collection (array) to remove the source (table) grouping, allowing easy access to the nested array for sorting.
-                        ->flatten(1)
+                        //->flatten(1)
                         //Count the number of children eat hit (parent) has, and order descending so top hits are at the top of list
                         ->sortByDesc(function($item){
                             return count($item);
@@ -117,10 +134,17 @@ class ProcessSearch implements ShouldQueue
             'code'          => 'results',
             'message'       => 'A toast to the people',
             'tables'        => $tables,
-            'mods'          => $mass_mods,
-            'massList'      => $mass_list,
+            #'mods'          => $mass_mods,
+            'massList'      => $masses,
             'results'       => $results,
         ];
+
+        Log::debug($response);
+
+        foreach($temp_tables as $t)
+        {
+            Schema::dropIfExists($t);
+        }
 
 
 
@@ -175,6 +199,37 @@ function expand_table_query(string $table_name, string $target_table_name, strin
     );
 }
 
+function construct_search_rowset($rowset_name)
+{
+    return(
+        ""
+    );
+}
+
+function base_query(string $expanded_table_name, string $search_rowset_name, float $tolerance)
+{
+    return(
+       "SELECT id, parent, sequence, mz1_monoisotopic, err FROM (
+            SELECT 
+              d.id,
+              d.parent,
+              d.sequence,
+              d.missed_cleavages,
+              d.mz1_monoisotopic,
+              ABS(d.mz1_monoisotopic - s.mz1_monoisotopic) err,
+              ROW_NUMBER() over (
+                PARTITION BY s.mz1_monoisotopic, d.parent
+                ORDER BY ABS(d.mz1_monoisotopic - s.mz1_monoisotopic), id
+              ) rn
+            FROM
+              $expanded_table_name d
+              INNER JOIN $search_rowset_name s ON
+                d.mz1_monoisotopic BETWEEN s.mz1_monoisotopic - $tolerance AND s.mz1_monoisotopic + $tolerance
+          ) result WHERE rn = 1;
+        "
+    );
+}
+
 
 function base_query_string(string $table_name, int $missed_cleavages, float $mz1, float $tolerance, string $fixed_mods_string)
 {
@@ -218,6 +273,21 @@ function mass_list_to_array(string $mass_list): array
 
     //Return the array.
     return $mass_list;
+}
+
+function get_mods(array $mods)
+{
+    $m = [];
+
+    foreach(\DB::table('modifications')->whereIn('name', $mods)->get() as $mod)
+    {
+        array_push($m, [
+            'mass' => $mod->mass,
+            'resi' => $mod->target
+        ]);
+    }
+
+    return $m;
 }
 
 class Mod
