@@ -111,11 +111,18 @@ Route::post('/digest/list', 'DigestController@list');         //Gets a list of a
 Route::post('/digest/poll', 'DigestController@poll');
 Route::post('/digest/sort', 'DigestController@sort');
 
+Route::post('/analysis/results', 'AnalysisController@results');             //Send a metadata object
+Route::post('/analysis/results/name', 'AnalysisController@results_by_name'); //Just send the job name
 Route::post('/analysis/seqview', 'AnalysisController@get_seqview');
 Route::post('/analysis/table', 'AnalysisController@get_table');
 Route::post('/analysis/appendnn', 'AnalysisController@append_to_nntrain');
 Route::post('/analysis/fingerprint', 'AnalysisController@get_fingerprints');
 Route::post('/analysis/drawspectra', 'AnalysisController@draw_spectra');
+Route::post('/analysis/rdm_fingerprint', 'AnalysisController@get_random_fingerprint');
+Route::post('/analysis/rdm_spectra', 'AnalysisController@get_random_spectra');
+
+Route::post('/history/searches', 'AnalysisController@get_history');
+
 
 Route::post('/modifications/list', 'ModificationController@list');
 

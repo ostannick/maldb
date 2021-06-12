@@ -22,11 +22,7 @@ export default class SearchFrame extends Component {
     this.state = {
       toolbarButtons: [
 
-        [{ type: 'btn btn-light btn-lg col-6', tooltip: 'Generative Search', icon: 'fas fa-search-plus', disabled: false, clickCallback: (callback) => this.runSearch(callback) }],
-
-        [{ type: 'btn btn-light btn-lg col-6', tooltip: 'Indexed Search', icon: 'fas fa-search-location', disabled: false, clickCallback: (callback) => this.runSearch(callback) }],
-
-        [{ type: 'btn btn-warning btn-lg col-6', tooltip: 'Search', icon: 'fas fa-running', disabled: false, clickCallback: (callback) => this.runSearch(callback)}],
+        [{ type: 'btn btn-primary btn-lg col-6', tooltip: 'Search', icon: 'fas fa-running', disabled: false, clickCallback: (callback) => this.runSearch(callback)}],
 
       ],
 
@@ -41,7 +37,7 @@ export default class SearchFrame extends Component {
       ],
 
       //Data
-      massList: "1170.260461 1375.483557 1653.520751 1752.469679 1765.517257 1849.43973 2105.47983 2128.467221 2178.484802 2211.44009 2222.209515 2389.285925 2424.412107 2551.361535 2668.518994 2855.366387",     
+      massList: "1170.260461\r1375.483557\r1653.520751\r1752.469679\r1765.517257\r1849.43973\r2105.47983\r2128.467221\r2178.484802\r2211.44009\r2222.209515\r2389.285925\r2424.412107\r2551.361535\r2668.518994\r2855.366387",     
       
       //Job Listener Visiblity
       searchJobListenerVisibility: false,
@@ -107,11 +103,20 @@ export default class SearchFrame extends Component {
             <SearchJobListener 
               processId={this.state.metadata.process_id}
               visibility={this.state.searchJobListenerVisibility}
+              metadata={this.state.metadata}
+              updateResults={(results) => this.props.updateResults(results)}
               ref={this.jobListener}
             />
 
             <div className="col-md-3">
-              <label htmlFor="dataset" className="form-label"><i className="fal fa-stream"></i> Mass List or Spectra</label>
+              <label htmlFor="dataset" className="form-label"><i className="fal fa-stream"></i>
+                &nbsp;
+                <a style={{cursor: 'pointer'}} onClick={() => this.populateRandomFingerprint() }>Mass List</a>
+                &nbsp;
+                or
+                &nbsp;
+                <a style={{cursor: 'pointer'}} onClick={() => this.populateRandomSpectra() }>Spectra</a>
+              </label>
               <textarea
                 className="form-control"
                 id="dataset"
@@ -133,7 +138,9 @@ export default class SearchFrame extends Component {
                     2424.412107
                     2551.361535
                     2668.518994
-                    2855.366387">
+                    2855.366387"
+                value={this.state.massList}
+                >
               </textarea>
             </div>
 
@@ -177,4 +184,40 @@ export default class SearchFrame extends Component {
   {
     this.setState({missedCleavages: e.target.value})
   }
+
+  populateRandomFingerprint = () =>
+  {
+    //Make the AJAX call
+    axios.post(`/analysis/rdm_fingerprint`, {})
+      .then(res => {
+
+        const response = res.data;
+
+        this.setState({massList: response});
+
+        console.log(response);
+
+      })
+      .catch(function(e) {
+        console.log(e.response.data.message);
+      });
+  }
+
+  populateRandomSpectra = () =>
+  {
+    axios.post(`/analysis/rdm_spectra`, {})
+      .then(res => {
+
+        const response = res.data;
+
+        this.setState({massList: response});
+
+        console.log(response);
+
+      })
+      .catch(function(e) {
+        console.log(e.response.data.message);
+      });
+  }
+  
 }

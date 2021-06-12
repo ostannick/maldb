@@ -8,6 +8,7 @@ import FadeIn from 'react-fade-in';
 
 import SearchFrame from './Frames/SearchFrame';
 import ResultsFrame from './Frames/ResultsFrame';
+import HistoryFrame from './Frames/HistoryFrame';
 import ProteomesFrame from './Frames/ProteomesFrame';
 //import ModificationsFrame from './Frames/ModificationsFrame';
 import QueueFrame from './Frames/QueueFrame';
@@ -28,16 +29,21 @@ export default class ApplicationContainer extends Component {
       controlItems: [
         { title: 'Search', icon: 'fa-search', index: 0},
         { title: 'Results', icon: 'fa-chart-bar', index: 1 },
-        { title: 'Proteomes', icon: 'fa-bacterium', index: 2 },
-        { title: 'Modifications', icon: 'fa-weight-hanging', index: 3 },
-        { title: 'Job Queue', icon: 'fa-line-columns', index: 4 },
-        { title: 'Perceptron', icon: 'fa-code-branch fa-rotate-90', index: 5 },
-        { title: 'Settings', icon: 'fa-cog', index: 6 },
+        { title: 'History', icon: 'fa-history', index: 2 },
+        
+      ],
+
+      manageItems: [
+        { title: 'Proteomes', icon: 'fa-bacterium', index: 3 },
+        { title: 'Modifications', icon: 'fa-weight-hanging', index: 4 },
+        { title: 'Job Queue', icon: 'fa-line-columns', index: 5 },
+        { title: 'Perceptron', icon: 'fa-code-branch fa-rotate-90', index: 6 },
+        { title: 'Settings', icon: 'fa-cog', index: 7 },
       ],
 
       learnItems:[
-        { title: 'Using malDB', icon: 'fa-info-circle', index: 7 },
-        { title: 'Performing PMF', icon: 'fa-vial', index: 8 },
+        { title: 'Using malDB', icon: 'fa-info-circle', index: 8 },
+        { title: 'Performing PMF', icon: 'fa-vial', index: 9 },
       ],
 
 
@@ -67,13 +73,16 @@ export default class ApplicationContainer extends Component {
       //PANEL 1
       <SearchFrame updateResults={(results) => this.updateResults(results)} />,
       <ResultsFrame results={this.props.results} />,
+      <HistoryFrame updateResults={(results) => this.updateResults(results)} />,
+
+      //PANEL 2
       <ProteomesFrame />,
       <ModificationsFrame />,
       <QueueFrame />,
       <PerceptronFrame />,
       <SettingsFrame />,
 
-      //PANEL 2
+      //PANEL 3
       <ReadmeFrame />,
       <ProtocolFrame />,
     ]
@@ -93,6 +102,14 @@ export default class ApplicationContainer extends Component {
               {/*Items in the sidenav need to be able to change the container state*/}
               <SideNav 
                 items={this.state.controlItems}
+                handleClick={(index) => this.changeContainerState(index)}
+              />
+
+              <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-2 text-primary">Management</h6>
+
+              {/*Items in the sidenav need to be able to change the container state*/}
+              <SideNav 
+                items={this.state.manageItems}
                 handleClick={(index) => this.changeContainerState(index)}
               />
 

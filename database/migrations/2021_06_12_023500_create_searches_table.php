@@ -18,7 +18,11 @@ class CreateSearchesTable extends Migration
             $table->timestamps();
             $table->integer('user_id');
             $table->integer('process_id');
+            $table->string('name');
             $table->string('metadata_file');
+            $table->string('results_file');
+            $table->string('top_match')->nullable();
+            $table->string('status')->default('incomplete');
         });
     }
 

@@ -17,23 +17,25 @@ use App\Models\Process;
 use App\Models\Status;
 use App\Models\UserSetting;
 use App\Models\Digest;
+use App\Models\Search;
 
 class ProcessSearch implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    //Metadata variable is a standard object holding all the search parameters and data.
     protected $metadata;
+
+    //No search job should run for longer than 10min. If it does, I haven't done my job optimizing well enough.
     public $timeout = 3600; 
 
-
-
+    //Constructor decodes the metadata file, and creates a stdObject.
     public function __construct($metadata_file)
     {
         $this->metadata = json_decode(Storage::get($metadata_file));
     }
 
-
-
+    //The method that runs when the job is initiated.
     public function handle()
     {
         //Get the settings
@@ -46,8 +48,7 @@ class ProcessSearch implements ShouldQueue
         $tables = get_tables($settings->tables);
 
         //Construct the mass list array
-        $masses = [1170.260461, 1228.382739, 1375.483557, 1653.520751, 1752.469679, 1765.517257, 1849.43973, 2105.47983, 2128.467221, 2178.484802, 2211.44009, 2222.209515, 2389.285925, 2424.412107, 2551.361535, 2668.518994, 2855.366387];
-        //mass_list_to_array($mass_list);
+        $masses = $settings->data->mass_list;
 
         //Get missed cleavages
         $missed_cleavages = $settings->mc;
@@ -59,6 +60,7 @@ class ProcessSearch implements ShouldQueue
         //$tolerance = UserSetting::where('user_id', $settings->user_id)->where('name', 'mass_tolerance')->first()->value; //This will return a string, you need to cast it.
         $tolerance = 1.2;
 
+        update_status($process->id, 0.2, 'Expanding base tables.');
         //Create the set of expanded tables
         $table_sets = [];
         foreach($tables as $t)
@@ -85,6 +87,8 @@ class ProcessSearch implements ShouldQueue
         //Create a new collection to continually append to
         $merged = new Collection();
 
+        update_status($process->id, 0.5, 'Searching expanded tables.');
+        //Perform the search
         foreach($table_sets as $t)
         {
             $matches = \DB::select(base_query($t['base'], $t['temp'], $rowset_name, $tolerance));
@@ -97,11 +101,12 @@ class ProcessSearch implements ShouldQueue
         
         Log::debug($merged->take(10));
 
+        update_status($process->id, 0.75, 'Scoring matches.');
         $results = $merged
                         //Group them so that the results from separate tables are not merged, altering statistical scores
-                        ->groupBy(['parent'])
+                        ->groupBy(['source', 'parent'])
                         //Flatten the collection (array) to remove the source (table) grouping, allowing easy access to the nested array for sorting.
-                        //->flatten(1)
+                        ->flatten(1)
                         //Count the number of children eat hit (parent) has, and order descending so top hits are at the top of list
                         ->sortByDesc(function($item){
                             return count($item);
@@ -136,25 +141,29 @@ class ProcessSearch implements ShouldQueue
                         ->values();
                         //Determine significance
                         
-        
-
-        $response = [
-            'code'          => 'results',
-            'message'       => 'A toast to the people',
-            'tables'        => $tables,
-            #'mods'          => $mass_mods,
-            'massList'      => $masses,
-            'results'       => $results,
+        $final = [
+            'results' => $results,
         ];
 
-        Log::debug($response);
-
-        foreach($temp_tables as $t)
+        update_status($process->id, 0.8, 'Cleaning Up.');
+        //Clean up all of the temporary tables
+        foreach($table_sets as $t)
         {
-            Schema::dropIfExists($t);
+            Schema::dropIfExists($t['temp']);
         }
 
+        update_status($process->id, 0.9, 'Writing results to file.');
 
+        //Mark the job as completed
+        update_status($process->id, 1, 'Complete');
+
+        //Set a path for the results file
+        Log::debug("Looking for a job with name $settings->job_string ...");
+
+        $results_file = \DB::table('searches')->where('name', $settings->job_string)->first()->results_file;
+
+        //Write to file
+        Storage::put($results_file, json_encode($final));
 
     }
 }
@@ -187,7 +196,7 @@ function expand_table_query(string $table_name, string $target_table_name, strin
         FROM 
                 $target_table_name 
         WHERE
-                mz1_monoisotopic < 3600 AND mz1_monoisotopic > 500
+                mz1_monoisotopic < 3600 AND mz1_monoisotopic > 650
         UNION ALL
         SELECT 
                 id,
@@ -232,7 +241,7 @@ function construct_search_rowset($rowset_name, $mass_list)
 function base_query(string $base_table_name, string $expanded_table_name, string $search_rowset_name, float $tolerance)
 {
     return(
-       "SELECT id, parent, sequence, mz1_monoisotopic, err FROM (
+       "SELECT id, parent, sequence, mz1_monoisotopic, missed_cleavages, source, err FROM (
             SELECT 
               d.id,
               d.parent,

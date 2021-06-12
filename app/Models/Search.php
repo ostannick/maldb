@@ -13,6 +13,7 @@ class Search extends Model
         'user_id',
         'process_id',
         'metadata_file',
-        'type',
+        'results_file',
+        'name',
     ];
 }

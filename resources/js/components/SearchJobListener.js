@@ -24,6 +24,7 @@ export default class SearchJobListener extends Component {
       return (
         <FadeIn>
           <div className="col-lg-12 mb-3">
+            <h4 className="text-center text-muted">{this.state.description}</h4>
             <ProgressBar animated now={this.state.progress * 100} />
           </div>
         </FadeIn>
@@ -37,8 +38,29 @@ export default class SearchJobListener extends Component {
     
   }
 
+  downloadResults = () =>
+  {
+    console.log("Downloading results from server...");
+
+    const sendData = {
+      metadata: this.props.metadata
+    }
+
+    axios.post('/analysis/results', sendData)
+      .then(res => {
+        const response = res.data;
+
+        this.props.updateResults(response);
+
+      })
+      .catch(function (e) {
+        console.log(e.response.data.message);
+      });
+  }
+
   startPolling = () =>
   {
+    clearInterval(this.state.interval);
     this.setState({ interval: setInterval(() => { this.poll() }, 1500) })
   }
 
@@ -67,8 +89,7 @@ export default class SearchJobListener extends Component {
 
         if (this.state.description == 'Complete') {
           clearInterval(this.state.interval);
-          //Update app results
-          //Change container state
+          this.downloadResults();
         }
 
       })

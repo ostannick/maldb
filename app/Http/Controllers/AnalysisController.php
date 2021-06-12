@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\Ionizer;
 use App\Models\Digest;
@@ -11,6 +12,31 @@ use Auth;
 
 class AnalysisController extends Controller
 {
+
+    public function results(Request $request)
+    {
+        $job_string =  $request->input('metadata')['job_string'];
+
+        $results_file = \DB::table('searches')->where('name', $job_string)->first()->results_file;
+
+        return Storage::get($results_file);
+    }
+
+    public function results_by_name(Request $request)
+    {
+        $job_string =  $request->input('name');
+
+        $results_file = \DB::table('searches')->where('name', $job_string)->first()->results_file;
+
+        return Storage::get($results_file);
+    }
+
+    public function get_history(Request $request)
+    {
+        $history = \DB::table('searches')->where('user_id', Auth::user()->id)->latest()->take(20)->get();
+
+        return $history;
+    }
 
     public function get_seqview(Request $request)
     {
@@ -285,5 +311,33 @@ class AnalysisController extends Controller
 
         
         return $series;
+    }
+
+    public function get_random_fingerprint()
+    {
+        $num_peaks = rand(8, 20);
+
+        $mass_list = [];
+        for($i = 0; $i < $num_peaks; $i++)
+        {
+            array_push($mass_list, mt_rand(650, 3600) + mt_rand() / mt_getrandmax());
+        }
+
+        sort($mass_list);
+
+        return implode(' ', $mass_list);
+
+    }
+
+    public function get_random_spectra()
+    {
+        $command = implode(' ', [
+            'python',
+            '../python/spectral_generator.py'
+        ]);
+
+        $spectra = shell_exec($command);
+
+        return $spectra;
     }
 }
