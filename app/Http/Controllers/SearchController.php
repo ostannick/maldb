@@ -330,10 +330,6 @@ function fixed_mods_string(array $modifications)
     return $s;
 }
 
-function query_unioner(array $queries): string
-{
-    return implode(' UNION ALL ', $queries);
-}
 
 function mass_list_to_array(string $mass_list): array
 {

@@ -60,25 +60,34 @@ class ProcessSearch implements ShouldQueue
         $tolerance = 1.2;
 
         //Create the set of expanded tables
-        $temp_tables = [];
+        $table_sets = [];
         foreach($tables as $t)
         {
             //Name the tables
             $temp_table_name = 'TEMP_' . $t . time();
             
-            //Store the table
-            array_push($temp_tables, $temp_table_name);
+            //Store the table beside its cognate base table
+            array_push($table_sets, [
+                'base' => $t,
+                'temp' => $temp_table_name
+            ]);
 
             //Run the expansion query
             \DB::select(expand_table_query($temp_table_name, $t, $fixed_mods_string));
         }
+        
+        //Name the search rowset 
+        $rowset_name = 'tmp_search_' . time();
+
+        //Create the rowset
+        construct_search_rowset($rowset_name, $masses);
 
         //Create a new collection to continually append to
         $merged = new Collection();
 
-        foreach($temp_tables as $t)
+        foreach($table_sets as $t)
         {
-            $matches = \DB::select(base_query($t, $tolerance));
+            $matches = \DB::select(base_query($t['base'], $t['temp'], $rowset_name, $tolerance));
 
             $merged = $merged->merge(collect($matches));
         }
@@ -122,7 +131,7 @@ class ProcessSearch implements ShouldQueue
                         })
                         //Calculate the score for each hit
                         ->each(function($item) use(&$tolerance){
-                            return $item->put("score", calculate_maldb_score($tolerance, 4000-650, $item['theos'], $item['matches']));
+                            return $item->put("score", calculate_maldb_score($tolerance, 3600-650, $item['theos'], $item['matches']));
                         })
                         ->sortByDesc('score')
                         ->values();
@@ -199,14 +208,29 @@ function expand_table_query(string $table_name, string $target_table_name, strin
     );
 }
 
-function construct_search_rowset($rowset_name)
+function construct_search_rowset($rowset_name, $mass_list)
 {
-    return(
-        ""
+    $table_query = 
+    "DROP TABLE IF EXISTS $rowset_name;
+    CREATE TABLE $rowset_name (
+      mz1_monoisotopic DECIMAL(10,2)
     );
+    ";
+    
+    \DB::unprepared($table_query);
+
+    $fill_query = "";
+
+    foreach($mass_list as $m)
+    {
+        $fill_query .= "INSERT INTO $rowset_name VALUES ($m);";
+    }
+
+    \DB::unprepared($fill_query);
+    
 }
 
-function base_query(string $expanded_table_name, string $search_rowset_name, float $tolerance)
+function base_query(string $base_table_name, string $expanded_table_name, string $search_rowset_name, float $tolerance)
 {
     return(
        "SELECT id, parent, sequence, mz1_monoisotopic, err FROM (
@@ -216,6 +240,7 @@ function base_query(string $expanded_table_name, string $search_rowset_name, flo
               d.sequence,
               d.missed_cleavages,
               d.mz1_monoisotopic,
+              '$base_table_name' AS d.source,
               ABS(d.mz1_monoisotopic - s.mz1_monoisotopic) err,
               ROW_NUMBER() over (
                 PARTITION BY s.mz1_monoisotopic, d.parent
@@ -228,12 +253,6 @@ function base_query(string $expanded_table_name, string $search_rowset_name, flo
           ) result WHERE rn = 1;
         "
     );
-}
-
-
-function base_query_string(string $table_name, int $missed_cleavages, float $mz1, float $tolerance, string $fixed_mods_string)
-{
-    return("SELECT `id`, `parent`, `met_ox_count`, '$table_name' AS `source` FROM `$table_name` WHERE `missed_cleavages` <= $missed_cleavages AND ABS(`mz1_monoisotopic` $fixed_mods_string - $mz1) < $tolerance");
 }
 
 function fixed_mods_string(array $modifications)
@@ -255,24 +274,9 @@ function fixed_mods_string(array $modifications)
     return $s;
 }
 
-function query_unioner(array $queries): string
+function parse_spectral_input(string $input_data)
 {
-    return implode(' UNION ', $queries);
-}
 
-function mass_list_to_array(string $mass_list): array
-{
-    //Parse the mass list. This can be expanded on later if we want to include intensities or have more robust parsing.
-    $mass_list = preg_split('/\s+/', $mass_list);
-
-    //Loop through and cast. Currently they are strings, need them as floats.
-    for($i = 0; $i < count($mass_list); $i++)
-    {
-        $mass_list[$i] = (float)$mass_list[$i];
-    }
-
-    //Return the array.
-    return $mass_list;
 }
 
 function get_mods(array $mods)
