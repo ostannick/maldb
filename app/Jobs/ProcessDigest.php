@@ -84,14 +84,13 @@ class ProcessDigest implements ShouldQueue
         //create a base peptide digest table
         Schema::create($tableNameDigest, function(Blueprint $table){
             $table->increments('id');
-            $table->string('parent')->nullable();
-            $table->string('sequence')->nullable();
+            $table->string('parent');
+            $table->string('sequence');
             $table->integer('start');
             $table->integer('end');
-            $table->decimal('mz1_average')->index('mz1_average');;
-            $table->decimal('mz1_monoisotopic')->index('mz1_monoisotopic');;
+            $table->double('mz1_average', 15, 8)->index('mz1_average');;
+            $table->double('mz1_monoisotopic', 15, 8)->index('mz1_monoisotopic');;
             $table->integer('missed_cleavages')->index('missed_cleavages');
-            $table->integer('met_ox_count')->nullable();
         });
       }
       else
@@ -215,7 +214,6 @@ class ProcessDigest implements ShouldQueue
             'mz1_monoisotopic'  => $peptides[$i]['mz1'],
             'mz1_average'       => $peptides[$i]['avg'],
             'missed_cleavages'  => $peptides[$i]['mc'],
-            'met_ox_count'      => $peptides[$i]['mso']
           ];
 
           array_push($batch, $p);

@@ -19,7 +19,7 @@ class CreateModificationsTable extends Migration
             $table->integer('user_id');
             $table->string('name');
             $table->string('target'); //amino acid, terminus, etc.
-            $table->decimal('mass');
+            $table->double('mass', 15, 8);
             $table->string('type');
         });
     }

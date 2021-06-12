@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Search extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'process_id',
+        'metadata_file',
+        'type',
+    ];
 }

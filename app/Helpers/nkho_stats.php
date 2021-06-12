@@ -60,5 +60,27 @@ if (!function_exists('calculate_maldb_score')) {
     
 }
 
+if (!function_exists('maldb_score')) {
+    /**
+     * This user-land implementation follows the implementation quite strictly;
+     * it does not attempt to improve the code or algorithm in any way. It will
+     * raise a warning if you have fewer than 2 values in your array, just like
+     * the extension does (although as an E_USER_WARNING, not E_WARNING).
+     *
+     * @param array $a
+     * @param bool $sample [optional] Defaults to false
+     * @return float|bool The standard deviation or false on error.
+     */
+    
+    function maldb_score($tolerance, $mass_range, $theoretical_peaks, $observed_peaks) {
+        
+        
+        
+
+    }
+    
+}
+
+
 
 ?>

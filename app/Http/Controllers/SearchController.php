@@ -89,19 +89,29 @@ class SearchController extends Controller
             'enzyme'        =>  $enzyme,
             'tables'        =>  $selected_tables,
             'modifications' =>  [
-                'fixed'         => ['Cys_CAM'],
-                'var'           => ['MSO'],
+                'fixed'             => [
+                    ['Cys_CAM']
+                ],
+                'variable'          => [
+                    ['Met_MSO']
+                ],
             ],
         ];
 
+        //Save the metadata file
         $path = Auth::user()->id . '\searches\\' . $job_name . '.meta';
-
         Storage::put($path, json_encode($metadata));
 
         //Dispatch the job to the default queue with the path to the metadata file.
         ProcessSearch::dispatch($path);
+        update_status($process->id, 0.00, 'Waiting for job to start.');
 
-        update_status($process->id, 0.01, 'Waiting for job to start.');
+        //Log the job in the database
+        Search::create([
+            'user_id' => Auth::user()->id,
+            'process_id' => $process->id,
+            'metadata_file' => $path,
+        ]);
 
         return $metadata;
 
@@ -195,7 +205,7 @@ class SearchController extends Controller
             'results'       => $results,
         ];
 
-        return json_encode($response);
+        return $response;
     }
 
     /**
@@ -257,9 +267,47 @@ function get_tables(array $table_ids): array
     return $tables;
 }
 
+function expand_table_query(string $table_name, string $target_table_name, string $fixed_mods_string)
+{
+    return(
+       "CREATE TABLE $table_name
+        WITH RECURSIVE 
+        expanded(id, parent, sequence, mz1_monoisotopic, missed_cleavages, MSO) AS
+        (
+        SELECT 
+                id,
+                parent,
+                sequence, 
+                (mz1_monoisotopic $fixed_mods_string) as mz1_monoisotopic,  
+                missed_cleavages,
+                0 AS MSO
+        FROM 
+                $target_table_name 
+        WHERE
+                mz1_monoisotopic < 3600 AND mz1_monoisotopic > 500
+        UNION ALL
+        SELECT 
+                id,
+                parent,
+                sequence,
+                `mz1_monoisotopic` + 15.999 AS `mz1_monoisotopic`,
+                missed_cleavages,
+                MSO + 1
+        FROM 
+                expanded 
+        WHERE 
+                MSO < (CHAR_LENGTH(sequence) - CHAR_LENGTH(REPLACE( sequence, 'M', '')))
+        )
+        SELECT * FROM expanded
+        "
+        
+    );
+}
+
 function base_query_string(string $table_name, int $missed_cleavages, float $mz1, float $tolerance, string $fixed_mods_string)
 {
-    return("SELECT `id`, `parent`, `met_ox_count`, '$table_name' AS `source` FROM `$table_name` WHERE `missed_cleavages` <= $missed_cleavages AND ABS(`mz1_monoisotopic` $fixed_mods_string - $mz1) < $tolerance");
+    return(
+        "SELECT `id`, `parent`, `met_ox_count`, '$table_name' AS `source` FROM `$table_name` WHERE `missed_cleavages` <= $missed_cleavages AND ABS(`mz1_monoisotopic` $fixed_mods_string - $mz1) < $tolerance");
 }
 
 function fixed_mods_string(array $modifications)
@@ -283,7 +331,7 @@ function fixed_mods_string(array $modifications)
 
 function query_unioner(array $queries): string
 {
-    return implode(' UNION ', $queries);
+    return implode(' UNION ALL ', $queries);
 }
 
 function mass_list_to_array(string $mass_list): array

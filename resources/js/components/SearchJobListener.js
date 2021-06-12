@@ -65,7 +65,7 @@ export default class SearchJobListener extends Component {
           description: response.description,
         })
 
-        if (this.state.status == 'Complete') {
+        if (this.state.description == 'Complete') {
           clearInterval(this.state.interval);
           //Update app results
           //Change container state
