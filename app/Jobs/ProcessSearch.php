@@ -91,13 +91,12 @@ class ProcessSearch implements ShouldQueue
 
             $merged = $merged->merge(collect($matches));
         }
-
-        Log::debug('Logging the merged results...');
-        Log::debug($merged);
         
         //Group peptides by the table they're from, then the parent they belong to.
         //Somehow sort the nested array, and then limit it to top 5
         
+        Log::debug($merged->take(10));
+
         $results = $merged
                         //Group them so that the results from separate tables are not merged, altering statistical scores
                         ->groupBy(['parent'])
@@ -240,7 +239,7 @@ function base_query(string $base_table_name, string $expanded_table_name, string
               d.sequence,
               d.missed_cleavages,
               d.mz1_monoisotopic,
-              '$base_table_name' AS d.source,
+              '$base_table_name' source,
               ABS(d.mz1_monoisotopic - s.mz1_monoisotopic) err,
               ROW_NUMBER() over (
                 PARTITION BY s.mz1_monoisotopic, d.parent
