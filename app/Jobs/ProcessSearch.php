@@ -135,7 +135,7 @@ class ProcessSearch implements ShouldQueue
                         })
                         //Calculate the score for each hit
                         ->each(function($item) use(&$tolerance){
-                            return $item->put("score", calculate_maldb_score($tolerance, 3600-650, $item['theos'], $item['matches']));
+                            return $item->put("score", calculate_maldb_score($tolerance, 3600-650, $item['theos'], count($masses), $item['matches']));
                         })
                         ->sortByDesc('score')
                         ->values();
