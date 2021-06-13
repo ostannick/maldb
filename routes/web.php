@@ -28,7 +28,7 @@ Route::get('/', function () {
 
 Route::get('/maldb', function() {
     return view('spa');
-});
+})->middleware('auth');
 
 Route::get('/settings', function() {
 
