@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 import ProgressBar from 'react-bootstrap/ProgressBar';
+import Spinner from 'react-bootstrap/Spinner';
 import FadeIn from 'react-fade-in';
 
 export default class SearchJobListener extends Component {
@@ -14,6 +15,9 @@ export default class SearchJobListener extends Component {
       progress: 0,
       description: 'Idle',
       interval: null,
+      //Timer
+      timerInterval: null,
+      elapsed: 0,
     }
 
   }
@@ -24,7 +28,9 @@ export default class SearchJobListener extends Component {
       return (
         <FadeIn>
           <div className="col-lg-12 mb-3">
-            <h4 className="text-center text-muted">{this.state.description}</h4>
+            <h4 className="text-center"><Spinner animation="grow" variant="primary" /></h4>
+            <h4 className="text-center text-muted"> {this.state.description}</h4>
+            <h6 className="text-center text-muted">{this.state.elapsed}</h6>
             <ProgressBar animated now={this.state.progress * 100} />
           </div>
         </FadeIn>
@@ -58,9 +64,22 @@ export default class SearchJobListener extends Component {
       });
   }
 
+  startTimer = () =>
+  {
+    clearInterval(this.state.timerInterval);
+    this.setState({elapsed: 0});
+    this.setState({ timerInterval: setInterval(() => { this.setState({elapsed: this.state.elapsed + 1}) }, 1000) });
+  }
+
+  stopTimer = () =>
+  {
+    clearInterval(this.state.timerInterval);
+  }
+
   startPolling = () =>
   {
     clearInterval(this.state.interval);
+    this.startTimer();
     this.setState({ interval: setInterval(() => { this.poll() }, 1500) })
   }
 

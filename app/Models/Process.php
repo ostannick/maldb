@@ -16,6 +16,6 @@ class Process extends Model
 
     public function status()
     {
-      return $this->hasMany(Status::class)->latest()->first();
+      return $this->hasMany(Status::class)->where('process_id', $this->id)->orderBy('progress', 'DESC')->first();
     }
 }
