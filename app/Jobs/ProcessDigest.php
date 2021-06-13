@@ -88,8 +88,8 @@ class ProcessDigest implements ShouldQueue
             $table->string('sequence');
             $table->integer('start');
             $table->integer('end');
-            $table->double('mz1_average', 15, 8)->index('mz1_average');;
-            $table->double('mz1_monoisotopic', 15, 8)->index('mz1_monoisotopic');;
+            $table->double('mz1_average', 12, 8)->index('mz1_average');;
+            $table->double('mz1_monoisotopic', 12, 8)->index('mz1_monoisotopic');;
             $table->integer('missed_cleavages')->index('missed_cleavages');
         });
       }

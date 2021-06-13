@@ -221,7 +221,7 @@ function construct_search_rowset($rowset_name, $mass_list)
     $table_query = 
     "DROP TABLE IF EXISTS $rowset_name;
     CREATE TABLE $rowset_name (
-      mz1_monoisotopic DECIMAL(10,2)
+      mz1_monoisotopic DECIMAL(12,8)
     );
     ";
     
