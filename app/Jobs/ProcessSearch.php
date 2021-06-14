@@ -97,10 +97,6 @@ class ProcessSearch implements ShouldQueue
         }
         
         //Group peptides by the table they're from, then the parent they belong to.
-        //Somehow sort the nested array, and then limit it to top 5
-        
-        Log::debug($merged->take(10));
-
         update_status($process->id, 0.75, 'Scoring matches.');
         $results = $merged
                         //Group them so that the results from separate tables are not merged, altering statistical scores
@@ -134,7 +130,7 @@ class ProcessSearch implements ShouldQueue
                             return $item->put("parent_name", \DB::table(Digest::where('table_name', $item[0]->source)->first()->parent_table_name)->find($item[0]->parent)->name);
                         })
                         //Calculate the score for each hit
-                        ->each(function($item) use(&$tolerance){
+                        ->each(function($item) use(&$tolerance, $masses){
                             return $item->put("score", calculate_maldb_score($tolerance, 3600-650, $item['theos'], count($masses), $item['matches']));
                         })
                         ->sortByDesc('score')
