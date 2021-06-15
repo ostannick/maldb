@@ -2,7 +2,7 @@
 
 # # #  Enzymatic digestion functions
 enzymes = {
-    'alp':'(?<=[TASVX])', 'arg-c':'(?<=[RX])(?!P)', 'arg-c_lowspec':'(?<=[RX])', 'asp-n':'(?=[DBX])', 'asp-n_ambic':'(?=[DBEZX])', 'chymotrypsin':'(?<=[FYWLJX])(?!P)', 'chymotrypsin_lowspec':'(?<=[FYWLJX])', 'chymotrypsin_precise':'(?<=[FYWLMHJX])(?![P+]) - complex', 'cnbr':'(?<=[MX])', 'elastase':'(?<=[ALIJVX])(?!P)', 'el-tr-cy':'(?<=[ALIVKRWFYX])(?!P)', 'glu-c':'(?<=[DBEZX])(?!P)', 'glu-c_lowspec':'(?<=[DBEZX])', 'ibz':'(?<=[WX])', 'lys-c':'(?<=[KX])(?!P)', 'lys-c_lowspec':'(?<=[KX])', 'lys-n':'(?=[KX])', 'pepsin':'(?<=[FLJX])(?!P)', 'pepsin_lowspec':'(?<=[FLJX])', 'trypsin':'(?<=[KRX])(?!P)', 'trypsin_lowspec':'(?<=[KRX])', 'trypchymo':'(?<=[FYWLJKRX])(?!P)'
+    'alp':'(?<=[TASVX])', 'arg-c':'(?<=[RX])(?!P)', 'arg-c_P':'(?<=[RX])', 'asp-n':'(?=[DBX])', 'asp-n_ambic':'(?=[DBEZX])', 'chymotrypsin':'(?<=[FYWLJX])(?!P)', 'chymotrypsin_P':'(?<=[FYWLJX])', 'chymotrypsin_precise':'(?<=[FYWLMHJX])(?![P+]) - complex', 'cnbr':'(?<=[MX])', 'elastase':'(?<=[ALIJVX])(?!P)', 'el-tr-cy':'(?<=[ALIVKRWFYX])(?!P)', 'glu-c':'(?<=[DBEZX])(?!P)', 'glu-c_P':'(?<=[DBEZX])', 'ibz':'(?<=[WX])', 'lys-c':'(?<=[KX])(?!P)', 'lys-c_P':'(?<=[KX])', 'lys-n':'(?=[KX])', 'pepsin':'(?<=[FLJX])(?!P)', 'pepsin_P':'(?<=[FLJX])', 'trypsin':'(?<=[KRX])(?!P)', 'trypsin_P':'(?<=[KRX])', 'trypchymo':'(?<=[FYWLJKRX])(?!P)'
 }
 def get_function(enzyme, ambiguous_cuts=False):
     # 'sites' should be a set containing upper case amino acid symbols defining the cut site
@@ -15,7 +15,7 @@ def get_function(enzyme, ambiguous_cuts=False):
         if ambiguous_cuts:
             conditional_sites['X'] = set('P')
         return digest_after_conditional(sequence, conditional_sites)
-    def trypsin_lowspec(sequence):
+    def trypsin_P(sequence):
         # Does not respect the "Keil rule", cutting after all R/K. Some research suggests this is more realistic.
         sites = set(['R','K'])
         if ambiguous_cuts:
@@ -27,7 +27,7 @@ def get_function(enzyme, ambiguous_cuts=False):
         if ambiguous_cuts:
             conditional_sites.update({'J':set('P'), 'X':set('P')})
         return digest_after_conditional(sequence, conditional_sites)
-    def chymotrypsin_lowspec(sequence):
+    def chymotrypsin_P(sequence):
         sites = set(['F', 'Y', 'W', 'L'])
         if ambiguous_cuts:
             sites.update(['J', 'X'])
@@ -49,7 +49,7 @@ def get_function(enzyme, ambiguous_cuts=False):
         if ambiguous_cuts:
             conditional_sites.update({'B':set('P'), 'Z':set('P'), 'X':set('P')})
         return digest_after_conditional(sequence, conditional_sites)
-    def glutamyl_endopeptidase_lowspec(sequence):
+    def glutamyl_endopeptidase_P(sequence):
         sites = set(['D', 'E'])
         if ambiguous_cuts:
             sites.update(['B', 'Z', 'X'])
@@ -59,7 +59,7 @@ def get_function(enzyme, ambiguous_cuts=False):
         if ambiguous_cuts:
             conditional_sites.update({'J':set('P'), 'X':set('P')})
         return digest_after_conditional(sequence, conditional_sites)
-    def pepsin_lowspec(sequence):
+    def pepsin_P(sequence):
         sites = set(['F', 'L'])
         if ambiguous_cuts:
             sites.update(['J', 'X'])
@@ -69,7 +69,7 @@ def get_function(enzyme, ambiguous_cuts=False):
         if ambiguous_cuts:
             conditional_sites['X'] = set('P')
         return digest_after_conditional(sequence, conditional_sites)
-    def arg_c_lowspec(sequence):
+    def arg_c_P(sequence):
         sites = set('R')
         if ambiguous_cuts:
             sites.add('X')
@@ -94,7 +94,7 @@ def get_function(enzyme, ambiguous_cuts=False):
         if ambiguous_cuts:
             conditional_sites['X'] = set('P')
         return digest_after_conditional(sequence, conditional_sites)
-    def lys_c_lowspec(sequence):
+    def lys_c_P(sequence):
         sites = set('K')
         if ambiguous_cuts:
             sites.add('X')
@@ -127,7 +127,7 @@ def get_function(enzyme, ambiguous_cuts=False):
         return digest_after(sequence, sites)
     # #  Name-to-function map
     digest_functions = {
-        'alp':alpha_lytic_protease, 'arg-c':arg_c, 'arg-c_lowspec':arg_c_lowspec, 'asp-n':asp_n, 'asp-n_ambic':asp_n_ambic, 'chymotrypsin':chymotrypsin, 'chymotrypsin_lowspec':chymotrypsin_lowspec, 'chymotrypsin_precise':chymotrypsin_precise, 'cnbr':cyanogen_bromide, 'elastase':elastase, 'el-tr-cy':elastase_trypsin_chymotrypsin, 'glu-c':glutamyl_endopeptidase, 'glu-c_lowspec':glutamyl_endopeptidase_lowspec, 'ibz':iodobenzoate, 'lys-c':lys_c, 'lys-c_lowspec':lys_c_lowspec, 'lys-n':lys_n, 'pepsin':pepsin, 'pepsin_lowspec':pepsin_lowspec, 'trypsin':trypsin, 'trypsin_lowspec':trypsin_lowspec, 'trypchymo':trypchymo
+        'alp':alpha_lytic_protease, 'arg-c':arg_c, 'arg-c_P':arg_c_P, 'asp-n':asp_n, 'asp-n_ambic':asp_n_ambic, 'chymotrypsin':chymotrypsin, 'chymotrypsin_P':chymotrypsin_P, 'chymotrypsin_precise':chymotrypsin_precise, 'cnbr':cyanogen_bromide, 'elastase':elastase, 'el-tr-cy':elastase_trypsin_chymotrypsin, 'glu-c':glutamyl_endopeptidase, 'glu-c_P':glutamyl_endopeptidase_P, 'ibz':iodobenzoate, 'lys-c':lys_c, 'lys-c_P':lys_c_P, 'lys-n':lys_n, 'pepsin':pepsin, 'pepsin_P':pepsin_P, 'trypsin':trypsin, 'trypsin_P':trypsin_P, 'trypchymo':trypchymo
     }
     return digest_functions[enzyme]
 

@@ -115,8 +115,7 @@ class Sequence(object):
 
 
 # # #  Processing code
-def digest_sequences(seqs, enzyme, missed_cleavages):
-    enz_digest_fxn = digest.get_function(enzyme)
+def digest_sequences(seqs, enz_digest_fxn, missed_cleavages):
     peptide_db, seq_db = [], []
     for seq_id, seq in enumerate(seqs):
         peptides = seq_to_peptide_dicts(seq_id, seq.seq, enz_digest_fxn, missed_cleavages)
@@ -196,11 +195,12 @@ def add_arguments(parser):
     parser.add_argument("summary_out", metavar="SUMMARY_OUT", help="The location to save the summary database")
     parser.add_argument("enzyme", metavar="ENZYME", choices=sorted(digest.enzymes.keys()), nargs=1, help="The enzyme to digest the sequences. Must be one of: %(choices)s")
     # #  Optional arguments
+    parser.add_argument("-a", "--ambiguous_cuts", action='store_true', help="Include this flag to allow ambiguous amino acid characters to satisfy peptidase cut sites (default: %(default)s)")
     parser.add_argument("-c", "--cleavages", type=int, default=1, help="Specify the number of missed cleavage sites allowed (default: %(default)s)")
     parser.add_argument("-n", "--min_weight", type=float, default=650.0, help="Discard peptides below this molecular weight threshold (default: %(default)s)")
     parser.add_argument("-x", "--max_weight", type=float, default=3800.0, help="Discard peptides above this molecular weight threshold (default: %(default)s)")
     parser.add_argument("-j", "--json_lines", type=int, default=50000, help="Format the peptides database file to have this many peptide JSON entries per line (default: %(default)s)")
-    parser.add_argument("-o", "--no_met_ox", action='store_true', help="Use this flag to prevent the generation of additional peptides from the variable oxidation of methionine (default: %(default)s)")
+    parser.add_argument("-o", "--no_met_ox", action='store_true', help="Include this flag to prevent the generation of additional peptides from the variable oxidation of methionine (default: %(default)s)")
 def get_and_validate_arguments(parser):
     args = parser.parse_args()
     # #  Positional arguments
@@ -225,7 +225,8 @@ if __name__ == '__main__':
     parser = setup_parser()
     args = get_and_validate_arguments(parser)
     seqs = parse_fasta_file(args.fasta_file)
-    peptide_db, seq_db = digest_sequences(seqs, args.enzyme[0], args.cleavages)
+    enz_digest_fxn = digest.get_function(args.enzyme[0], ambiguous_cuts=args.ambiguous_cuts)
+    peptide_db, seq_db = digest_sequences(seqs, enz_digest_fxn, args.cleavages)
     summary_db = make_summary_dict(peptide_db, seq_db, args)
     # #  Write the peptide database to file in chunks
     linesize = args.json_lines
