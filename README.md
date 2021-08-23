@@ -21,10 +21,9 @@ malDB provides the following features:
 
 Installing malDB involves deploying a Laravel application on a machine that can serve as a webserver. You can run malDB on your own computer but it is recommended that you use a networked machine with a high performance CPU and at least 16GB of RAM.
 
-0. [Download Python (with data science libraries)](https://www.anaconda.com/) if you have not already, and ensure the python binary is in your PATH.
+0. [Download Python (with data science libraries)](https://www.anaconda.com/) if you have not already, and ensure the python binary is in your PATH. malDB has numpy and pandas as dependencies.
 1. [Download PHP](https://www.php.net/downloads.php) and add the root folder to your PATH so that the php binary is accessible.
 2. [Download Composer](https://getcomposer.org/) and install it. Make sure it is added to your PATH. Restart any terminals after installing Composer.
-3. [Download node.js](https://nodejs.org/en/) and install it.
 4. [Download MySQL](https://dev.mysql.com/downloads/installer/) and install MySQL server and MySQL workbench.
 5. In the PHP folder, open php.ini and uncomment the following lines by removing the semicolon:
 

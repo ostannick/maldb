@@ -29,53 +29,9 @@ Fields in the summary file:
 import argparse, os, json
 from decimal import Decimal
 from datetime import datetime
+import digest
 
 database_format_version = '0.5.0'
-
-
-# # #  Enzymatic digestions
-def trypsin_digest(sequence):
-    # Respects the "Keil rule" where it cuts after R/K but not in front of a proline
-    return digest_after_blocked(sequence, {'R':set('P'), 'K':set('P')})
-def trypsin_digest_lowspec(sequence):
-    # Does not respect the "Keil rule", so cuts after all R/K. Some research suggests this is more realistic.
-    return digest_after(sequence, set(['R','K']))
-def chymotrypsin_digest(sequence):
-    # Cuts after large hydrophobic aa (F/Y/W/L), blocked by P
-    return digest_after_blocked(sequence, {'F':set('P'), 'Y':set('P'), 'W':set('P'), 'L':set('P')})
-def chymotrypsin_digest_lowspec(sequence):
-    # Cuts after more large hydrophobic aa, blocked by P and some other specific aa.
-    return digest_after_blocked(sequence, {'F':set('P'), 'Y':set('P'), 'W':set(['P','M']), 'L':set('P'), 'M':set(['P','Y']), 'H':set(['P','D','M','W'])})
-
-digest_fxns = {
-    'trypsin':trypsin_digest, 'trypsin_lowspec':trypsin_digest_lowspec,
-    'chymotrypsin':chymotrypsin_digest, 'chymotrypsin_lowspec':chymotrypsin_digest_lowspec
-}
-
-# Specificity taken from http://www.matrixscience.com/help/enzyme_help.html and https://web.expasy.org/peptide_cutter/peptidecutter_enzymes.html
-def digest_after(sequence, sites):
-    # 'sites' should be a set/tuple containing upper case amino acid symbols to cut after.
-    frags = []
-    prev_ind = 0
-    for cur_ind, aa in enumerate(sequence):
-        if aa in sites:
-            frags.append(sequence[prev_ind : cur_ind+1])
-            prev_ind = cur_ind + 1
-    if prev_ind <= cur_ind:
-        frags.append(sequence[prev_ind :])
-    return frags
-def digest_after_blocked(sequence, sites):
-    # 'sites' should be a dict containing upper case amino acid keys to cut after, whose values are a set/tuple of upper case amino acid symbols that block digestion.
-    # EX {'W':set('M','P'), 'Y':set('P'), 'F':set()} indicates that digestion should happen after W unless the next aa is M or P; after Y unless the next aa is P; and after all F.
-    frags = []
-    prev_ind, max_ind = 0, len(sequence) - 1
-    for cur_ind, aa in enumerate(sequence):
-        if aa in sites and cur_ind < max_ind and sequence[cur_ind+1] not in sites[aa]:
-            frags.append(sequence[prev_ind : cur_ind+1])
-            prev_ind = cur_ind + 1
-    if prev_ind <= cur_ind:
-        frags.append(sequence[prev_ind :])
-    return frags
 
 
 # # #  Mass modifications
@@ -159,8 +115,7 @@ class Sequence(object):
 
 
 # # #  Processing code
-def digest_sequences(seqs, enzyme, missed_cleavages):
-    enz_digest_fxn = digest_fxns[enzyme]
+def digest_sequences(seqs, enz_digest_fxn, missed_cleavages):
     peptide_db, seq_db = [], []
     for seq_id, seq in enumerate(seqs):
         peptides = seq_to_peptide_dicts(seq_id, seq.seq, enz_digest_fxn, missed_cleavages)
@@ -238,13 +193,14 @@ def add_arguments(parser):
     parser.add_argument("peptides_out", metavar="PEPTIDES_OUT", help="The location to save the peptides database")
     parser.add_argument("sequences_out", metavar="SEQUENCES_OUT", help="The location to save the sequences database")
     parser.add_argument("summary_out", metavar="SUMMARY_OUT", help="The location to save the summary database")
-    parser.add_argument("enzyme", metavar="ENZYME", choices=sorted(digest_fxns.keys()), nargs=1, help="The enzyme to digest the sequences. Must be one of: %(choices)s")
+    parser.add_argument("enzyme", metavar="ENZYME", choices=sorted(digest.enzymes.keys()), nargs=1, help="The enzyme to digest the sequences. Must be one of: %(choices)s")
     # #  Optional arguments
+    parser.add_argument("-a", "--ambiguous_cuts", action='store_true', help="Include this flag to allow ambiguous amino acid characters to satisfy peptidase cut sites (default: %(default)s)")
     parser.add_argument("-c", "--cleavages", type=int, default=1, help="Specify the number of missed cleavage sites allowed (default: %(default)s)")
     parser.add_argument("-n", "--min_weight", type=float, default=650.0, help="Discard peptides below this molecular weight threshold (default: %(default)s)")
     parser.add_argument("-x", "--max_weight", type=float, default=3800.0, help="Discard peptides above this molecular weight threshold (default: %(default)s)")
     parser.add_argument("-j", "--json_lines", type=int, default=50000, help="Format the peptides database file to have this many peptide JSON entries per line (default: %(default)s)")
-    parser.add_argument("-o", "--no_met_ox", action='store_true', help="Use this flag to prevent the generation of additional peptides from the variable oxidation of methionine (default: %(default)s)")
+    parser.add_argument("-o", "--no_met_ox", action='store_true', help="Include this flag to prevent the generation of additional peptides from the variable oxidation of methionine (default: %(default)s)")
 def get_and_validate_arguments(parser):
     args = parser.parse_args()
     # #  Positional arguments
@@ -269,7 +225,8 @@ if __name__ == '__main__':
     parser = setup_parser()
     args = get_and_validate_arguments(parser)
     seqs = parse_fasta_file(args.fasta_file)
-    peptide_db, seq_db = digest_sequences(seqs, args.enzyme[0], args.cleavages)
+    enz_digest_fxn = digest.get_function(args.enzyme[0], ambiguous_cuts=args.ambiguous_cuts)
+    peptide_db, seq_db = digest_sequences(seqs, enz_digest_fxn, args.cleavages)
     summary_db = make_summary_dict(peptide_db, seq_db, args)
     # #  Write the peptide database to file in chunks
     linesize = args.json_lines
