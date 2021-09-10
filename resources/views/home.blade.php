@@ -15,7 +15,7 @@
               <p class="card-text">Launches the application. Upload and digest proteomes, then search through them with experimental data.</p>
             </div>
             <div class="card-footer d-flex flex-row-reverse">
-              <a href="/spa" class="btn btn-primary">Launch</a>
+              <a href="/maldb" class="btn btn-primary">Launch</a>
             </div>
           </div>
         </div>
